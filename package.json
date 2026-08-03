@@ -12,18 +12,23 @@
 		"publish": true
 	},
 	"dependencies": {
-		"@astrojs/cloudflare": "12.6.12",
-		"@astrojs/mdx": "4.3.13",
-		"@astrojs/rss": "4.0.14",
-		"@astrojs/sitemap": "3.6.1",
-		"astro": "5.16.9",
+		"@astrojs/cloudflare": "14.1.5",
+		"@astrojs/mdx": "7.0.5",
+		"@astrojs/react": "6.0.1",
+		"@astrojs/rss": "4.0.19",
+		"@astrojs/sitemap": "3.7.3",
+		"@keystatic/astro": "5.2.0",
+		"@keystatic/core": "0.6.3",
+		"astro": "7.1.4",
+		"react": "19.2.4",
+		"react-dom": "19.2.4",
 		"typescript": "5.9.3"
 	},
 	"devDependencies": {
-		"wrangler": "4.88.0"
+		"wrangler": "4.114.0"
 	},
 	"engines": {
-		"node": ">=22"
+		"node": "22.12.0"
 	},
 	"private": true,
 	"scripts": {
