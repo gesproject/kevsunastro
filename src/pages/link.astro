@@ -1,0 +1,730 @@
+---
+/**
+ * Task 3.6 — the dedicated /link social landing route.
+ *
+ * Visual system originally approved by the human on 2026-08-03 as evaluation
+ * preview E1. Restyled 2026-08-07 at the human's direction: same industrial
+ * language (condensed uppercase display type, hard grain, card rhythm) moved
+ * from the light "paper" ground to a dark one, over the approved Plasma WebGL
+ * backdrop, with the narrow centred column and large portrait that make a
+ * link-in-bio page read as finished rather than as a list of buttons.
+ *
+ * Deliberately no shared components with `/` — this route must not request
+ * Hero media, ship React, or exceed 200 KiB, and importing anything from the
+ * cinematic homepage's component tree risks all three.
+ */
+export const prerender = true;
+
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PlasmaBackdrop from "../components/PlasmaBackdrop.astro";
+import { getLinkActions, getReleases, getShows, getSite } from "../lib/content";
+
+const [links, releases, shows, site] = await Promise.all([
+  getLinkActions(),
+  getReleases(),
+  getShows(),
+  getSite(),
+]);
+
+const socialLinks = links.filter((link) => link.data.kind === "social");
+const listenAction = links.find((link) => link.data.kind === "listen");
+const buyAction = links.find((link) => link.data.kind === "buy");
+const bookingAction = links.find((link) => link.data.kind === "booking");
+const viewSiteAction = links.find((link) => link.data.kind === "site");
+
+const release = releases[0];
+const nextShow = shows[0];
+
+function formatShowDate(iso: string) {
+  return `${iso.slice(8, 10)} · ${iso.slice(5, 7)} · ${iso.slice(0, 4)}`;
+}
+
+// Marks are the site's own SVGs, inlined so the row costs no extra requests.
+// Monochrome `currentColor` rather than brand palettes: six different brand
+// colours in a row was the single least cohesive element of the light design,
+// and on the dark ground a flat mark row reads as one system.
+// Trusted local constants only -- nothing here comes from content or user input.
+const SOCIAL_MARKS: Record<string, string> = {
+  Instagram: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>`,
+  TikTok: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.5 9c-1.8 0-3.5-.6-4.9-1.7V15c0 3.3-2.7 6-6 6s-6-2.7-6-6 2.7-6 6-6c.4 0 .8.04 1.2.12V12c-.4-.1-.8-.2-1.2-.2-1.7 0-3 1.3-3 3s1.3 3 3 3 3-1.3 3-3V3h3c0 2.2 1.8 4 4 4v2z"/></svg>`,
+  Facebook: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>`,
+  Spotify: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><g transform="rotate(10 12 12)"><path d="M 4 10 C 8 6, 16 6, 20 10"/><path d="M 5.5 14 C 9 10.5, 15 10.5, 18.5 14"/><path d="M 7.5 18 C 10 15.5, 14 15.5, 16.5 18"/></g></svg>`,
+  SoundCloud: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.5 8.5v9h8a3.5 3.5 0 0 0 0-7 4.5 4.5 0 0 0-4.3-3.5c-.7 0-1.3.2-1.8.5-.6-.6-1.3-1-2.1-1z"/><path stroke="currentColor" stroke-width="1.4" stroke-linecap="round" d="M10 9v8.5M8 10v7.5M6 11.5v6M4 13v4.5M2 14.5v3"/></svg>`,
+};
+
+// ponytail: a mark with no SVG above renders a plain "↗" glyph instead of a
+// broken icon. Only matters if a future social kind is added without also
+// adding its mark here.
+const FALLBACK_MARK = "↗";
+
+function socialMark(label: string) {
+  // hasOwn, not `SOCIAL_MARKS[label]`: a label matching an inherited
+  // Object.prototype key (e.g. "constructor") would otherwise resolve
+  // through the prototype chain and feed a function into set:html.
+  return Object.hasOwn(SOCIAL_MARKS, label) ? SOCIAL_MARKS[label] : FALLBACK_MARK;
+}
+---
+
+<BaseLayout title={`${site.data.artistName} — Links`} description="Sölbo — follow, listen, and enter the site.">
+  <PlasmaBackdrop />
+
+  <div class="link-page">
+    <div class="film" aria-hidden="true"></div>
+
+    <div class="shell">
+      <header class="identity">
+        <img
+          class="identity__portrait"
+          src="/images/solbo-portrait.webp"
+          width="800"
+          height="1000"
+          alt={`Portrait of ${site.data.artistName}`}
+          fetchpriority="high"
+          decoding="async"
+        />
+
+        <h1>{site.data.artistName}</h1>
+        <p class="identity__location">{site.data.location}</p>
+
+        <nav class="social-row" aria-label={`${site.data.artistName} social profiles`}>
+          {
+            socialLinks.map((link) =>
+              link.data.enabled ? (
+                <a
+                  class="social-chip"
+                  href={link.data.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={link.data.label}
+                  set:html={socialMark(link.data.label)}
+                />
+              ) : (
+                <span
+                  class="social-chip social-chip--pending"
+                  role="img"
+                  aria-label={`${link.data.label} — link pending`}
+                  set:html={socialMark(link.data.label)}
+                />
+              ),
+            )
+          }
+        </nav>
+
+        {
+          viewSiteAction?.data.enabled && (
+            <a class="enter-card" href={viewSiteAction.data.href}>
+              <span>Enter cinematic site</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+          )
+        }
+      </header>
+
+      <section id="actions" class="section" aria-labelledby="access-heading">
+        <h2 id="access-heading">Music</h2>
+
+        <div class="action-stack">
+          {
+            [
+              { action: listenAction, detail: "Spotify / SoundCloud" },
+              { action: buyAction, detail: "Bandcamp" },
+            ].map(({ action, detail }) =>
+              action?.data.enabled ? (
+                <a class="action-card card" href={action.data.href}>
+                  <span class="action-card__label">{action.data.label}</span>
+                  <span class="action-card__detail">{detail}</span>
+                  <span class="action-card__arrow" aria-hidden="true">
+                    ↗
+                  </span>
+                </a>
+              ) : (
+                <div class="action-card action-card--pending card">
+                  <span class="action-card__label">{action?.data.label}</span>
+                  <span class="action-card__detail">{detail}</span>
+                  <span class="action-card__pending">Soon</span>
+                </div>
+              ),
+            )
+          }
+        </div>
+      </section>
+
+      <section class="editorial card" aria-hidden="true">
+        <img class="editorial__image" src="/images/Horizontal1.webp" alt="" loading="lazy" decoding="async" />
+        <div class="editorial__veil"></div>
+        <p class="editorial__statement">Tension between<br />darkness and warmth.</p>
+      </section>
+
+      {
+        release && (
+          <section id="release" class="section" aria-labelledby="release-heading">
+            <h2 id="release-heading">New release</h2>
+
+            <article class="release-card card">
+              {release.data.artwork && (
+                <img
+                  class="release-card__art"
+                  src={release.data.artwork}
+                  width="240"
+                  height="240"
+                  alt={`${release.data.title} artwork`}
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
+              <div class="release-card__copy">
+                <p class="release-card__type">
+                  {release.data.type} · {release.data.releaseDate.slice(0, 4)}
+                </p>
+                <h3>{release.data.title}</h3>
+              </div>
+            </article>
+          </section>
+        )
+      }
+
+      <section id="shows" class="section" aria-labelledby="shows-heading">
+        <h2 id="shows-heading">Find me live</h2>
+
+        {
+          nextShow ? (
+            <article class="show-card card">
+              <p class="show-card__day">{formatShowDate(nextShow.data.date)}</p>
+              <div class="show-card__copy">
+                <p class="show-card__city">
+                  {nextShow.data.venue} · {nextShow.data.city}
+                </p>
+                {nextShow.data.status === "sold-out" ? (
+                  <p class="show-card__note">Sold out.</p>
+                ) : nextShow.data.status === "free" ? (
+                  <p class="show-card__note">Free entry.</p>
+                ) : (
+                  nextShow.data.ticketUrl && (
+                    <a class="micro-link" href={nextShow.data.ticketUrl} target="_blank" rel="noopener noreferrer">
+                      Tickets <span aria-hidden="true">↗</span>
+                    </a>
+                  )
+                )}
+              </div>
+            </article>
+          ) : (
+            <article class="show-card card">
+              <p class="show-card__day">
+                New dates
+                <br />
+                incoming
+              </p>
+              <div class="show-card__copy">
+                <p class="show-card__city">{site.data.location} + beyond</p>
+                <p class="show-card__note">Join the signal to receive the next room, city, and time.</p>
+                <a class="micro-link" href={`mailto:${site.data.bookingEmail}?subject=Show%20updates`}>
+                  Get updates <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+            </article>
+          )
+        }
+      </section>
+
+      <footer class="footer">
+        {
+          bookingAction?.data.enabled && (
+            <a class="footer__mail" href={bookingAction.data.href}>
+              {site.data.bookingEmail} <span aria-hidden="true">↗</span>
+            </a>
+          )
+        }
+        {/* ponytail: computed once at build time on this prerendered route, same
+            tradeoff already documented and accepted in Footer.astro. */}
+        <p>© {new Date().getFullYear()} {site.data.artistName}</p>
+      </footer>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .link-page {
+    /* Palette derived from the Plasma backdrop, taken *after* its 3.04 rad hue
+       rotation rather than from the brief's pre-rotation swatches: the shader
+       renders copper, not cyan, so the four listed colours were run through the
+       same YIQ rotation to get the ones actually on screen.
+         #031C26 → #271102   #1B6CA8 → #964E02
+         #5AD2F4 → #FF9760   #EAF9FF → #FFF2E9
+       Foreground and background are then one system instead of near-complements. */
+    --link-ink: #fff2e9;
+    --link-dim: rgb(255 242 233 / 56%);
+    --link-faint: rgb(255 242 233 / 36%);
+    --link-accent: #ff9760;
+    --link-deep: #271102;
+    --link-card: rgb(30 14 4 / 58%);
+    --link-card-hi: rgb(58 27 7 / 72%);
+    --link-line: rgb(255 151 96 / 17%);
+    --link-line-hi: rgb(255 151 96 / 36%);
+    --link-radius: 18px;
+    --link-lift: 0 1px 2px rgb(0 0 0 / 34%), 0 14px 34px rgb(0 0 0 / 30%);
+    --link-lift-hover: 0 2px 4px rgb(0 0 0 / 38%), 0 20px 46px rgb(0 0 0 / 40%);
+    --link-gutter: clamp(1.5rem, 5vw, 2.25rem);
+    /* global.css's documented hook: override the token, inherit its
+       :focus-visible rule, rather than adding a competing one here. */
+    --focus-ring: var(--link-accent);
+
+    position: relative;
+    /* Above PlasmaBackdrop's fixed layer, which owns z-index 0. */
+    z-index: 1;
+    min-height: 100svh;
+    color: var(--link-ink);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  /* No `.link-page a { color: inherit }` here on purpose: global.css already
+     sets it, and repeating it locally raises the specificity to (0,1,1), which
+     beat `.enter-card`'s own colour and rendered that button's label in the
+     page ink on the page ink. */
+
+  /* Kept from the light design as the industrial signature, at roughly half
+     strength: the shader already carries its own grain (u_grain 0.35), and at
+     the old 0.07 the two stacked into visible mud. */
+  .film {
+    position: fixed;
+    z-index: 10;
+    inset: 0;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.9'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  /* The single narrow centred column. On desktop the plasma fills everything
+     outside it, which is what replaced the old 48rem layout's dead grey field. */
+  .shell {
+    width: min(100%, 38rem);
+    margin: 0 auto;
+    padding-inline: var(--link-gutter);
+    padding-bottom: 2.5rem;
+  }
+
+  .card {
+    border: 1px solid var(--link-line);
+    border-radius: var(--link-radius);
+    background: var(--link-card);
+    box-shadow: var(--link-lift);
+    /* Progressive: without backdrop-filter the flat rgba above still reads. */
+    backdrop-filter: blur(14px) saturate(1.15);
+  }
+
+  .identity {
+    display: grid;
+    justify-items: center;
+    gap: 0.5rem;
+    padding-top: clamp(1.5rem, calc(0.75rem + 3vw), 2.75rem);
+    padding-bottom: clamp(1.75rem, 5vw, 2.5rem);
+    text-align: center;
+  }
+
+  /* Full column width so the hero lines up with the cards below it, height
+     capped so the wordmark still clears the fold on a laptop. */
+  .identity__portrait {
+    width: 100%;
+    max-height: 56svh;
+    aspect-ratio: 4 / 5;
+    border-radius: var(--link-radius);
+    /* Grayscale keeps a warm studio photo inside the backdrop's system, and
+       matches the treatment already used on the editorial image below. */
+    filter: grayscale(1) contrast(1.08) brightness(0.82);
+    object-fit: cover;
+    /* The source is a studio shot on a pale seamless. Ending it on a hard edge
+       put a bright rectangle on the page; fading its foot into the backdrop
+       lets the wordmark read as part of the same picture. No border or shadow
+       for the same reason -- both would redraw the edge the mask removes. */
+    mask-image: linear-gradient(180deg, #000 0%, #000 66%, rgb(0 0 0 / 0%) 100%);
+  }
+
+  .identity h1 {
+    margin: -0.75rem 0 0;
+    font-size: clamp(2.6rem, 12vw, 4rem);
+    font-weight: 900;
+    letter-spacing: -0.09em;
+    line-height: 0.85;
+    text-transform: uppercase;
+  }
+
+  /* --link-dim (56%) is tuned for text inside a card, where the card's own
+     dark layer does half the work. This line and the copyright below are the
+     only small type sitting on the bare backdrop, so they carry more alpha to
+     clear 4.5:1 against the shader's brightest wisp. */
+  .identity__location {
+    margin: 0;
+    color: rgb(255 242 233 / 78%);
+  }
+
+  .identity__location,
+  .release-card__type,
+  .show-card__city,
+  .footer p {
+    margin: 0;
+    font-size: 0.61rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    line-height: 1.35;
+    text-transform: uppercase;
+  }
+
+  .link-page h1,
+  .link-page h2,
+  .link-page h3,
+  .link-page p {
+    margin-top: 0;
+  }
+
+  .link-page h2 {
+    max-width: 11ch;
+    margin-bottom: 1rem;
+    font-size: clamp(1.75rem, 7vw, 2.5rem);
+    font-weight: 900;
+    letter-spacing: -0.08em;
+    line-height: 0.86;
+    text-transform: uppercase;
+  }
+
+  .section {
+    padding-top: clamp(2.25rem, 7vw, 3rem);
+    scroll-margin-top: 1rem;
+  }
+
+  .social-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-top: 0.7rem;
+  }
+
+  /* Flat marks, no bubble: the chip background was carrying the brand colours
+     on the light ground and has nothing to do here. */
+  .social-chip {
+    display: grid;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 999px;
+    color: var(--link-ink);
+    place-items: center;
+    transition:
+      color 0.24s ease,
+      background-color 0.24s ease,
+      transform 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .social-chip:hover,
+  .social-chip:focus-visible {
+    background: rgb(90 210 244 / 14%);
+    color: var(--link-accent);
+    transform: translateY(-2px);
+  }
+
+  .social-chip :global(svg) {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+
+  .social-chip--pending {
+    color: var(--link-faint);
+  }
+
+  /* The one primary action on the page: this route exists to move social
+     traffic into the cinematic site, so it gets the only filled button. */
+  .enter-card {
+    display: flex;
+    width: 100%;
+    min-height: 3.25rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-top: 1.35rem;
+    border: 1px solid var(--link-ink);
+    border-radius: 999px;
+    background: var(--link-ink);
+    color: var(--link-deep);
+    font-size: 0.66rem;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+    line-height: 1;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition:
+      background-color 0.24s ease,
+      color 0.24s ease,
+      transform 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .enter-card:hover,
+  .enter-card:focus-visible {
+    background: var(--link-accent);
+    border-color: var(--link-accent);
+    transform: translateY(-2px);
+  }
+
+  .action-stack {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  /* Uniform row: label + detail left, affordance right, one height for every
+     card in the stack. The old design let desktop cards grow into tall boxes
+     with their content pinned to opposite corners. */
+  .action-card {
+    display: grid;
+    min-height: 5.25rem;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 1.1rem 1.25rem;
+    text-decoration: none;
+    transition:
+      transform 0.24s cubic-bezier(0.2, 0.8, 0.2, 1),
+      background-color 0.24s ease,
+      border-color 0.24s ease,
+      box-shadow 0.24s ease;
+  }
+
+  a.action-card:hover,
+  a.action-card:focus-visible {
+    border-color: var(--link-line-hi);
+    background: var(--link-card-hi);
+    box-shadow: var(--link-lift-hover);
+    transform: translateY(-2px);
+  }
+
+  .action-card--pending {
+    color: var(--link-dim);
+  }
+
+  .action-card__detail {
+    grid-column: 1;
+    margin-top: 0.3rem;
+    color: var(--link-dim);
+    font-size: 0.57rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .action-card__label {
+    font-size: 1.3rem;
+    font-weight: 900;
+    letter-spacing: -0.06em;
+    text-transform: uppercase;
+  }
+
+  .action-card__arrow {
+    grid-row: 1 / span 2;
+    grid-column: 2;
+    align-self: center;
+    color: var(--link-accent);
+    font-size: 1.3rem;
+  }
+
+  /* "Soon", not "Link pending": the state is real (no URL supplied yet) but
+     the old wording read as a broken page rather than an unreleased one. */
+  .action-card__pending {
+    grid-row: 1 / span 2;
+    grid-column: 2;
+    align-self: center;
+    border: 1px solid var(--link-line-hi);
+    border-radius: 999px;
+    padding: 0.32rem 0.6rem;
+    color: var(--link-faint);
+    font-size: 0.5rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .editorial {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    min-height: clamp(13rem, 42vw, 17rem);
+    margin-top: clamp(2.25rem, 7vw, 3rem);
+    overflow: hidden;
+    align-items: end;
+  }
+
+  .editorial__image {
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    filter: grayscale(1) contrast(1.15);
+    object-fit: cover;
+    transform: scale(1.03);
+  }
+
+  .editorial__veil {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background: linear-gradient(90deg, rgb(24 11 3 / 94%) 0%, rgb(24 11 3 / 58%) 55%, rgb(24 11 3 / 10%) 100%);
+  }
+
+  .editorial__statement {
+    max-width: 14ch;
+    margin: 0;
+    padding: clamp(1.2rem, 4vw, 2rem);
+    font-size: clamp(1.15rem, 3.6vw, 1.5rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1.02;
+  }
+
+  .release-card {
+    display: grid;
+    min-height: 11rem;
+    grid-template-columns: minmax(6.5rem, 34%) 1fr;
+    align-items: center;
+    gap: 1.1rem;
+    overflow: hidden;
+    padding: 0 1.25rem 0 0;
+  }
+
+  /* release.data.artwork is optional; when the <img> isn't rendered at all,
+     .release-card__copy is the grid's only item and would otherwise auto-
+     place into the narrow art column instead of spanning the row. */
+  .release-card__copy:only-child {
+    grid-column: 1 / -1;
+    padding-left: 1.25rem;
+  }
+
+  .release-card__art {
+    align-self: stretch;
+    width: 100%;
+    height: 100%;
+    min-height: 11rem;
+    filter: grayscale(0.35) contrast(1.05);
+    object-fit: cover;
+  }
+
+  .release-card__type {
+    color: var(--link-dim);
+  }
+
+  .link-page h3 {
+    margin: 0.45rem 0 0;
+    font-size: clamp(1.5rem, 6vw, 2.1rem);
+    font-weight: 900;
+    letter-spacing: -0.085em;
+    line-height: 0.85;
+    text-transform: uppercase;
+  }
+
+  .micro-link {
+    display: inline-flex;
+    gap: 0.45rem;
+    color: var(--link-accent);
+    font-size: 0.61rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .micro-link:hover,
+  .micro-link:focus-visible {
+    text-decoration: underline;
+    text-underline-offset: 0.35rem;
+  }
+
+  .show-card {
+    display: grid;
+    grid-template-columns: minmax(7.5rem, 34%) 1fr;
+    gap: 1.1rem;
+    padding: 1.25rem;
+  }
+
+  .show-card__day {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 900;
+    letter-spacing: -0.075em;
+    line-height: 0.85;
+    text-transform: uppercase;
+  }
+
+  .show-card__copy {
+    align-self: center;
+  }
+
+  .show-card__note {
+    margin: 0.5rem 0 0.9rem;
+    color: var(--link-dim);
+    font-size: 0.78rem;
+    line-height: 1.35;
+  }
+
+  .show-card .micro-link {
+    grid-column: 1 / -1;
+  }
+
+  .footer {
+    display: grid;
+    gap: 1rem;
+    margin-top: clamp(2.25rem, 7vw, 3rem);
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--link-line);
+  }
+
+  .footer__mail {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 0.71rem;
+    font-weight: 800;
+    letter-spacing: 0.11em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .footer__mail:hover,
+  .footer__mail:focus-visible {
+    color: var(--link-accent);
+  }
+
+  /* See .identity__location: on the bare backdrop, not on a card. */
+  .footer p {
+    color: rgb(255 242 233 / 64%);
+  }
+
+  @media (width >= 42rem) {
+    .identity__portrait {
+      max-width: 24rem;
+    }
+
+    .social-chip {
+      width: 3rem;
+      height: 3rem;
+    }
+
+    .social-chip :global(svg) {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+
+    .action-card {
+      min-height: 5.75rem;
+    }
+
+    .release-card {
+      min-height: 12.5rem;
+      grid-template-columns: 11rem 1fr;
+    }
+
+    .release-card__art {
+      min-height: 12.5rem;
+    }
+
+    .show-card {
+      grid-template-columns: 10rem 1fr;
+      align-items: center;
+      padding: 1.5rem;
+    }
+  }
+</style>

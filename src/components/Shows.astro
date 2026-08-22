@@ -1,0 +1,456 @@
+---
+/**
+ * Task 3.2 — Shows section, static markup and vanilla CSS only.
+ * The pinned scroll timeline, header clip-path wipe, photo-panel 3D tilt,
+ * per-row text-scramble on hover, and the idle flicker animation belong to
+ * Task 4.3. Everything here must be readable with JavaScript off, so rows
+ * render plain text and the photo panel has no motion.
+ *
+ * Legacy rendered the show list twice — once per breakpoint — purely to get
+ * a different grid-template-columns and desktop-only glass chrome. This port
+ * renders the list once and adapts both with a media query, so screen
+ * readers and view-source get one copy of the content instead of two.
+ */
+import { getShows } from "../lib/content";
+
+type ShowRow = {
+  date: string;
+  venue: string;
+  city: string;
+  status: "available" | "sold-out" | "free";
+  ticketUrl?: string;
+};
+
+const contentShows = await getShows();
+// ponytail: User-approved Vercel mock fallback. Task 5.2 replaces it with
+// real records; content records above always take precedence when they exist.
+const fallbackShows: ShowRow[] = [
+  { date: "2025-08-15", venue: "VELD", city: "Toronto", status: "available", ticketUrl: "https://example.com/tickets/1" },
+  { date: "2025-09-03", venue: "Stereo", city: "Montreal", status: "available", ticketUrl: "https://example.com/tickets/2" },
+  { date: "2025-10-11", venue: "New City Gas", city: "Montreal", status: "sold-out" },
+  { date: "2025-10-11", venue: "Newspeak", city: "Montreal", status: "sold-out" },
+  { date: "2025-11-22", venue: "Yoko Luna", city: "Montreal", status: "free" },
+];
+const shows: ShowRow[] = contentShows.length > 0
+  ? contentShows.map(({ data }) => ({
+      date: data.date,
+      venue: data.venue,
+      city: data.city,
+      status: data.status,
+      ticketUrl: data.ticketUrl,
+    }))
+  : fallbackShows;
+
+function formatShowDate(iso: string) {
+  return `${iso.slice(8, 10)} · ${iso.slice(5, 7)} · ${iso.slice(0, 4)}`;
+}
+function getDateParts(iso: string) {
+  const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+  return { day: iso.slice(8, 10), month: months[Number(iso.slice(5, 7)) - 1], year: iso.slice(0, 4) };
+}
+---
+
+<section class="shows" id="shows">
+  <div class="shows__seam" aria-hidden="true"></div>
+
+  <div class="shows__inner">
+    <div class="shows__grid">
+      <div class="shows__list-col">
+        <div class="shows__header">
+          <h2>Find me live.</h2>
+        </div>
+
+        <div class="shows__panel">
+          <div class="shows__board-meta">
+            <span>Tour signal</span>
+            <span>{String(shows.length).padStart(2, "0")} dates</span>
+          </div>
+
+          <ul class="shows__list" role="list">
+            {shows.map((show) => {
+              const date = getDateParts(show.date);
+              return (
+                <li class="shows__row">
+                  <time class="shows__date" datetime={show.date} aria-label={formatShowDate(show.date)}>
+                    <span class="shows__date-day shows__date-label">{date.day}</span>
+                    <span class="shows__date-month">{date.month}</span>
+                    <span class="shows__date-year">{date.year}</span>
+                  </time>
+                  <span class="shows__venue">{show.venue}</span>
+                  <span class="shows__city">{show.city}</span>
+                  <span class="shows__ticket-cell">
+                    {show.status === "sold-out" ? (
+                      <span class="shows__badge">Sold Out</span>
+                    ) : show.status === "free" ? (
+                      <span class="shows__badge">Free</span>
+                    ) : show.ticketUrl ? (
+                      <a
+                        class="shows__ticket"
+                        href={show.ticketUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Tickets <span aria-hidden="true">↗</span>
+                      </a>
+                    ) : null}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+
+          <p class="shows__board-foot" aria-hidden="true">KEEP MOVING / STAY CLOSE</p>
+        </div>
+      </div>
+
+      <div class="shows__photo-outer">
+        <div class="shows__photo-panel">
+          <img
+            class="shows__photo"
+            src="/images/Horizontal1.webp"
+            alt="Live performance"
+            width="1600"
+            height="1000"
+            loading="lazy"
+            decoding="async"
+          />
+          <div class="shows__vignette" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .shows {
+    --shows-text: #e8e0d4;
+    --shows-border: 232 224 212;
+
+    position: relative;
+    overflow-x: clip;
+  }
+
+  .shows__seam {
+    position: absolute;
+    z-index: var(--z-base);
+    inset: 0 0 auto;
+    height: 25vh;
+    background: linear-gradient(to bottom, var(--color-ink) 0%, transparent 100%);
+    pointer-events: none;
+  }
+
+  .shows__inner {
+    position: relative;
+    z-index: var(--z-content);
+    padding: var(--space-7) var(--page-gutter) var(--space-7)
+      calc(var(--page-gutter) + var(--safe-left));
+    padding-right: calc(var(--page-gutter) + var(--safe-right));
+  }
+
+  .shows__header {
+    margin: 0 0 var(--space-6);
+  }
+
+  .shows__header h2 {
+    margin: 0;
+    color: var(--shows-text);
+    font-size: clamp(1.5rem, 2vw, 2rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 0.85;
+  }
+
+  /* Signal Board: date-first cards with the legacy information density. */
+  .shows__panel {
+    position: relative;
+    overflow: hidden;
+    padding: 0.7rem;
+    border: 1px solid rgb(var(--shows-border) / 18%);
+    border-radius: 0.7rem;
+    background:
+      radial-gradient(circle at 100% 0%, rgb(222 250 103 / 10%), transparent 29rem),
+      linear-gradient(135deg, rgb(255 255 255 / 7%), rgb(255 255 255 / 1%) 48%, rgb(0 0 0 / 20%));
+    box-shadow: 0 32px 80px -36px rgb(0 0 0 / 90%), inset 0 1px 0 rgb(255 255 255 / 10%);
+    isolation: isolate;
+  }
+
+  .shows__panel::before {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background-image:
+      linear-gradient(rgb(232 224 212 / 5%) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(232 224 212 / 5%) 1px, transparent 1px);
+    background-size: 1.75rem 1.75rem;
+    content: "";
+    mask-image: linear-gradient(to bottom, black, transparent 82%);
+    pointer-events: none;
+  }
+
+  .shows__board-meta,
+  .shows__board-foot {
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+    color: var(--shows-text);
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    letter-spacing: 0.22em;
+    opacity: 0.45;
+    text-transform: uppercase;
+  }
+
+  .shows__board-meta {
+    padding: 0.45rem 0.55rem 0.8rem;
+  }
+
+  .shows__board-foot {
+    padding: 0.85rem 0.55rem 0.2rem;
+    font-size: 0.5rem;
+    opacity: 0.26;
+  }
+
+  .shows__list {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .shows__row {
+    position: relative;
+    grid-template-columns: 4.75rem minmax(0, 1fr) auto;
+    grid-template-areas:
+      "date venue action"
+      "date city action";
+    gap: 0 0.75rem;
+    min-height: 5.4rem;
+    padding: 0.7rem 0.75rem;
+    border: 1px solid rgb(var(--shows-border) / 9%);
+    border-radius: 0.35rem;
+    background: linear-gradient(100deg, rgb(255 255 255 / 5%), rgb(255 255 255 / 1%));
+    transition:
+      border-color var(--duration-base) var(--ease-in-out),
+      background-color var(--duration-base) var(--ease-in-out),
+      transform var(--duration-base) var(--ease-in-out);
+  }
+
+  .shows__row::before {
+    position: absolute;
+    inset: 0.45rem auto 0.45rem 0;
+    width: 2px;
+    background: rgb(222 250 103 / 65%);
+    content: "";
+    opacity: 0;
+    transform: scaleY(0.25);
+    transition:
+      opacity var(--duration-base) var(--ease-in-out),
+      transform var(--duration-base) var(--ease-in-out);
+  }
+
+  .shows__row:hover,
+  .shows__row:focus-within {
+    border-color: rgb(222 250 103 / 35%);
+    background: linear-gradient(100deg, rgb(222 250 103 / 11%), rgb(255 255 255 / 4%));
+    transform: translateX(0.2rem);
+  }
+
+  .shows__row:hover::before,
+  .shows__row:focus-within::before {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+
+  .shows__date {
+    display: grid;
+    grid-area: date;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1fr auto;
+    column-gap: 0.3rem;
+    align-items: end;
+    align-self: stretch;
+    color: var(--shows-text);
+    font-family: var(--font-mono);
+    line-height: 0.9;
+    opacity: 0.95;
+  }
+
+  .shows__date-day {
+    grid-row: span 2;
+    font-size: clamp(2rem, 7vw, 3.1rem);
+    font-weight: 600;
+    letter-spacing: -0.1em;
+  }
+
+  .shows__date-month,
+  .shows__date-year {
+    align-self: end;
+    font-size: 0.55rem;
+    letter-spacing: 0.12em;
+    opacity: 0.6;
+  }
+
+  .shows__date-year {
+    align-self: start;
+  }
+
+  .shows__venue {
+    grid-area: venue;
+    align-self: end;
+    color: var(--shows-text);
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 3.5vw, 1.3rem);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+    opacity: 0.95;
+  }
+
+  .shows__city {
+    display: block;
+    grid-area: city;
+    align-self: start;
+    color: var(--shows-text);
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    letter-spacing: 0.16em;
+    line-height: 1.2;
+    opacity: 0.48;
+    text-transform: uppercase;
+  }
+
+  .shows__ticket-cell {
+    grid-area: action;
+    align-self: center;
+  }
+
+  .shows__badge,
+  .shows__ticket {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: 1.85rem;
+    padding: 0.25rem 0.45rem;
+    border-color: rgb(var(--shows-border) / 24%);
+    font-size: 0.5rem;
+    letter-spacing: 0.16em;
+  }
+
+  .shows__ticket {
+    border-color: rgb(222 250 103 / 46%);
+    color: #defa67;
+    opacity: 0.9;
+  }
+
+  .shows__ticket:hover,
+  .shows__ticket:focus-visible {
+    background: rgb(222 250 103 / 14%);
+  }
+
+  .shows__photo-outer {
+    display: none;
+  }
+
+  .shows__photo-panel {
+    position: relative;
+    overflow: hidden;
+    height: 70vh;
+    border: 1px solid rgb(255 255 255 / 3%);
+    border-radius: 3px;
+  }
+
+  .shows__photo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .shows__vignette {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        to bottom,
+        rgb(0 0 0 / 60%) 0%,
+        transparent 20%,
+        transparent 60%,
+        rgb(0 0 0 / 95%) 100%
+      ),
+      radial-gradient(circle at center, transparent 30%, rgb(0 0 0 / 50%) 120%);
+  }
+
+  @media (width >= 768px) {
+    .shows {
+      overflow-x: visible;
+    }
+
+    .shows__seam {
+      display: none;
+    }
+
+    .shows__inner {
+      padding-top: var(--space-8);
+      padding-bottom: calc(var(--space-8) * 3);
+    }
+
+    .shows__grid {
+      display: grid;
+      grid-template-columns: 50% 50%;
+    }
+
+    .shows__list-col {
+      display: flex;
+      min-height: 70vh;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .shows__panel {
+      padding: 0.9rem;
+      border-color: rgb(var(--shows-border) / 20%);
+      background:
+        radial-gradient(circle at 100% 0%, rgb(222 250 103 / 12%), transparent 30rem),
+        linear-gradient(135deg, rgb(255 255 255 / 7%), rgb(255 255 255 / 1%) 48%, rgb(0 0 0 / 20%));
+      backdrop-filter: blur(28px);
+    }
+
+    .shows__row {
+      grid-template-columns: 5.8rem minmax(0, 1fr) minmax(5rem, 0.42fr) auto;
+      grid-template-areas: "date venue city action";
+      min-height: 5.85rem;
+      padding: 0.8rem 1rem;
+    }
+
+    .shows__date {
+      align-items: center;
+    }
+
+    .shows__venue,
+    .shows__city {
+      align-self: center;
+    }
+
+    .shows__venue {
+      font-size: clamp(1.2rem, 1.9vw, 1.7rem);
+    }
+
+    .shows__city {
+      justify-self: start;
+      font-size: 0.58rem;
+    }
+
+    .shows__photo-outer {
+      display: block;
+      position: sticky;
+      top: 9rem;
+      align-self: start;
+      height: 70vh;
+      margin-left: var(--space-6);
+    }
+
+    .shows__photo-panel {
+      box-shadow:
+        0 30px 100px rgb(0 0 0 / 90%),
+        0 4px 24px rgb(0 0 0 / 60%);
+    }
+  }
+</style>

@@ -1,0 +1,3289 @@
+{
+  "capturedAt": "2026-08-01T21:34:48.558Z",
+  "browser": "Edg/150.0.4078.105",
+  "throttleProfile": {
+    "offline": false,
+    "latency": 150,
+    "downloadThroughput": 209715,
+    "uploadThroughput": 96000
+  },
+  "results": [
+    {
+      "run": {
+        "mode": "seq-jpeg",
+        "fail": false,
+        "throttle": true,
+        "warm": false
+      },
+      "cdp": {
+        "mediaRequests": 194,
+        "mediaEncodedBytes": 19691983,
+        "servedFromCache": 0,
+        "cachedEncodedBytes": 0,
+        "stillStreamingAtEnd": 0,
+        "statusCounts": {
+          "200": 194
+        }
+      },
+      "perf": {
+        "jsHeapUsedBytes": 651980,
+        "documents": 1,
+        "nodes": 32,
+        "taskDurationS": 1.052905
+      },
+      "processMemory": {
+        "totalWorkingSetBytes": 990584832,
+        "byType": {
+          "browser": 154890240,
+          "renderer": 716128256,
+          "GPU": 33275904,
+          "network.mojom.NetworkService": 41369600,
+          "storage.mojom.StorageService": 19251200,
+          "edge_search_indexer.mojom.SearchIndexerInterfaceBroker": 25669632
+        },
+        "processCount": 8
+      },
+      "page": {
+        "mode": "seq-jpeg",
+        "fail": false,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0",
+        "firstInteractiveMs": 1284.300000011921,
+        "fullReadyMs": 95577.71000000834,
+        "unlockedMs": 1284.425000011921,
+        "unlockReason": "first-frame",
+        "posterShownMs": 950.9500000178814,
+        "errors": [],
+        "notes": [],
+        "scrubAtFirstInteractive": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.005000025033950806,
+            "p95Ms": 0.030000001192092896,
+            "maxMs": 0.8100000023841858
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 0.016666666666666666
+        },
+        "readyFramesAtFirstScrub": 1,
+        "statsAtFirstInteractive": {
+          "requests": 2,
+          "transferBytes": 156626,
+          "encodedBodyBytes": 156026,
+          "servedFromCache": 0
+        },
+        "spineReadyMs": 13267.600000023842,
+        "readyFramesAtSpine": 25,
+        "statsAtSpineReady": {
+          "requests": 26,
+          "transferBytes": 2610061,
+          "encodedBodyBytes": 2602261,
+          "servedFromCache": 0
+        },
+        "scrubAtSpineReady": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.005000025033950806,
+            "p95Ms": 0.015000015497207642,
+            "maxMs": 0.05500000715255737
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 0.13333333333333333
+        },
+        "readyFrames": 193,
+        "scrubAtFullReady": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.005000025033950806,
+            "p95Ms": 0.02000001072883606,
+            "maxMs": 0.06000000238418579
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 1
+        },
+        "decodeMsPerFrame": {
+          "n": 193,
+          "medianMs": 12.109999984502792,
+          "p95Ms": 21.41499999165535,
+          "maxMs": 34.71500000357628
+        },
+        "decodedPixelBytes": 1601486208,
+        "statsTotal": {
+          "requests": 194,
+          "transferBytes": 19674840,
+          "encodedBodyBytes": 19616640,
+          "servedFromCache": 0
+        },
+        "memory": {
+          "jsHeapUsedBytes": 779562,
+          "uaSpecific": {
+            "breakdown": [
+              {
+                "attribution": [
+                  {
+                    "scope": "Window",
+                    "url": "http://127.0.0.1:3113/tasks/astro-migration/references/task-1.3/harness.html?mode=seq-jpeg"
+                  }
+                ],
+                "bytes": 306487,
+                "types": [
+                  "JavaScript"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 269582,
+                "types": [
+                  "Shared"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 32400,
+                "types": [
+                  "DOM"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 0,
+                "types": []
+              }
+            ],
+            "bytes": 608469
+          }
+        },
+        "locked": false,
+        "scrollMoved": true,
+        "scrollY": 600,
+        "totalMs": 112526.67499998212
+      }
+    },
+    {
+      "run": {
+        "mode": "seq-jpeg",
+        "fail": false,
+        "throttle": false,
+        "warm": false
+      },
+      "cdp": {
+        "mediaRequests": 194,
+        "mediaEncodedBytes": 19691983,
+        "servedFromCache": 0,
+        "cachedEncodedBytes": 0,
+        "stillStreamingAtEnd": 0,
+        "statusCounts": {
+          "200": 194
+        }
+      },
+      "perf": {
+        "jsHeapUsedBytes": 682420,
+        "documents": 1,
+        "nodes": 225,
+        "taskDurationS": 0.18226
+      },
+      "processMemory": {
+        "totalWorkingSetBytes": 984031232,
+        "byType": {
+          "browser": 157765632,
+          "renderer": 704073728,
+          "GPU": 35356672,
+          "network.mojom.NetworkService": 41746432,
+          "storage.mojom.StorageService": 19386368,
+          "edge_search_indexer.mojom.SearchIndexerInterfaceBroker": 25702400
+        },
+        "processCount": 8
+      },
+      "page": {
+        "mode": "seq-jpeg",
+        "fail": false,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0",
+        "firstInteractiveMs": 143.75499999523163,
+        "fullReadyMs": 1516.2300000190735,
+        "unlockedMs": 143.89500001072884,
+        "unlockReason": "first-frame",
+        "posterShownMs": 126.26000002026558,
+        "errors": [],
+        "notes": [],
+        "scrubAtFirstInteractive": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.009999990463256836,
+            "p95Ms": 0.030000001192092896,
+            "maxMs": 0.9750000238418579
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 0.016666666666666666
+        },
+        "readyFramesAtFirstScrub": 1,
+        "statsAtFirstInteractive": {
+          "requests": 2,
+          "transferBytes": 156626,
+          "encodedBodyBytes": 156026,
+          "servedFromCache": 0
+        },
+        "spineReadyMs": 455.455000013113,
+        "readyFramesAtSpine": 25,
+        "statsAtSpineReady": {
+          "requests": 26,
+          "transferBytes": 2610061,
+          "encodedBodyBytes": 2602261,
+          "servedFromCache": 0
+        },
+        "scrubAtSpineReady": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.004999995231628418,
+            "p95Ms": 0.015000015497207642,
+            "maxMs": 0.04999998211860657
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 0.13333333333333333
+        },
+        "readyFrames": 193,
+        "scrubAtFullReady": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.005000025033950806,
+            "p95Ms": 0.015000015497207642,
+            "maxMs": 0.06499999761581421
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 1
+        },
+        "decodeMsPerFrame": {
+          "n": 193,
+          "medianMs": 325.19999998807907,
+          "p95Ms": 369.5949999988079,
+          "maxMs": 397.40000000596046
+        },
+        "decodedPixelBytes": 1601486208,
+        "statsTotal": {
+          "requests": 194,
+          "transferBytes": 19674840,
+          "encodedBodyBytes": 19616640,
+          "servedFromCache": 0
+        },
+        "memory": {
+          "jsHeapUsedBytes": 1039067,
+          "uaSpecific": {
+            "breakdown": [
+              {
+                "attribution": [],
+                "bytes": 276757,
+                "types": [
+                  "Shared"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 74088,
+                "types": [
+                  "DOM"
+                ]
+              },
+              {
+                "attribution": [
+                  {
+                    "scope": "Window",
+                    "url": "http://127.0.0.1:3113/tasks/astro-migration/references/task-1.3/harness.html?mode=seq-jpeg"
+                  }
+                ],
+                "bytes": 329932,
+                "types": [
+                  "JavaScript"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 0,
+                "types": []
+              }
+            ],
+            "bytes": 680777
+          }
+        },
+        "locked": false,
+        "scrollMoved": true,
+        "scrollY": 600,
+        "totalMs": 1785.7099999785423
+      }
+    },
+    {
+      "run": {
+        "mode": "seq-jpeg",
+        "fail": false,
+        "throttle": false,
+        "warm": true
+      },
+      "cdp": {
+        "mediaRequests": 194,
+        "mediaEncodedBytes": 0,
+        "servedFromCache": 194,
+        "cachedEncodedBytes": 0,
+        "stillStreamingAtEnd": 0,
+        "statusCounts": {
+          "200": 194
+        }
+      },
+      "perf": {
+        "jsHeapUsedBytes": 682508,
+        "documents": 1,
+        "nodes": 225,
+        "taskDurationS": 0.168791
+      },
+      "processMemory": {
+        "totalWorkingSetBytes": 1611714560,
+        "byType": {
+          "browser": 159436800,
+          "renderer": 1327947776,
+          "GPU": 36773888,
+          "network.mojom.NetworkService": 42418176,
+          "storage.mojom.StorageService": 19410944,
+          "edge_search_indexer.mojom.SearchIndexerInterfaceBroker": 25726976
+        },
+        "processCount": 9
+      },
+      "page": {
+        "mode": "seq-jpeg",
+        "fail": false,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0",
+        "firstInteractiveMs": 61.84000000357628,
+        "fullReadyMs": 1021.4699999988079,
+        "unlockedMs": 61.98499998450279,
+        "unlockReason": "first-frame",
+        "posterShownMs": 48.645000010728836,
+        "errors": [],
+        "notes": [],
+        "scrubAtFirstInteractive": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.005000025033950806,
+            "p95Ms": 0.030000001192092896,
+            "maxMs": 0.9150000214576721
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 0.016666666666666666
+        },
+        "readyFramesAtFirstScrub": 1,
+        "statsAtFirstInteractive": {
+          "requests": 2,
+          "transferBytes": 0,
+          "encodedBodyBytes": 156026,
+          "servedFromCache": 2
+        },
+        "spineReadyMs": 369.53999999165535,
+        "readyFramesAtSpine": 25,
+        "statsAtSpineReady": {
+          "requests": 26,
+          "transferBytes": 0,
+          "encodedBodyBytes": 2602261,
+          "servedFromCache": 26
+        },
+        "scrubAtSpineReady": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.004999995231628418,
+            "p95Ms": 0.015000015497207642,
+            "maxMs": 0.04499998688697815
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 0.13333333333333333
+        },
+        "readyFrames": 193,
+        "scrubAtFullReady": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.005000025033950806,
+            "p95Ms": 0.019999980926513672,
+            "maxMs": 0.07000002264976501
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 1
+        },
+        "decodeMsPerFrame": {
+          "n": 193,
+          "medianMs": 327.75,
+          "p95Ms": 347.3900000154972,
+          "maxMs": 351.6599999964237
+        },
+        "decodedPixelBytes": 1601486208,
+        "statsTotal": {
+          "requests": 194,
+          "transferBytes": 0,
+          "encodedBodyBytes": 19616640,
+          "servedFromCache": 194
+        },
+        "memory": {
+          "jsHeapUsedBytes": 1036803,
+          "uaSpecific": {
+            "breakdown": [
+              {
+                "attribution": [],
+                "bytes": 0,
+                "types": []
+              },
+              {
+                "attribution": [],
+                "bytes": 74088,
+                "types": [
+                  "DOM"
+                ]
+              },
+              {
+                "attribution": [
+                  {
+                    "scope": "Window",
+                    "url": "http://127.0.0.1:3113/tasks/astro-migration/references/task-1.3/harness.html?mode=seq-jpeg"
+                  }
+                ],
+                "bytes": 328513,
+                "types": [
+                  "JavaScript"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 278176,
+                "types": [
+                  "Shared"
+                ]
+              }
+            ],
+            "bytes": 680777
+          }
+        },
+        "locked": false,
+        "scrollMoved": true,
+        "scrollY": 600,
+        "totalMs": 1554.5
+      }
+    },
+    {
+      "run": {
+        "mode": "seq-webp",
+        "fail": false,
+        "throttle": true,
+        "warm": false
+      },
+      "cdp": {
+        "mediaRequests": 194,
+        "mediaEncodedBytes": 6820676,
+        "servedFromCache": 0,
+        "cachedEncodedBytes": 0,
+        "stillStreamingAtEnd": 0,
+        "statusCounts": {
+          "200": 194
+        }
+      },
+      "perf": {
+        "jsHeapUsedBytes": 655484,
+        "documents": 1,
+        "nodes": 32,
+        "taskDurationS": 0.495635
+      },
+      "processMemory": {
+        "totalWorkingSetBytes": 986836992,
+        "byType": {
+          "browser": 156635136,
+          "renderer": 708898816,
+          "GPU": 33824768,
+          "network.mojom.NetworkService": 42336256,
+          "storage.mojom.StorageService": 19394560,
+          "edge_search_indexer.mojom.SearchIndexerInterfaceBroker": 25747456
+        },
+        "processCount": 8
+      },
+      "page": {
+        "mode": "seq-webp",
+        "fail": false,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0",
+        "firstInteractiveMs": 728.0600000023842,
+        "fullReadyMs": 34346.57999998331,
+        "unlockedMs": 728.1799999773502,
+        "unlockReason": "first-frame",
+        "posterShownMs": 794.6349999904633,
+        "errors": [],
+        "notes": [],
+        "scrubAtFirstInteractive": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.004999995231628418,
+            "p95Ms": 0.025000005960464478,
+            "maxMs": 0.7450000047683716
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 0.016666666666666666
+        },
+        "readyFramesAtFirstScrub": 1,
+        "statsAtFirstInteractive": {
+          "requests": 1,
+          "transferBytes": 32666,
+          "encodedBodyBytes": 32366,
+          "servedFromCache": 0
+        },
+        "spineReadyMs": 5239.859999984503,
+        "readyFramesAtSpine": 25,
+        "statsAtSpineReady": {
+          "requests": 26,
+          "transferBytes": 928822,
+          "encodedBodyBytes": 921022,
+          "servedFromCache": 0
+        },
+        "scrubAtSpineReady": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.004999995231628418,
+            "p95Ms": 0.015000015497207642,
+            "maxMs": 0.04499998688697815
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 0.13333333333333333
+        },
+        "readyFrames": 193,
+        "scrubAtFullReady": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.009999990463256836,
+            "p95Ms": 0.02000001072883606,
+            "maxMs": 0.05500000715255737
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 1
+        },
+        "decodeMsPerFrame": {
+          "n": 193,
+          "medianMs": 17.865000009536743,
+          "p95Ms": 38.58500000834465,
+          "maxMs": 90.18000000715256
+        },
+        "decodedPixelBytes": 1601486208,
+        "statsTotal": {
+          "requests": 194,
+          "transferBytes": 6803648,
+          "encodedBodyBytes": 6745448,
+          "servedFromCache": 0
+        },
+        "memory": {
+          "jsHeapUsedBytes": 1057573,
+          "uaSpecific": {
+            "breakdown": [
+              {
+                "attribution": [],
+                "bytes": 277273,
+                "types": [
+                  "Shared"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 54888,
+                "types": [
+                  "DOM"
+                ]
+              },
+              {
+                "attribution": [
+                  {
+                    "scope": "Window",
+                    "url": "http://127.0.0.1:3113/tasks/astro-migration/references/task-1.3/harness.html?mode=seq-webp"
+                  }
+                ],
+                "bytes": 302394,
+                "types": [
+                  "JavaScript"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 0,
+                "types": []
+              }
+            ],
+            "bytes": 634555
+          }
+        },
+        "locked": false,
+        "scrollMoved": true,
+        "scrollY": 600,
+        "totalMs": 34772.96999999881
+      }
+    },
+    {
+      "run": {
+        "mode": "seq-webp",
+        "fail": false,
+        "throttle": false,
+        "warm": false
+      },
+      "cdp": {
+        "mediaRequests": 194,
+        "mediaEncodedBytes": 6820676,
+        "servedFromCache": 0,
+        "cachedEncodedBytes": 0,
+        "stillStreamingAtEnd": 0,
+        "statusCounts": {
+          "200": 194
+        }
+      },
+      "perf": {
+        "jsHeapUsedBytes": 652292,
+        "documents": 1,
+        "nodes": 32,
+        "taskDurationS": 0.221877
+      },
+      "processMemory": {
+        "totalWorkingSetBytes": 977788928,
+        "byType": {
+          "browser": 157114368,
+          "renderer": 699740160,
+          "GPU": 33083392,
+          "network.mojom.NetworkService": 42708992,
+          "storage.mojom.StorageService": 19394560,
+          "edge_search_indexer.mojom.SearchIndexerInterfaceBroker": 25747456
+        },
+        "processCount": 8
+      },
+      "page": {
+        "mode": "seq-webp",
+        "fail": false,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0",
+        "firstInteractiveMs": 143.09000000357628,
+        "fullReadyMs": 1978.875,
+        "unlockedMs": 143.2199999988079,
+        "unlockReason": "first-frame",
+        "posterShownMs": 124.69999998807907,
+        "errors": [],
+        "notes": [],
+        "scrubAtFirstInteractive": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.004999995231628418,
+            "p95Ms": 0.025000005960464478,
+            "maxMs": 0.9399999976158142
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 0.016666666666666666
+        },
+        "readyFramesAtFirstScrub": 1,
+        "statsAtFirstInteractive": {
+          "requests": 2,
+          "transferBytes": 80874,
+          "encodedBodyBytes": 80274,
+          "servedFromCache": 0
+        },
+        "spineReadyMs": 599.0149999856949,
+        "readyFramesAtSpine": 25,
+        "statsAtSpineReady": {
+          "requests": 26,
+          "transferBytes": 928822,
+          "encodedBodyBytes": 921022,
+          "servedFromCache": 0
+        },
+        "scrubAtSpineReady": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.004999995231628418,
+            "p95Ms": 0.02000001072883606,
+            "maxMs": 0.054999977350234985
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 0.13333333333333333
+        },
+        "readyFrames": 193,
+        "scrubAtFullReady": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.004999995231628418,
+            "p95Ms": 0.010000020265579224,
+            "maxMs": 0.050000011920928955
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 1
+        },
+        "decodeMsPerFrame": {
+          "n": 193,
+          "medianMs": 508.5949999988079,
+          "p95Ms": 530.5399999916553,
+          "maxMs": 572.0649999976158
+        },
+        "decodedPixelBytes": 1601486208,
+        "statsTotal": {
+          "requests": 194,
+          "transferBytes": 6803648,
+          "encodedBodyBytes": 6745448,
+          "servedFromCache": 0
+        },
+        "memory": {
+          "jsHeapUsedBytes": 797791,
+          "uaSpecific": {
+            "breakdown": [
+              {
+                "attribution": [
+                  {
+                    "scope": "Window",
+                    "url": "http://127.0.0.1:3113/tasks/astro-migration/references/task-1.3/harness.html?mode=seq-webp"
+                  }
+                ],
+                "bytes": 394956,
+                "types": [
+                  "JavaScript"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 182023,
+                "types": [
+                  "Shared"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 0,
+                "types": []
+              },
+              {
+                "attribution": [],
+                "bytes": 32400,
+                "types": [
+                  "DOM"
+                ]
+              }
+            ],
+            "bytes": 609379
+          }
+        },
+        "locked": false,
+        "scrollMoved": true,
+        "scrollY": 600,
+        "totalMs": 18116.840000003576
+      }
+    },
+    {
+      "run": {
+        "mode": "seq-webp",
+        "fail": false,
+        "throttle": false,
+        "warm": true
+      },
+      "cdp": {
+        "mediaRequests": 194,
+        "mediaEncodedBytes": 0,
+        "servedFromCache": 194,
+        "cachedEncodedBytes": 0,
+        "stillStreamingAtEnd": 0,
+        "statusCounts": {
+          "200": 194
+        }
+      },
+      "perf": {
+        "jsHeapUsedBytes": 652172,
+        "documents": 1,
+        "nodes": 32,
+        "taskDurationS": 0.187571
+      },
+      "processMemory": {
+        "totalWorkingSetBytes": 1583210496,
+        "byType": {
+          "browser": 157724672,
+          "renderer": 1302908928,
+          "GPU": 34643968,
+          "network.mojom.NetworkService": 42795008,
+          "storage.mojom.StorageService": 19415040,
+          "edge_search_indexer.mojom.SearchIndexerInterfaceBroker": 25722880
+        },
+        "processCount": 9
+      },
+      "page": {
+        "mode": "seq-webp",
+        "fail": false,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0",
+        "firstInteractiveMs": 130.03999999165535,
+        "fullReadyMs": 1656.5550000071526,
+        "unlockedMs": 130.19499999284744,
+        "unlockReason": "first-frame",
+        "posterShownMs": 73.89499998092651,
+        "errors": [],
+        "notes": [],
+        "scrubAtFirstInteractive": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.004999995231628418,
+            "p95Ms": 0.04999998211860657,
+            "maxMs": 0.9750000238418579
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 0.016666666666666666
+        },
+        "readyFramesAtFirstScrub": 1,
+        "statsAtFirstInteractive": {
+          "requests": 2,
+          "transferBytes": 0,
+          "encodedBodyBytes": 80274,
+          "servedFromCache": 2
+        },
+        "spineReadyMs": 572.3050000071526,
+        "readyFramesAtSpine": 25,
+        "statsAtSpineReady": {
+          "requests": 26,
+          "transferBytes": 0,
+          "encodedBodyBytes": 921022,
+          "servedFromCache": 26
+        },
+        "scrubAtSpineReady": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.005000025033950806,
+            "p95Ms": 0.015000015497207642,
+            "maxMs": 0.05500000715255737
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 0.13333333333333333
+        },
+        "readyFrames": 193,
+        "scrubAtFullReady": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.004999995231628418,
+            "p95Ms": 0.015000015497207642,
+            "maxMs": 0.05500000715255737
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 1
+        },
+        "decodeMsPerFrame": {
+          "n": 193,
+          "medianMs": 502.47499999403954,
+          "p95Ms": 525.0650000274181,
+          "maxMs": 528.4050000011921
+        },
+        "decodedPixelBytes": 1601486208,
+        "statsTotal": {
+          "requests": 194,
+          "transferBytes": 0,
+          "encodedBodyBytes": 6745448,
+          "servedFromCache": 194
+        },
+        "memory": {
+          "jsHeapUsedBytes": 783687,
+          "uaSpecific": {
+            "breakdown": [
+              {
+                "attribution": [],
+                "bytes": 32400,
+                "types": [
+                  "DOM"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 193365,
+                "types": [
+                  "Shared"
+                ]
+              },
+              {
+                "attribution": [
+                  {
+                    "scope": "Window",
+                    "url": "http://127.0.0.1:3113/tasks/astro-migration/references/task-1.3/harness.html?mode=seq-webp"
+                  }
+                ],
+                "bytes": 383614,
+                "types": [
+                  "JavaScript"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 0,
+                "types": []
+              }
+            ],
+            "bytes": 609379
+          }
+        },
+        "locked": false,
+        "scrollMoved": true,
+        "scrollY": 600,
+        "totalMs": 14855.064999997616
+      }
+    },
+    {
+      "run": {
+        "mode": "seq-avif",
+        "fail": false,
+        "throttle": true,
+        "warm": false
+      },
+      "cdp": {
+        "mediaRequests": 194,
+        "mediaEncodedBytes": 3017672,
+        "servedFromCache": 0,
+        "cachedEncodedBytes": 0,
+        "stillStreamingAtEnd": 0,
+        "statusCounts": {
+          "200": 194
+        }
+      },
+      "perf": {
+        "jsHeapUsedBytes": 655364,
+        "documents": 1,
+        "nodes": 32,
+        "taskDurationS": 0.377402
+      },
+      "processMemory": {
+        "totalWorkingSetBytes": 981245952,
+        "byType": {
+          "browser": 157274112,
+          "renderer": 703254528,
+          "GPU": 33767424,
+          "network.mojom.NetworkService": 41811968,
+          "storage.mojom.StorageService": 19398656,
+          "edge_search_indexer.mojom.SearchIndexerInterfaceBroker": 25739264
+        },
+        "processCount": 8
+      },
+      "page": {
+        "mode": "seq-avif",
+        "fail": false,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0",
+        "firstInteractiveMs": 593.0649999976158,
+        "fullReadyMs": 20969.79999998212,
+        "unlockedMs": 593.1949999928474,
+        "unlockReason": "first-frame",
+        "posterShownMs": 814.9050000011921,
+        "errors": [],
+        "notes": [],
+        "scrubAtFirstInteractive": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.004999995231628418,
+            "p95Ms": 0.02499997615814209,
+            "maxMs": 0.8149999976158142
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 0.016666666666666666
+        },
+        "readyFramesAtFirstScrub": 1,
+        "statsAtFirstInteractive": {
+          "requests": 1,
+          "transferBytes": 14512,
+          "encodedBodyBytes": 14212,
+          "servedFromCache": 0
+        },
+        "spineReadyMs": 2859.1449999809265,
+        "readyFramesAtSpine": 25,
+        "statsAtSpineReady": {
+          "requests": 26,
+          "transferBytes": 433181,
+          "encodedBodyBytes": 425381,
+          "servedFromCache": 0
+        },
+        "scrubAtSpineReady": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.009999990463256836,
+            "p95Ms": 0.04499998688697815,
+            "maxMs": 0.20000001788139343
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 0.13333333333333333
+        },
+        "readyFrames": 193,
+        "scrubAtFullReady": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.009999990463256836,
+            "p95Ms": 0.02000001072883606,
+            "maxMs": 0.04499998688697815
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 1
+        },
+        "decodeMsPerFrame": {
+          "n": 193,
+          "medianMs": 78.28999999165535,
+          "p95Ms": 314.455000013113,
+          "maxMs": 561.0999999940395
+        },
+        "decodedPixelBytes": 1601486208,
+        "statsTotal": {
+          "requests": 194,
+          "transferBytes": 3000651,
+          "encodedBodyBytes": 2942451,
+          "servedFromCache": 0
+        },
+        "memory": {
+          "jsHeapUsedBytes": 1053937,
+          "uaSpecific": {
+            "breakdown": [
+              {
+                "attribution": [
+                  {
+                    "scope": "Window",
+                    "url": "http://127.0.0.1:3113/tasks/astro-migration/references/task-1.3/harness.html?mode=seq-avif"
+                  }
+                ],
+                "bytes": 396900,
+                "types": [
+                  "JavaScript"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 54888,
+                "types": [
+                  "DOM"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 183435,
+                "types": [
+                  "Shared"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 0,
+                "types": []
+              }
+            ],
+            "bytes": 635223
+          }
+        },
+        "locked": false,
+        "scrollMoved": true,
+        "scrollY": 600,
+        "totalMs": 37074.010000020266
+      }
+    },
+    {
+      "run": {
+        "mode": "seq-avif",
+        "fail": false,
+        "throttle": false,
+        "warm": false
+      },
+      "cdp": {
+        "mediaRequests": 194,
+        "mediaEncodedBytes": 3017672,
+        "servedFromCache": 0,
+        "cachedEncodedBytes": 0,
+        "stillStreamingAtEnd": 0,
+        "statusCounts": {
+          "200": 194
+        }
+      },
+      "perf": {
+        "jsHeapUsedBytes": 655488,
+        "documents": 1,
+        "nodes": 32,
+        "taskDurationS": 0.237095
+      },
+      "processMemory": {
+        "totalWorkingSetBytes": 968556544,
+        "byType": {
+          "browser": 157360128,
+          "renderer": 689922048,
+          "GPU": 33800192,
+          "network.mojom.NetworkService": 42328064,
+          "storage.mojom.StorageService": 19406848,
+          "edge_search_indexer.mojom.SearchIndexerInterfaceBroker": 25739264
+        },
+        "processCount": 8
+      },
+      "page": {
+        "mode": "seq-avif",
+        "fail": false,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0",
+        "firstInteractiveMs": 321.97499999403954,
+        "fullReadyMs": 4698.219999998808,
+        "unlockedMs": 322.1149999797344,
+        "unlockReason": "first-frame",
+        "posterShownMs": 267.9549999833107,
+        "errors": [],
+        "notes": [],
+        "scrubAtFirstInteractive": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.004999995231628418,
+            "p95Ms": 0.07499998807907104,
+            "maxMs": 1.449999988079071
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 0.016666666666666666
+        },
+        "readyFramesAtFirstScrub": 1,
+        "statsAtFirstInteractive": {
+          "requests": 2,
+          "transferBytes": 62720,
+          "encodedBodyBytes": 62120,
+          "servedFromCache": 0
+        },
+        "spineReadyMs": 1827.780000001192,
+        "readyFramesAtSpine": 25,
+        "statsAtSpineReady": {
+          "requests": 26,
+          "transferBytes": 433181,
+          "encodedBodyBytes": 425381,
+          "servedFromCache": 0
+        },
+        "scrubAtSpineReady": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.009999990463256836,
+            "p95Ms": 0.034999996423721313,
+            "maxMs": 0.06499999761581421
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 0.13333333333333333
+        },
+        "readyFrames": 193,
+        "scrubAtFullReady": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.005000025033950806,
+            "p95Ms": 0.015000015497207642,
+            "maxMs": 0.050000011920928955
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 1
+        },
+        "decodeMsPerFrame": {
+          "n": 193,
+          "medianMs": 1328.0850000083447,
+          "p95Ms": 1687.7249999940395,
+          "maxMs": 1758.1800000071526
+        },
+        "decodedPixelBytes": 1601486208,
+        "statsTotal": {
+          "requests": 194,
+          "transferBytes": 3000651,
+          "encodedBodyBytes": 2942451,
+          "servedFromCache": 0
+        },
+        "memory": {
+          "jsHeapUsedBytes": 1045045,
+          "uaSpecific": {
+            "breakdown": [
+              {
+                "attribution": [],
+                "bytes": 182659,
+                "types": [
+                  "Shared"
+                ]
+              },
+              {
+                "attribution": [
+                  {
+                    "scope": "Window",
+                    "url": "http://127.0.0.1:3113/tasks/astro-migration/references/task-1.3/harness.html?mode=seq-avif"
+                  }
+                ],
+                "bytes": 397712,
+                "types": [
+                  "JavaScript"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 0,
+                "types": []
+              },
+              {
+                "attribution": [],
+                "bytes": 32400,
+                "types": [
+                  "DOM"
+                ]
+              }
+            ],
+            "bytes": 612771
+          }
+        },
+        "locked": false,
+        "scrollMoved": true,
+        "scrollY": 600,
+        "totalMs": 21801.280000001192
+      }
+    },
+    {
+      "run": {
+        "mode": "seq-avif",
+        "fail": false,
+        "throttle": false,
+        "warm": true
+      },
+      "cdp": {
+        "mediaRequests": 194,
+        "mediaEncodedBytes": 0,
+        "servedFromCache": 194,
+        "cachedEncodedBytes": 0,
+        "stillStreamingAtEnd": 0,
+        "statusCounts": {
+          "200": 194
+        }
+      },
+      "perf": {
+        "jsHeapUsedBytes": 655356,
+        "documents": 1,
+        "nodes": 32,
+        "taskDurationS": 0.214329
+      },
+      "processMemory": {
+        "totalWorkingSetBytes": 1585446912,
+        "byType": {
+          "browser": 159350784,
+          "renderer": 1303429120,
+          "GPU": 34717696,
+          "network.mojom.NetworkService": 42754048,
+          "storage.mojom.StorageService": 19439616,
+          "edge_search_indexer.mojom.SearchIndexerInterfaceBroker": 25755648
+        },
+        "processCount": 9
+      },
+      "page": {
+        "mode": "seq-avif",
+        "fail": false,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0",
+        "firstInteractiveMs": 448.7800000011921,
+        "fullReadyMs": 5880.285000026226,
+        "unlockedMs": 448.9350000023842,
+        "unlockReason": "first-frame",
+        "posterShownMs": 377.9699999988079,
+        "errors": [],
+        "notes": [],
+        "scrubAtFirstInteractive": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.004999995231628418,
+            "p95Ms": 0.09000000357627869,
+            "maxMs": 1.9350000023841858
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 0.016666666666666666
+        },
+        "readyFramesAtFirstScrub": 1,
+        "statsAtFirstInteractive": {
+          "requests": 2,
+          "transferBytes": 0,
+          "encodedBodyBytes": 62120,
+          "servedFromCache": 2
+        },
+        "spineReadyMs": 1767.660000026226,
+        "readyFramesAtSpine": 25,
+        "statsAtSpineReady": {
+          "requests": 26,
+          "transferBytes": 0,
+          "encodedBodyBytes": 425381,
+          "servedFromCache": 26
+        },
+        "scrubAtSpineReady": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.004999995231628418,
+            "p95Ms": 0.014999985694885254,
+            "maxMs": 0.04999998211860657
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 0.13333333333333333
+        },
+        "readyFrames": 193,
+        "scrubAtFullReady": {
+          "drawMs": {
+            "n": 60,
+            "medianMs": 0.009999990463256836,
+            "p95Ms": 0.025000005960464478,
+            "maxMs": 0.16499999165534973
+          },
+          "stepsRendered": 60,
+          "exactFrameRatio": 1
+        },
+        "decodeMsPerFrame": {
+          "n": 193,
+          "medianMs": 1101.6800000071526,
+          "p95Ms": 1518.6500000059605,
+          "maxMs": 1550.6500000059605
+        },
+        "decodedPixelBytes": 1601486208,
+        "statsTotal": {
+          "requests": 194,
+          "transferBytes": 0,
+          "encodedBodyBytes": 2942451,
+          "servedFromCache": 194
+        },
+        "memory": {
+          "jsHeapUsedBytes": 1045973,
+          "uaSpecific": {
+            "breakdown": [
+              {
+                "attribution": [],
+                "bytes": 32400,
+                "types": [
+                  "DOM"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 0,
+                "types": []
+              },
+              {
+                "attribution": [],
+                "bytes": 182367,
+                "types": [
+                  "Shared"
+                ]
+              },
+              {
+                "attribution": [
+                  {
+                    "scope": "Window",
+                    "url": "http://127.0.0.1:3113/tasks/astro-migration/references/task-1.3/harness.html?mode=seq-avif"
+                  }
+                ],
+                "bytes": 397968,
+                "types": [
+                  "JavaScript"
+                ]
+              }
+            ],
+            "bytes": 612735
+          }
+        },
+        "locked": false,
+        "scrollMoved": true,
+        "scrollY": 600,
+        "totalMs": 21875.139999985695
+      }
+    },
+    {
+      "run": {
+        "mode": "video-h264-gop30",
+        "fail": false,
+        "throttle": true,
+        "warm": false
+      },
+      "cdp": {
+        "mediaRequests": 2,
+        "mediaEncodedBytes": 863448,
+        "servedFromCache": 0,
+        "cachedEncodedBytes": 0,
+        "stillStreamingAtEnd": 1,
+        "statusCounts": {
+          "200": 1,
+          "206": 1
+        }
+      },
+      "perf": {
+        "jsHeapUsedBytes": 602552,
+        "documents": 1,
+        "nodes": 179,
+        "taskDurationS": 0.176712
+      },
+      "processMemory": {
+        "totalWorkingSetBytes": 508665856,
+        "byType": {
+          "browser": 158904320,
+          "renderer": 203071488,
+          "GPU": 40775680,
+          "network.mojom.NetworkService": 44793856,
+          "storage.mojom.StorageService": 19419136,
+          "edge_search_indexer.mojom.SearchIndexerInterfaceBroker": 25174016,
+          "edge_xpay_wallet.mojom.EdgeXPayWalletService": 16527360
+        },
+        "processCount": 9
+      },
+      "page": {
+        "mode": "video-h264-gop30",
+        "fail": false,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0",
+        "firstInteractiveMs": null,
+        "fullReadyMs": null,
+        "unlockedMs": 5367.800000011921,
+        "unlockReason": "timeout",
+        "posterShownMs": 4382.145000010729,
+        "errors": [],
+        "notes": [
+          "video unavailable (timeout) -> poster fallback"
+        ],
+        "statsAtFirstInteractive": {
+          "requests": 1,
+          "transferBytes": 48208,
+          "encodedBodyBytes": 47908,
+          "servedFromCache": 0
+        },
+        "bufferedAtFirstInteractive": [],
+        "duration": null,
+        "statsTotal": {
+          "requests": 1,
+          "transferBytes": 48208,
+          "encodedBodyBytes": 47908,
+          "servedFromCache": 0
+        },
+        "memory": {
+          "jsHeapUsedBytes": 726260,
+          "uaSpecific": {
+            "breakdown": [
+              {
+                "attribution": [],
+                "bytes": 0,
+                "types": []
+              },
+              {
+                "attribution": [],
+                "bytes": 81560,
+                "types": [
+                  "DOM"
+                ]
+              },
+              {
+                "attribution": [
+                  {
+                    "scope": "Window",
+                    "url": "http://127.0.0.1:3113/tasks/astro-migration/references/task-1.3/harness.html?mode=video-h264-gop30"
+                  }
+                ],
+                "bytes": 348335,
+                "types": [
+                  "JavaScript"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 179947,
+                "types": [
+                  "Shared"
+                ]
+              }
+            ],
+            "bytes": 609842
+          }
+        },
+        "locked": false,
+        "scrollMoved": true,
+        "scrollY": 600,
+        "totalMs": 18197.584999978542
+      }
+    },
+    {
+      "run": {
+        "mode": "video-h264-gop30",
+        "fail": false,
+        "throttle": false,
+        "warm": false
+      },
+      "cdp": {
+        "mediaRequests": 2,
+        "mediaEncodedBytes": 2741426,
+        "servedFromCache": 0,
+        "cachedEncodedBytes": 0,
+        "stillStreamingAtEnd": 0,
+        "statusCounts": {
+          "200": 1,
+          "206": 1
+        }
+      },
+      "perf": {
+        "jsHeapUsedBytes": 612744,
+        "documents": 1,
+        "nodes": 178,
+        "taskDurationS": 0.198438
+      },
+      "processMemory": {
+        "totalWorkingSetBytes": 519958528,
+        "byType": {
+          "browser": 157605888,
+          "renderer": 217559040,
+          "GPU": 41406464,
+          "network.mojom.NetworkService": 42225664,
+          "storage.mojom.StorageService": 19402752,
+          "edge_search_indexer.mojom.SearchIndexerInterfaceBroker": 25214976,
+          "edge_xpay_wallet.mojom.EdgeXPayWalletService": 16543744
+        },
+        "processCount": 9
+      },
+      "page": {
+        "mode": "video-h264-gop30",
+        "fail": false,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0",
+        "firstInteractiveMs": 609.2450000047684,
+        "fullReadyMs": 7581.560000002384,
+        "unlockedMs": 609.3799999952316,
+        "unlockReason": "loadeddata",
+        "posterShownMs": 410.3700000047684,
+        "errors": [],
+        "notes": [],
+        "readyStateAtFirstInteractive": 4,
+        "statsAtFirstInteractive": {
+          "requests": 1,
+          "transferBytes": 48208,
+          "encodedBodyBytes": 47908,
+          "servedFromCache": 0
+        },
+        "bufferedAtFirstInteractive": [
+          [
+            0,
+            0.635
+          ]
+        ],
+        "duration": 6.433333,
+        "seekAtFirstInteractive": {
+          "n": 20,
+          "medianMs": 292.4050000011921,
+          "p95Ms": 727.2849999964237,
+          "maxMs": 727.2849999964237
+        },
+        "bufferedAfterFirstScrub": [
+          [
+            0,
+            6.433333
+          ]
+        ],
+        "seekRandomFull": {
+          "n": 30,
+          "medianMs": 255.82499998807907,
+          "p95Ms": 573.1800000071526,
+          "maxMs": 574.9350000023842
+        },
+        "seekSequentialFull": {
+          "n": 30,
+          "medianMs": 340.97999998927116,
+          "p95Ms": 716.6450000107288,
+          "maxMs": 823.2750000059605
+        },
+        "bufferedAtEnd": [
+          [
+            0,
+            6.433333
+          ]
+        ],
+        "statsTotal": {
+          "requests": 2,
+          "transferBytes": 2741194,
+          "encodedBodyBytes": 2740594,
+          "servedFromCache": 0
+        },
+        "memory": {
+          "jsHeapUsedBytes": 747434,
+          "uaSpecific": {
+            "breakdown": [
+              {
+                "attribution": [],
+                "bytes": 81560,
+                "types": [
+                  "DOM"
+                ]
+              },
+              {
+                "attribution": [
+                  {
+                    "scope": "Window",
+                    "url": "http://127.0.0.1:3113/tasks/astro-migration/references/task-1.3/harness.html?mode=video-h264-gop30"
+                  }
+                ],
+                "bytes": 362779,
+                "types": [
+                  "JavaScript"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 0,
+                "types": []
+              },
+              {
+                "attribution": [],
+                "bytes": 180159,
+                "types": [
+                  "Shared"
+                ]
+              }
+            ],
+            "bytes": 624498
+          }
+        },
+        "locked": false,
+        "scrollMoved": true,
+        "scrollY": 600,
+        "totalMs": 30639.935000002384
+      }
+    },
+    {
+      "run": {
+        "mode": "video-h264-gop30",
+        "fail": false,
+        "throttle": false,
+        "warm": true
+      },
+      "cdp": {
+        "mediaRequests": 2,
+        "mediaEncodedBytes": 0,
+        "servedFromCache": 2,
+        "cachedEncodedBytes": 0,
+        "stillStreamingAtEnd": 0,
+        "statusCounts": {
+          "200": 1,
+          "206": 1
+        }
+      },
+      "perf": {
+        "jsHeapUsedBytes": 617232,
+        "documents": 1,
+        "nodes": 179,
+        "taskDurationS": 0.172823
+      },
+      "processMemory": {
+        "totalWorkingSetBytes": 622899200,
+        "byType": {
+          "browser": 157978624,
+          "renderer": 320483328,
+          "GPU": 41566208,
+          "network.mojom.NetworkService": 41730048,
+          "storage.mojom.StorageService": 19390464,
+          "edge_search_indexer.mojom.SearchIndexerInterfaceBroker": 25214976,
+          "edge_xpay_wallet.mojom.EdgeXPayWalletService": 16535552
+        },
+        "processCount": 10
+      },
+      "page": {
+        "mode": "video-h264-gop30",
+        "fail": false,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0",
+        "firstInteractiveMs": 274.9849999845028,
+        "fullReadyMs": 5030.125,
+        "unlockedMs": 275.14999997615814,
+        "unlockReason": "loadeddata",
+        "posterShownMs": 146.94999998807907,
+        "errors": [],
+        "notes": [],
+        "readyStateAtFirstInteractive": 4,
+        "statsAtFirstInteractive": {
+          "requests": 1,
+          "transferBytes": 0,
+          "encodedBodyBytes": 47908,
+          "servedFromCache": 1
+        },
+        "bufferedAtFirstInteractive": [
+          [
+            0,
+            4.383
+          ]
+        ],
+        "duration": 6.433333,
+        "seekAtFirstInteractive": {
+          "n": 20,
+          "medianMs": 226.7800000011921,
+          "p95Ms": 426.875,
+          "maxMs": 426.875
+        },
+        "bufferedAfterFirstScrub": [
+          [
+            0,
+            6.433333
+          ]
+        ],
+        "seekRandomFull": {
+          "n": 30,
+          "medianMs": 200.25499999523163,
+          "p95Ms": 367.47499999403954,
+          "maxMs": 369.4350000023842
+        },
+        "seekSequentialFull": {
+          "n": 30,
+          "medianMs": 225.08499997854233,
+          "p95Ms": 297.53999999165535,
+          "maxMs": 347.86500000953674
+        },
+        "bufferedAtEnd": [
+          [
+            0,
+            6.433333
+          ]
+        ],
+        "statsTotal": {
+          "requests": 2,
+          "transferBytes": 0,
+          "encodedBodyBytes": 2740594,
+          "servedFromCache": 2
+        },
+        "memory": {
+          "jsHeapUsedBytes": 745174,
+          "uaSpecific": {
+            "breakdown": [
+              {
+                "attribution": [],
+                "bytes": 188049,
+                "types": [
+                  "Shared"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 0,
+                "types": []
+              },
+              {
+                "attribution": [],
+                "bytes": 81560,
+                "types": [
+                  "DOM"
+                ]
+              },
+              {
+                "attribution": [
+                  {
+                    "scope": "Window",
+                    "url": "http://127.0.0.1:3113/tasks/astro-migration/references/task-1.3/harness.html?mode=video-h264-gop30"
+                  }
+                ],
+                "bytes": 354073,
+                "types": [
+                  "JavaScript"
+                ]
+              }
+            ],
+            "bytes": 623682
+          }
+        },
+        "locked": false,
+        "scrollMoved": true,
+        "scrollY": 600,
+        "totalMs": 29381.07000002265
+      }
+    },
+    {
+      "run": {
+        "mode": "video-h264-gop10",
+        "fail": false,
+        "throttle": true,
+        "warm": false
+      },
+      "cdp": {
+        "mediaRequests": 2,
+        "mediaEncodedBytes": 3232043,
+        "servedFromCache": 0,
+        "cachedEncodedBytes": 0,
+        "stillStreamingAtEnd": 0,
+        "statusCounts": {
+          "200": 1,
+          "206": 1
+        }
+      },
+      "perf": {
+        "jsHeapUsedBytes": 617424,
+        "documents": 1,
+        "nodes": 179,
+        "taskDurationS": 0.405634
+      },
+      "processMemory": {
+        "totalWorkingSetBytes": 534228992,
+        "byType": {
+          "browser": 157671424,
+          "renderer": 232382464,
+          "GPU": 41447424,
+          "network.mojom.NetworkService": 41558016,
+          "storage.mojom.StorageService": 19410944,
+          "edge_search_indexer.mojom.SearchIndexerInterfaceBroker": 25219072,
+          "edge_xpay_wallet.mojom.EdgeXPayWalletService": 16539648
+        },
+        "processCount": 9
+      },
+      "page": {
+        "mode": "video-h264-gop10",
+        "fail": false,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0",
+        "firstInteractiveMs": 2019.2349999845028,
+        "fullReadyMs": 36043.35499998927,
+        "unlockedMs": 2020.0649999976158,
+        "unlockReason": "loadeddata",
+        "posterShownMs": 1307.2849999964237,
+        "errors": [],
+        "notes": [],
+        "readyStateAtFirstInteractive": 3,
+        "statsAtFirstInteractive": {
+          "requests": 1,
+          "transferBytes": 48208,
+          "encodedBodyBytes": 47908,
+          "servedFromCache": 0
+        },
+        "bufferedAtFirstInteractive": [
+          [
+            0,
+            0.266667
+          ]
+        ],
+        "duration": 6.433333,
+        "seekAtFirstInteractive": {
+          "n": 20,
+          "medianMs": 1714.7299999892712,
+          "p95Ms": 2914.469999998808,
+          "maxMs": 2914.469999998808
+        },
+        "bufferedAfterFirstScrub": [
+          [
+            0,
+            6.433333
+          ]
+        ],
+        "seekRandomFull": {
+          "n": 30,
+          "medianMs": 98.44500002264977,
+          "p95Ms": 166.3949999809265,
+          "maxMs": 168.62999999523163
+        },
+        "seekSequentialFull": {
+          "n": 30,
+          "medianMs": 97.03499999642372,
+          "p95Ms": 217.05000001192093,
+          "maxMs": 224.28999999165535
+        },
+        "bufferedAtEnd": [
+          [
+            0,
+            6.433333
+          ]
+        ],
+        "statsTotal": {
+          "requests": 2,
+          "transferBytes": 3231811,
+          "encodedBodyBytes": 3231211,
+          "servedFromCache": 0
+        },
+        "memory": {
+          "jsHeapUsedBytes": 726502,
+          "uaSpecific": {
+            "breakdown": [
+              {
+                "attribution": [
+                  {
+                    "scope": "Window",
+                    "url": "http://127.0.0.1:3113/tasks/astro-migration/references/task-1.3/harness.html?mode=video-h264-gop10"
+                  }
+                ],
+                "bytes": 281433,
+                "types": [
+                  "JavaScript"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 0,
+                "types": []
+              },
+              {
+                "attribution": [],
+                "bytes": 81560,
+                "types": [
+                  "DOM"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 260733,
+                "types": [
+                  "Shared"
+                ]
+              }
+            ],
+            "bytes": 623726
+          }
+        },
+        "locked": false,
+        "scrollMoved": true,
+        "scrollY": 600,
+        "totalMs": 56959.02500000596
+      }
+    },
+    {
+      "run": {
+        "mode": "video-h264-gop10",
+        "fail": false,
+        "throttle": false,
+        "warm": false
+      },
+      "cdp": {
+        "mediaRequests": 2,
+        "mediaEncodedBytes": 3232043,
+        "servedFromCache": 0,
+        "cachedEncodedBytes": 0,
+        "stillStreamingAtEnd": 0,
+        "statusCounts": {
+          "200": 1,
+          "206": 1
+        }
+      },
+      "perf": {
+        "jsHeapUsedBytes": 617388,
+        "documents": 1,
+        "nodes": 179,
+        "taskDurationS": 0.138533
+      },
+      "processMemory": {
+        "totalWorkingSetBytes": 533614592,
+        "byType": {
+          "browser": 157663232,
+          "renderer": 231792640,
+          "GPU": 41431040,
+          "network.mojom.NetworkService": 41562112,
+          "storage.mojom.StorageService": 19406848,
+          "edge_search_indexer.mojom.SearchIndexerInterfaceBroker": 25219072,
+          "edge_xpay_wallet.mojom.EdgeXPayWalletService": 16539648
+        },
+        "processCount": 9
+      },
+      "page": {
+        "mode": "video-h264-gop10",
+        "fail": false,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0",
+        "firstInteractiveMs": 353.2450000047684,
+        "fullReadyMs": 2770.600000023842,
+        "unlockedMs": 353.3850000202656,
+        "unlockReason": "loadeddata",
+        "posterShownMs": 187.33500000834465,
+        "errors": [],
+        "notes": [],
+        "readyStateAtFirstInteractive": 4,
+        "statsAtFirstInteractive": {
+          "requests": 1,
+          "transferBytes": 48208,
+          "encodedBodyBytes": 47908,
+          "servedFromCache": 0
+        },
+        "bufferedAtFirstInteractive": [
+          [
+            0,
+            2.391
+          ]
+        ],
+        "duration": 6.433333,
+        "seekAtFirstInteractive": {
+          "n": 20,
+          "medianMs": 127.0750000178814,
+          "p95Ms": 166.89500001072884,
+          "maxMs": 166.89500001072884
+        },
+        "bufferedAfterFirstScrub": [
+          [
+            0,
+            6.433333
+          ]
+        ],
+        "seekRandomFull": {
+          "n": 30,
+          "medianMs": 104.47999998927116,
+          "p95Ms": 163.85499998927116,
+          "maxMs": 171.38499999046326
+        },
+        "seekSequentialFull": {
+          "n": 30,
+          "medianMs": 78.53999999165535,
+          "p95Ms": 118.84000000357628,
+          "maxMs": 152.08000001311302
+        },
+        "bufferedAtEnd": [
+          [
+            0,
+            6.433333
+          ]
+        ],
+        "statsTotal": {
+          "requests": 2,
+          "transferBytes": 3231811,
+          "encodedBodyBytes": 3231211,
+          "servedFromCache": 0
+        },
+        "memory": {
+          "jsHeapUsedBytes": 742578,
+          "uaSpecific": {
+            "breakdown": [
+              {
+                "attribution": [],
+                "bytes": 0,
+                "types": []
+              },
+              {
+                "attribution": [],
+                "bytes": 180231,
+                "types": [
+                  "Shared"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 81560,
+                "types": [
+                  "DOM"
+                ]
+              },
+              {
+                "attribution": [
+                  {
+                    "scope": "Window",
+                    "url": "http://127.0.0.1:3113/tasks/astro-migration/references/task-1.3/harness.html?mode=video-h264-gop10"
+                  }
+                ],
+                "bytes": 362399,
+                "types": [
+                  "JavaScript"
+                ]
+              }
+            ],
+            "bytes": 624190
+          }
+        },
+        "locked": false,
+        "scrollMoved": true,
+        "scrollY": 600,
+        "totalMs": 20395.00499999523
+      }
+    },
+    {
+      "run": {
+        "mode": "video-h264-gop10",
+        "fail": false,
+        "throttle": false,
+        "warm": true
+      },
+      "cdp": {
+        "mediaRequests": 2,
+        "mediaEncodedBytes": 0,
+        "servedFromCache": 2,
+        "cachedEncodedBytes": 0,
+        "stillStreamingAtEnd": 0,
+        "statusCounts": {
+          "200": 1,
+          "206": 1
+        }
+      },
+      "perf": {
+        "jsHeapUsedBytes": 617264,
+        "documents": 1,
+        "nodes": 179,
+        "taskDurationS": 0.151909
+      },
+      "processMemory": {
+        "totalWorkingSetBytes": 611127296,
+        "byType": {
+          "browser": 158109696,
+          "renderer": 308686848,
+          "GPU": 41562112,
+          "network.mojom.NetworkService": 41590784,
+          "storage.mojom.StorageService": 19419136,
+          "edge_search_indexer.mojom.SearchIndexerInterfaceBroker": 25219072,
+          "edge_xpay_wallet.mojom.EdgeXPayWalletService": 16539648
+        },
+        "processCount": 10
+      },
+      "page": {
+        "mode": "video-h264-gop10",
+        "fail": false,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0",
+        "firstInteractiveMs": 290.669999986887,
+        "fullReadyMs": 2986.7400000095367,
+        "unlockedMs": 290.80500000715256,
+        "unlockReason": "loadeddata",
+        "posterShownMs": 209.50499999523163,
+        "errors": [],
+        "notes": [],
+        "readyStateAtFirstInteractive": 4,
+        "statsAtFirstInteractive": {
+          "requests": 1,
+          "transferBytes": 0,
+          "encodedBodyBytes": 47908,
+          "servedFromCache": 1
+        },
+        "bufferedAtFirstInteractive": [
+          [
+            0,
+            1.456
+          ]
+        ],
+        "duration": 6.433333,
+        "seekAtFirstInteractive": {
+          "n": 20,
+          "medianMs": 134.35499998927116,
+          "p95Ms": 208.65499997138977,
+          "maxMs": 208.65499997138977
+        },
+        "bufferedAfterFirstScrub": [
+          [
+            0,
+            6.433333
+          ]
+        ],
+        "seekRandomFull": {
+          "n": 30,
+          "medianMs": 105.7199999988079,
+          "p95Ms": 175.00999999046326,
+          "maxMs": 185.49500000476837
+        },
+        "seekSequentialFull": {
+          "n": 30,
+          "medianMs": 109.66999998688698,
+          "p95Ms": 194.4699999988079,
+          "maxMs": 262.0149999856949
+        },
+        "bufferedAtEnd": [
+          [
+            0,
+            6.433333
+          ]
+        ],
+        "statsTotal": {
+          "requests": 2,
+          "transferBytes": 0,
+          "encodedBodyBytes": 3231211,
+          "servedFromCache": 2
+        },
+        "memory": {
+          "jsHeapUsedBytes": 743142,
+          "uaSpecific": {
+            "breakdown": [
+              {
+                "attribution": [
+                  {
+                    "scope": "Window",
+                    "url": "http://127.0.0.1:3113/tasks/astro-migration/references/task-1.3/harness.html?mode=video-h264-gop10"
+                  }
+                ],
+                "bytes": 281129,
+                "types": [
+                  "JavaScript"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 261501,
+                "types": [
+                  "Shared"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 0,
+                "types": []
+              },
+              {
+                "attribution": [],
+                "bytes": 81560,
+                "types": [
+                  "DOM"
+                ]
+              }
+            ],
+            "bytes": 624190
+          }
+        },
+        "locked": false,
+        "scrollMoved": true,
+        "scrollY": 600,
+        "totalMs": 28495.064999997616
+      }
+    },
+    {
+      "run": {
+        "mode": "video-h264-allintra",
+        "fail": false,
+        "throttle": true,
+        "warm": false
+      },
+      "cdp": {
+        "mediaRequests": 16,
+        "mediaEncodedBytes": 8904241,
+        "servedFromCache": 0,
+        "cachedEncodedBytes": 0,
+        "stillStreamingAtEnd": 14,
+        "statusCounts": {
+          "200": 1,
+          "206": 15
+        }
+      },
+      "perf": {
+        "jsHeapUsedBytes": 618096,
+        "documents": 1,
+        "nodes": 179,
+        "taskDurationS": 0.677239
+      },
+      "processMemory": {
+        "totalWorkingSetBytes": 532361216,
+        "byType": {
+          "browser": 157831168,
+          "renderer": 229720064,
+          "GPU": 41484288,
+          "network.mojom.NetworkService": 42074112,
+          "storage.mojom.StorageService": 19427328,
+          "edge_search_indexer.mojom.SearchIndexerInterfaceBroker": 25247744,
+          "edge_xpay_wallet.mojom.EdgeXPayWalletService": 16576512
+        },
+        "processCount": 9
+      },
+      "page": {
+        "mode": "video-h264-allintra",
+        "fail": false,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0",
+        "firstInteractiveMs": 2424.389999985695,
+        "fullReadyMs": 55476.810000002384,
+        "unlockedMs": 2424.5099999904633,
+        "unlockReason": "loadeddata",
+        "posterShownMs": 933.2700000107288,
+        "errors": [],
+        "notes": [],
+        "readyStateAtFirstInteractive": 3,
+        "statsAtFirstInteractive": {
+          "requests": 1,
+          "transferBytes": 48208,
+          "encodedBodyBytes": 47908,
+          "servedFromCache": 0
+        },
+        "bufferedAtFirstInteractive": [
+          [
+            0,
+            0.239
+          ]
+        ],
+        "duration": 6.433333,
+        "seekAtFirstInteractive": {
+          "n": 20,
+          "medianMs": 2520.2100000083447,
+          "p95Ms": 5004.384999990463,
+          "maxMs": 5004.384999990463
+        },
+        "bufferedAfterFirstScrub": [
+          [
+            0,
+            2.168
+          ],
+          [
+            2.287,
+            2.503
+          ],
+          [
+            2.62,
+            4.466667
+          ],
+          [
+            4.55,
+            4.8
+          ],
+          [
+            4.883,
+            5.133333
+          ],
+          [
+            5.241,
+            5.482
+          ],
+          [
+            5.598,
+            5.813
+          ],
+          [
+            5.932,
+            6.329
+          ]
+        ],
+        "seekRandomFull": {
+          "n": 30,
+          "medianMs": 72.83000001311302,
+          "p95Ms": 1652.9000000059605,
+          "maxMs": 2004.9249999821186
+        },
+        "seekSequentialFull": {
+          "n": 30,
+          "medianMs": 57.860000014305115,
+          "p95Ms": 100.30500000715256,
+          "maxMs": 117.13999998569489
+        },
+        "bufferedAtEnd": [
+          [
+            0,
+            6.433333
+          ]
+        ],
+        "statsTotal": {
+          "requests": 16,
+          "transferBytes": 741647,
+          "encodedBodyBytes": 736847,
+          "servedFromCache": 0
+        },
+        "memory": {
+          "jsHeapUsedBytes": 739552,
+          "uaSpecific": {
+            "breakdown": [
+              {
+                "attribution": [],
+                "bytes": 81560,
+                "types": [
+                  "DOM"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 178951,
+                "types": [
+                  "Shared"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 0,
+                "types": []
+              },
+              {
+                "attribution": [
+                  {
+                    "scope": "Window",
+                    "url": "http://127.0.0.1:3113/tasks/astro-migration/references/task-1.3/harness.html?mode=video-h264-allintra"
+                  }
+                ],
+                "bytes": 364285,
+                "types": [
+                  "JavaScript"
+                ]
+              }
+            ],
+            "bytes": 624796
+          }
+        },
+        "locked": false,
+        "scrollMoved": true,
+        "scrollY": 600,
+        "totalMs": 80427.18500000238
+      }
+    },
+    {
+      "run": {
+        "mode": "video-h264-allintra",
+        "fail": false,
+        "throttle": false,
+        "warm": false
+      },
+      "cdp": {
+        "mediaRequests": 6,
+        "mediaEncodedBytes": 8907855,
+        "servedFromCache": 0,
+        "cachedEncodedBytes": 0,
+        "stillStreamingAtEnd": 4,
+        "statusCounts": {
+          "200": 1,
+          "206": 5
+        }
+      },
+      "perf": {
+        "jsHeapUsedBytes": 617204,
+        "documents": 1,
+        "nodes": 179,
+        "taskDurationS": 0.171837
+      },
+      "processMemory": {
+        "totalWorkingSetBytes": 526118912,
+        "byType": {
+          "browser": 157880320,
+          "renderer": 224251904,
+          "GPU": 41447424,
+          "network.mojom.NetworkService": 41336832,
+          "storage.mojom.StorageService": 19369984,
+          "edge_search_indexer.mojom.SearchIndexerInterfaceBroker": 25255936,
+          "edge_xpay_wallet.mojom.EdgeXPayWalletService": 16576512
+        },
+        "processCount": 9
+      },
+      "page": {
+        "mode": "video-h264-allintra",
+        "fail": false,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0",
+        "firstInteractiveMs": 453.4650000035763,
+        "fullReadyMs": 2007.7450000047684,
+        "unlockedMs": 453.8649999797344,
+        "unlockReason": "loadeddata",
+        "posterShownMs": 342.8400000035763,
+        "errors": [],
+        "notes": [],
+        "readyStateAtFirstInteractive": 4,
+        "statsAtFirstInteractive": {
+          "requests": 1,
+          "transferBytes": 48208,
+          "encodedBodyBytes": 47908,
+          "servedFromCache": 0
+        },
+        "bufferedAtFirstInteractive": [
+          [
+            0,
+            0.24
+          ]
+        ],
+        "duration": 6.433333,
+        "seekAtFirstInteractive": {
+          "n": 20,
+          "medianMs": 77.31999999284744,
+          "p95Ms": 146.32499998807907,
+          "maxMs": 146.32499998807907
+        },
+        "bufferedAfterFirstScrub": [
+          [
+            0,
+            4.8
+          ],
+          [
+            4.883,
+            5.133333
+          ],
+          [
+            5.241,
+            6.433333
+          ]
+        ],
+        "seekRandomFull": {
+          "n": 30,
+          "medianMs": 65.7800000011921,
+          "p95Ms": 114.45999997854233,
+          "maxMs": 114.87999999523163
+        },
+        "seekSequentialFull": {
+          "n": 30,
+          "medianMs": 62.7049999833107,
+          "p95Ms": 95.01500001549721,
+          "maxMs": 97.69499999284744
+        },
+        "bufferedAtEnd": [
+          [
+            0,
+            6.433333
+          ]
+        ],
+        "statsTotal": {
+          "requests": 6,
+          "transferBytes": 1688919,
+          "encodedBodyBytes": 1687119,
+          "servedFromCache": 0
+        },
+        "memory": {
+          "jsHeapUsedBytes": 740676,
+          "uaSpecific": {
+            "breakdown": [
+              {
+                "attribution": [],
+                "bytes": 0,
+                "types": []
+              },
+              {
+                "attribution": [
+                  {
+                    "scope": "Window",
+                    "url": "http://127.0.0.1:3113/tasks/astro-migration/references/task-1.3/harness.html?mode=video-h264-allintra"
+                  }
+                ],
+                "bytes": 362417,
+                "types": [
+                  "JavaScript"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 180159,
+                "types": [
+                  "Shared"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 81560,
+                "types": [
+                  "DOM"
+                ]
+              }
+            ],
+            "bytes": 624136
+          }
+        },
+        "locked": false,
+        "scrollMoved": true,
+        "scrollY": 600,
+        "totalMs": 23792.57999998331
+      }
+    },
+    {
+      "run": {
+        "mode": "video-h264-allintra",
+        "fail": false,
+        "throttle": false,
+        "warm": true
+      },
+      "cdp": {
+        "mediaRequests": 2,
+        "mediaEncodedBytes": 0,
+        "servedFromCache": 2,
+        "cachedEncodedBytes": 0,
+        "stillStreamingAtEnd": 0,
+        "statusCounts": {
+          "200": 1,
+          "206": 1
+        }
+      },
+      "perf": {
+        "jsHeapUsedBytes": 617016,
+        "documents": 1,
+        "nodes": 179,
+        "taskDurationS": 0.222006
+      },
+      "processMemory": {
+        "totalWorkingSetBytes": 618975232,
+        "byType": {
+          "browser": 158351360,
+          "renderer": 316424192,
+          "GPU": 41598976,
+          "network.mojom.NetworkService": 41406464,
+          "storage.mojom.StorageService": 19382272,
+          "edge_search_indexer.mojom.SearchIndexerInterfaceBroker": 25227264,
+          "edge_xpay_wallet.mojom.EdgeXPayWalletService": 16584704
+        },
+        "processCount": 10
+      },
+      "page": {
+        "mode": "video-h264-allintra",
+        "fail": false,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0",
+        "firstInteractiveMs": 503.31999999284744,
+        "fullReadyMs": 2352.4000000059605,
+        "unlockedMs": 503.4549999833107,
+        "unlockReason": "loadeddata",
+        "posterShownMs": 317.7800000011921,
+        "errors": [],
+        "notes": [],
+        "readyStateAtFirstInteractive": 4,
+        "statsAtFirstInteractive": {
+          "requests": 1,
+          "transferBytes": 0,
+          "encodedBodyBytes": 47908,
+          "servedFromCache": 1
+        },
+        "bufferedAtFirstInteractive": [
+          [
+            0,
+            0.524
+          ]
+        ],
+        "duration": 6.433333,
+        "seekAtFirstInteractive": {
+          "n": 20,
+          "medianMs": 89.22499999403954,
+          "p95Ms": 159.47499999403954,
+          "maxMs": 159.47499999403954
+        },
+        "bufferedAfterFirstScrub": [
+          [
+            0,
+            6.433333
+          ]
+        ],
+        "seekRandomFull": {
+          "n": 30,
+          "medianMs": 92.7800000011921,
+          "p95Ms": 150.87000000476837,
+          "maxMs": 175.51499998569489
+        },
+        "seekSequentialFull": {
+          "n": 30,
+          "medianMs": 84.30500000715256,
+          "p95Ms": 124.86500000953674,
+          "maxMs": 166.03999999165535
+        },
+        "bufferedAtEnd": [
+          [
+            0,
+            6.433333
+          ]
+        ],
+        "statsTotal": {
+          "requests": 2,
+          "transferBytes": 0,
+          "encodedBodyBytes": 8896079,
+          "servedFromCache": 2
+        },
+        "memory": {
+          "jsHeapUsedBytes": 678720,
+          "uaSpecific": {
+            "breakdown": [
+              {
+                "attribution": [],
+                "bytes": 180491,
+                "types": [
+                  "Shared"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 0,
+                "types": []
+              },
+              {
+                "attribution": [
+                  {
+                    "scope": "Window",
+                    "url": "http://127.0.0.1:3113/tasks/astro-migration/references/task-1.3/harness.html?mode=video-h264-allintra"
+                  }
+                ],
+                "bytes": 361893,
+                "types": [
+                  "JavaScript"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 81560,
+                "types": [
+                  "DOM"
+                ]
+              }
+            ],
+            "bytes": 623944
+          }
+        },
+        "locked": false,
+        "scrollMoved": true,
+        "scrollY": 600,
+        "totalMs": 24558.49500000477
+      }
+    },
+    {
+      "run": {
+        "mode": "video-vp9",
+        "fail": false,
+        "throttle": true,
+        "warm": false
+      },
+      "cdp": {
+        "mediaRequests": 4,
+        "mediaEncodedBytes": 2229328,
+        "servedFromCache": 0,
+        "cachedEncodedBytes": 0,
+        "stillStreamingAtEnd": 2,
+        "statusCounts": {
+          "200": 1,
+          "206": 3
+        }
+      },
+      "perf": {
+        "jsHeapUsedBytes": 617276,
+        "documents": 1,
+        "nodes": 179,
+        "taskDurationS": 0.575225
+      },
+      "processMemory": {
+        "totalWorkingSetBytes": 513531904,
+        "byType": {
+          "browser": 157954048,
+          "renderer": 211173376,
+          "GPU": 41885696,
+          "network.mojom.NetworkService": 41353216,
+          "storage.mojom.StorageService": 19386368,
+          "edge_search_indexer.mojom.SearchIndexerInterfaceBroker": 25194496,
+          "edge_xpay_wallet.mojom.EdgeXPayWalletService": 16584704
+        },
+        "processCount": 9
+      },
+      "page": {
+        "mode": "video-vp9",
+        "fail": false,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0",
+        "firstInteractiveMs": 3336.6599999964237,
+        "fullReadyMs": 57629.6400000155,
+        "unlockedMs": 3336.7899999916553,
+        "unlockReason": "loadeddata",
+        "posterShownMs": 2422.780000001192,
+        "errors": [],
+        "notes": [],
+        "readyStateAtFirstInteractive": 3,
+        "statsAtFirstInteractive": {
+          "requests": 1,
+          "transferBytes": 48208,
+          "encodedBodyBytes": 47908,
+          "servedFromCache": 0
+        },
+        "bufferedAtFirstInteractive": [
+          [
+            0,
+            0.302
+          ]
+        ],
+        "duration": 6.433,
+        "seekAtFirstInteractive": {
+          "n": 20,
+          "medianMs": 2750.5999999940395,
+          "p95Ms": 5017.25,
+          "maxMs": 5017.25
+        },
+        "bufferedAfterFirstScrub": [
+          [
+            0,
+            6.433
+          ]
+        ],
+        "seekRandomFull": {
+          "n": 30,
+          "medianMs": 173.70999997854233,
+          "p95Ms": 386.7800000011921,
+          "maxMs": 575.2349999845028
+        },
+        "seekSequentialFull": {
+          "n": 30,
+          "medianMs": 139.25,
+          "p95Ms": 272.2150000035763,
+          "maxMs": 298.94999998807907
+        },
+        "bufferedAtEnd": [
+          [
+            0,
+            6.433
+          ]
+        ],
+        "statsTotal": {
+          "requests": 4,
+          "transferBytes": 66894,
+          "encodedBodyBytes": 65694,
+          "servedFromCache": 0
+        },
+        "memory": {
+          "jsHeapUsedBytes": 736227,
+          "uaSpecific": {
+            "breakdown": [
+              {
+                "attribution": [
+                  {
+                    "scope": "Window",
+                    "url": "http://127.0.0.1:3113/tasks/astro-migration/references/task-1.3/harness.html?mode=video-vp9"
+                  }
+                ],
+                "bytes": 362484,
+                "types": [
+                  "JavaScript"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 0,
+                "types": []
+              },
+              {
+                "attribution": [],
+                "bytes": 81560,
+                "types": [
+                  "DOM"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 180199,
+                "types": [
+                  "Shared"
+                ]
+              }
+            ],
+            "bytes": 624243
+          }
+        },
+        "locked": false,
+        "scrollMoved": true,
+        "scrollY": 600,
+        "totalMs": 78060.84499999881
+      }
+    },
+    {
+      "run": {
+        "mode": "video-vp9",
+        "fail": false,
+        "throttle": false,
+        "warm": false
+      },
+      "cdp": {
+        "mediaRequests": 4,
+        "mediaEncodedBytes": 2236516,
+        "servedFromCache": 0,
+        "cachedEncodedBytes": 0,
+        "stillStreamingAtEnd": 2,
+        "statusCounts": {
+          "200": 1,
+          "206": 3
+        }
+      },
+      "perf": {
+        "jsHeapUsedBytes": 617272,
+        "documents": 1,
+        "nodes": 179,
+        "taskDurationS": 0.193576
+      },
+      "processMemory": {
+        "totalWorkingSetBytes": 495517696,
+        "byType": {
+          "browser": 158040064,
+          "renderer": 193081344,
+          "GPU": 41852928,
+          "network.mojom.NetworkService": 41369600,
+          "storage.mojom.StorageService": 19390464,
+          "edge_search_indexer.mojom.SearchIndexerInterfaceBroker": 25194496,
+          "edge_xpay_wallet.mojom.EdgeXPayWalletService": 16588800
+        },
+        "processCount": 9
+      },
+      "page": {
+        "mode": "video-vp9",
+        "fail": false,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0",
+        "firstInteractiveMs": 792.6349999904633,
+        "fullReadyMs": 4685.324999988079,
+        "unlockedMs": 792.7800000011921,
+        "unlockReason": "loadeddata",
+        "posterShownMs": 602.0399999916553,
+        "errors": [],
+        "notes": [],
+        "readyStateAtFirstInteractive": 4,
+        "statsAtFirstInteractive": {
+          "requests": 1,
+          "transferBytes": 48208,
+          "encodedBodyBytes": 47908,
+          "servedFromCache": 0
+        },
+        "bufferedAtFirstInteractive": [
+          [
+            0,
+            1.633
+          ]
+        ],
+        "duration": 6.433,
+        "seekAtFirstInteractive": {
+          "n": 20,
+          "medianMs": 208.2199999988079,
+          "p95Ms": 374.3700000047684,
+          "maxMs": 374.3700000047684
+        },
+        "bufferedAfterFirstScrub": [
+          [
+            0,
+            6.433
+          ]
+        ],
+        "seekRandomFull": {
+          "n": 30,
+          "medianMs": 164.0199999809265,
+          "p95Ms": 238.0499999821186,
+          "maxMs": 640.6450000107288
+        },
+        "seekSequentialFull": {
+          "n": 30,
+          "medianMs": 114.22999998927116,
+          "p95Ms": 187.13500002026558,
+          "maxMs": 270.9249999821186
+        },
+        "bufferedAtEnd": [
+          [
+            0,
+            6.433
+          ]
+        ],
+        "statsTotal": {
+          "requests": 4,
+          "transferBytes": 66894,
+          "encodedBodyBytes": 65694,
+          "servedFromCache": 0
+        },
+        "memory": {
+          "jsHeapUsedBytes": 744715,
+          "uaSpecific": {
+            "breakdown": [
+              {
+                "attribution": [],
+                "bytes": 260925,
+                "types": [
+                  "Shared"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 81560,
+                "types": [
+                  "DOM"
+                ]
+              },
+              {
+                "attribution": [
+                  {
+                    "scope": "Window",
+                    "url": "http://127.0.0.1:3113/tasks/astro-migration/references/task-1.3/harness.html?mode=video-vp9"
+                  }
+                ],
+                "bytes": 281730,
+                "types": [
+                  "JavaScript"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 0,
+                "types": []
+              }
+            ],
+            "bytes": 624215
+          }
+        },
+        "locked": false,
+        "scrollMoved": true,
+        "scrollY": 600,
+        "totalMs": 22626.810000002384
+      }
+    },
+    {
+      "run": {
+        "mode": "video-vp9",
+        "fail": false,
+        "throttle": false,
+        "warm": true
+      },
+      "cdp": {
+        "mediaRequests": 4,
+        "mediaEncodedBytes": 0,
+        "servedFromCache": 4,
+        "cachedEncodedBytes": 0,
+        "stillStreamingAtEnd": 2,
+        "statusCounts": {
+          "200": 1,
+          "206": 3
+        }
+      },
+      "perf": {
+        "jsHeapUsedBytes": 617268,
+        "documents": 1,
+        "nodes": 179,
+        "taskDurationS": 0.182746
+      },
+      "processMemory": {
+        "totalWorkingSetBytes": 562958336,
+        "byType": {
+          "browser": 155348992,
+          "renderer": 279576576,
+          "GPU": 42024960,
+          "network.mojom.NetworkService": 41394176,
+          "storage.mojom.StorageService": 19398656,
+          "edge_search_indexer.mojom.SearchIndexerInterfaceBroker": 25214976
+        },
+        "processCount": 9
+      },
+      "page": {
+        "mode": "video-vp9",
+        "fail": false,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0",
+        "firstInteractiveMs": 695.9000000059605,
+        "fullReadyMs": 3965.889999985695,
+        "unlockedMs": 696.044999986887,
+        "unlockReason": "loadeddata",
+        "posterShownMs": 524.3899999856949,
+        "errors": [],
+        "notes": [],
+        "readyStateAtFirstInteractive": 4,
+        "statsAtFirstInteractive": {
+          "requests": 1,
+          "transferBytes": 0,
+          "encodedBodyBytes": 47908,
+          "servedFromCache": 1
+        },
+        "bufferedAtFirstInteractive": [
+          [
+            0,
+            2.167
+          ]
+        ],
+        "duration": 6.433,
+        "seekAtFirstInteractive": {
+          "n": 20,
+          "medianMs": 158.38500002026558,
+          "p95Ms": 304.8599999845028,
+          "maxMs": 304.8599999845028
+        },
+        "bufferedAfterFirstScrub": [
+          [
+            0,
+            6.433
+          ]
+        ],
+        "seekRandomFull": {
+          "n": 30,
+          "medianMs": 123.80999997258186,
+          "p95Ms": 196.84000000357628,
+          "maxMs": 207.74000000953674
+        },
+        "seekSequentialFull": {
+          "n": 30,
+          "medianMs": 105.99500000476837,
+          "p95Ms": 198.62999999523163,
+          "maxMs": 243.15999999642372
+        },
+        "bufferedAtEnd": [
+          [
+            0,
+            6.433
+          ]
+        ],
+        "statsTotal": {
+          "requests": 4,
+          "transferBytes": 0,
+          "encodedBodyBytes": 65694,
+          "servedFromCache": 2
+        },
+        "memory": {
+          "jsHeapUsedBytes": 745435,
+          "uaSpecific": {
+            "breakdown": [
+              {
+                "attribution": [
+                  {
+                    "scope": "Window",
+                    "url": "http://127.0.0.1:3113/tasks/astro-migration/references/task-1.3/harness.html?mode=video-vp9"
+                  }
+                ],
+                "bytes": 284978,
+                "types": [
+                  "JavaScript"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 81560,
+                "types": [
+                  "DOM"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 0,
+                "types": []
+              },
+              {
+                "attribution": [],
+                "bytes": 257677,
+                "types": [
+                  "Shared"
+                ]
+              }
+            ],
+            "bytes": 624215
+          }
+        },
+        "locked": false,
+        "scrollMoved": true,
+        "scrollY": 600,
+        "totalMs": 26920.97999998927
+      }
+    },
+    {
+      "run": {
+        "mode": "seq-jpeg",
+        "fail": true,
+        "throttle": false,
+        "warm": false
+      },
+      "cdp": {
+        "mediaRequests": 2,
+        "mediaEncodedBytes": 48448,
+        "servedFromCache": 0,
+        "cachedEncodedBytes": 0,
+        "stillStreamingAtEnd": 0,
+        "statusCounts": {
+          "200": 1,
+          "404": 1
+        }
+      },
+      "perf": {
+        "jsHeapUsedBytes": 634360,
+        "documents": 1,
+        "nodes": 32,
+        "taskDurationS": 0.073224
+      },
+      "processMemory": {
+        "totalWorkingSetBytes": 434212864,
+        "byType": {
+          "browser": 154669056,
+          "renderer": 160813056,
+          "GPU": 32808960,
+          "network.mojom.NetworkService": 41320448,
+          "storage.mojom.StorageService": 19386368,
+          "edge_search_indexer.mojom.SearchIndexerInterfaceBroker": 25214976
+        },
+        "processCount": 8
+      },
+      "page": {
+        "mode": "seq-jpeg",
+        "fail": true,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0",
+        "firstInteractiveMs": null,
+        "fullReadyMs": null,
+        "unlockedMs": 736.1099999845028,
+        "unlockReason": "fallback:error",
+        "posterShownMs": 736.6850000023842,
+        "errors": [
+          "load-fail-0"
+        ],
+        "notes": [
+          "first frame unavailable (error) -> poster fallback"
+        ],
+        "statsTotal": {
+          "requests": 2,
+          "transferBytes": 48512,
+          "encodedBodyBytes": 47912,
+          "servedFromCache": 0
+        },
+        "memory": {
+          "jsHeapUsedBytes": 763624,
+          "uaSpecific": {
+            "breakdown": [
+              {
+                "attribution": [],
+                "bytes": 32160,
+                "types": [
+                  "DOM"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 181659,
+                "types": [
+                  "Shared"
+                ]
+              },
+              {
+                "attribution": [
+                  {
+                    "scope": "Window",
+                    "url": "http://127.0.0.1:3113/tasks/astro-migration/references/task-1.3/harness.html?mode=seq-jpeg&fail=1"
+                  }
+                ],
+                "bytes": 378619,
+                "types": [
+                  "JavaScript"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 0,
+                "types": []
+              }
+            ],
+            "bytes": 592438
+          }
+        },
+        "locked": false,
+        "scrollMoved": true,
+        "scrollY": 600,
+        "totalMs": 11327.819999992847
+      }
+    },
+    {
+      "run": {
+        "mode": "video-h264-gop10",
+        "fail": true,
+        "throttle": false,
+        "warm": false
+      },
+      "cdp": {
+        "mediaRequests": 2,
+        "mediaEncodedBytes": 48296,
+        "servedFromCache": 0,
+        "cachedEncodedBytes": 0,
+        "stillStreamingAtEnd": 1,
+        "statusCounts": {
+          "200": 1,
+          "404": 1
+        }
+      },
+      "perf": {
+        "jsHeapUsedBytes": 602600,
+        "documents": 1,
+        "nodes": 179,
+        "taskDurationS": 0.067983
+      },
+      "processMemory": {
+        "totalWorkingSetBytes": 422404096,
+        "byType": {
+          "browser": 154746880,
+          "renderer": 148828160,
+          "GPU": 32903168,
+          "network.mojom.NetworkService": 41316352,
+          "storage.mojom.StorageService": 19394560,
+          "edge_search_indexer.mojom.SearchIndexerInterfaceBroker": 25214976
+        },
+        "processCount": 8
+      },
+      "page": {
+        "mode": "video-h264-gop10",
+        "fail": true,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0",
+        "firstInteractiveMs": null,
+        "fullReadyMs": null,
+        "unlockedMs": 375.2150000035763,
+        "unlockReason": "fallback:error",
+        "posterShownMs": 377.7199999988079,
+        "errors": [],
+        "notes": [
+          "video unavailable (error) -> poster fallback"
+        ],
+        "statsAtFirstInteractive": {
+          "requests": 1,
+          "transferBytes": 300,
+          "encodedBodyBytes": 0,
+          "servedFromCache": 0
+        },
+        "bufferedAtFirstInteractive": [],
+        "duration": null,
+        "statsTotal": {
+          "requests": 1,
+          "transferBytes": 300,
+          "encodedBodyBytes": 0,
+          "servedFromCache": 0
+        },
+        "memory": {
+          "jsHeapUsedBytes": 725331,
+          "uaSpecific": {
+            "breakdown": [
+              {
+                "attribution": [],
+                "bytes": 182648,
+                "types": [
+                  "Shared"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 81560,
+                "types": [
+                  "DOM"
+                ]
+              },
+              {
+                "attribution": [
+                  {
+                    "scope": "Window",
+                    "url": "http://127.0.0.1:3113/tasks/astro-migration/references/task-1.3/harness.html?mode=video-h264-gop10&fail=1"
+                  }
+                ],
+                "bytes": 345681,
+                "types": [
+                  "JavaScript"
+                ]
+              },
+              {
+                "attribution": [],
+                "bytes": 0,
+                "types": []
+              }
+            ],
+            "bytes": 609889
+          }
+        },
+        "locked": false,
+        "scrollMoved": true,
+        "scrollY": 600,
+        "totalMs": 19340.715000003576
+      }
+    }
+  ]
+}

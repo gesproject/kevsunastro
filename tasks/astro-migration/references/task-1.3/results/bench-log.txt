@@ -1,0 +1,24 @@
+running seq-jpeg+slow4g ... ok 194 req 19691983 B
+running seq-jpeg+loopback ... ok 194 req 19691983 B
+running seq-jpeg+warm ... ok 194 req 0 B
+running seq-webp+slow4g ... ok 194 req 6820676 B
+running seq-webp+loopback ... ok 194 req 6820676 B
+running seq-webp+warm ... ok 194 req 0 B
+running seq-avif+slow4g ... ok 194 req 3017672 B
+running seq-avif+loopback ... ok 194 req 3017672 B
+running seq-avif+warm ... ok 194 req 0 B
+running video-h264-gop30+slow4g ... ok 2 req 863448 B
+running video-h264-gop30+loopback ... ok 2 req 2741426 B
+running video-h264-gop30+warm ... ok 2 req 0 B
+running video-h264-gop10+slow4g ... ok 2 req 3232043 B
+running video-h264-gop10+loopback ... ok 2 req 3232043 B
+running video-h264-gop10+warm ... ok 2 req 0 B
+running video-h264-allintra+slow4g ... ok 16 req 8904241 B
+running video-h264-allintra+loopback ... ok 6 req 8907855 B
+running video-h264-allintra+warm ... ok 2 req 0 B
+running video-vp9+slow4g ... ok 4 req 2229328 B
+running video-vp9+loopback ... ok 4 req 2236516 B
+running video-vp9+warm ... ok 4 req 0 B
+running seq-jpeg+fail+loopback ... ok 2 req 48448 B
+running video-h264-gop10+fail+loopback ... ok 2 req 48296 B
+wrote results/bench-results.json

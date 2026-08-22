@@ -1,0 +1,7 @@
+{
+  "label": "Booking",
+  "kind": "booking",
+  "priority": 40,
+  "enabled": true,
+  "href": "mailto:booking@solbo.studio"
+}

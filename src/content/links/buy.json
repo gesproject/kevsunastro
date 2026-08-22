@@ -1,0 +1,6 @@
+{
+  "label": "Buy",
+  "kind": "buy",
+  "priority": 60,
+  "enabled": false
+}

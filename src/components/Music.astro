@@ -1,0 +1,892 @@
+---
+/**
+ * Task 3.1 — Music section, static markup and vanilla CSS only.
+ * ScrollTrigger reveals, the Hero→Music colour-grade seam, and hover motion
+ * are layered on by Task 4.3's musicTimeline.ts. Everything here must be
+ * readable with JavaScript off,
+ * so nothing starts at opacity 0 the way the legacy React section did.
+ *
+ * Task 4.3 amendment (2026-08-08) — Music backdrop. Brings a bold, animated
+ * shader background to this section: a section-scoped mount of the shared
+ * shaderField.ts engine running the "moss" Perlin Noise shader (see
+ * src/lib/motion/shaders/moss.ts, human-supplied), replacing the old static
+ * mobile-only hero-image background at every breakpoint. The engine itself
+ * is shared with /link's Plasma backdrop (shaders/plasma.ts) -- same
+ * compile/draw/resize/pause plumbing, different shader per mount. Moss is a
+ * light-dominant palette (cream/lime, see reference), so unlike /link's dark
+ * Plasma this section moved to dark-ink-on-light-field at every breakpoint
+ * (previously light-paper was desktop-only). This is the first JavaScript
+ * this section has ever shipped -- its no-JS and reduced-motion floors are
+ * the same CSS-gradient-then-frozen-frame chain PlasmaBackdrop.astro
+ * already established for /link, reused rather than re-derived. The
+ * Hero→Music transition/seam itself is deliberately NOT built here -- out
+ * of scope for this pass, called out explicitly by the human directing
+ * this change, and left for a dedicated pass once Hero's own concurrent
+ * rework (a separate session) lands.
+ *
+ * ponytail: the embed branches below are unreachable until Task 5.2 supplies
+ * real release URLs, so they ship unhardened. Ceiling: once a release carries a
+ * URL, the iframe replaces the static card and renders as an empty box with
+ * JavaScript disabled, which breaks the Phase 3 no-JS bar. Upgrade path: add a
+ * plain <a> to the release URL beneath each embed when 5.2 lands real content
+ * to verify it against. Must close before Checkpoint 3 sign-off.
+ */
+import { getPlatformLinks, getReleases } from "../lib/content";
+import { soundcloudEmbedUrl, spotifyEmbedUrl } from "../lib/embeds";
+
+const [releases, platformLinks] = await Promise.all([getReleases(), getPlatformLinks()]);
+
+// Legacy hardcoded Spotify, SoundCloud, Instagram, Resident Advisor, and Bandcamp,
+// the last two pointing at "#". This row is content-driven instead, so it currently
+// resolves to Instagram/TikTok/Facebook plus pending Listen and Buy. The two primary
+// listen destinations are absent because their real URLs have not been supplied yet
+// — they appear here automatically once `links/listen.json` and `links/buy.json` get
+// destinations. Do not invent them.
+
+const spotifyRelease = releases.find((release) => spotifyEmbedUrl(release.data.spotifyUrl));
+const soundcloudRelease = releases.find((release) => soundcloudEmbedUrl(release.data.soundcloudUrl));
+const spotifyEmbed = spotifyEmbedUrl(spotifyRelease?.data.spotifyUrl);
+const soundcloudEmbed = soundcloudEmbedUrl(soundcloudRelease?.data.soundcloudUrl);
+
+// Fixed silhouette of the legacy fallback player. Rendered at build time, so
+// the 50 bars cost markup only — no client script and no layout measurement.
+const WAVEFORM = [
+  60, 45, 80, 35, 90, 55, 70, 40, 85, 50, 75, 30, 65, 80, 45, 90, 38, 72, 55, 62,
+  78, 48, 85, 60, 95, 42, 68, 75, 50, 88, 35, 65, 82, 45, 70, 55, 90, 62, 75, 40,
+  85, 50, 78, 35, 68, 80, 55, 88, 42, 65,
+];
+const WAVEFORM_PLAYED = 18;
+
+const FALLBACK_TRACK = { title: "Mecca", artist: "Sölbo", artwork: "/images/mecca-solbo.png" };
+---
+
+<section class="music" id="music">
+  <div class="music__backdrop" aria-hidden="true">
+    <canvas data-music-shader></canvas>
+    <div class="music__backdrop-veil"></div>
+  </div>
+  <div class="music__grain" aria-hidden="true"></div>
+
+  <div class="music__inner">
+    <div class="music__grid">
+        <div class="music__stack">
+          {
+            spotifyEmbed ? (
+              <iframe
+                class="music__embed music__embed--spotify"
+                title={`${spotifyRelease?.data.title ?? "Spotify"} on Spotify`}
+                src={spotifyEmbed}
+                loading="lazy"
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              />
+            ) : (
+              <div class="player player--spotify">
+                <div class="player__top">
+                  <div class="player__identity">
+                    <img
+                      class="player__art"
+                      src={FALLBACK_TRACK.artwork}
+                      alt=""
+                      width="144"
+                      height="144"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <div class="player__meta">
+                      <span class="player__title">{FALLBACK_TRACK.title}</span>
+                      <span class="player__artist">{FALLBACK_TRACK.artist}</span>
+                    </div>
+                  </div>
+                  <p class="player__brand">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.72 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
+                    </svg>
+                    <span>Spotify</span>
+                  </p>
+                </div>
+
+                <div class="player__transport" aria-hidden="true">
+                  <span class="player__play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg></span>
+                  <span class="player__time">0:42</span>
+                  <span class="player__scrubber"><span class="player__progress"></span></span>
+                  <span class="player__time">3:18</span>
+                </div>
+              </div>
+            )
+          }
+
+          {
+            soundcloudEmbed ? (
+              <iframe
+                class="music__embed music__embed--soundcloud"
+                title={`${soundcloudRelease?.data.title ?? "SoundCloud"} on SoundCloud`}
+                src={soundcloudEmbed}
+                loading="lazy"
+                allow="autoplay"
+              />
+            ) : (
+              <div class="player player--soundcloud">
+                <img
+                  class="player__art player__art--square"
+                  src={FALLBACK_TRACK.artwork}
+                  alt=""
+                  width="128"
+                  height="128"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <div class="player__column">
+                  <div class="player__top">
+                    <div class="player__identity">
+                      <span class="player__play player__play--soundcloud" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                      </span>
+                      <div class="player__meta">
+                        <span class="player__title">{FALLBACK_TRACK.title}</span>
+                        <span class="player__artist">{FALLBACK_TRACK.artist}</span>
+                      </div>
+                    </div>
+                    <p class="player__brand player__brand--soundcloud">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z" />
+                      </svg>
+                      <span>SoundCloud</span>
+                    </p>
+                  </div>
+
+                  <div class="player__waveform-block" aria-hidden="true">
+                    <div class="player__waveform">
+                      {
+                        WAVEFORM.map((height, index) => (
+                          <span
+                            class:list={["player__bar", index < WAVEFORM_PLAYED && "player__bar--played"]}
+                            style={`height:${height}%;${
+                              index < WAVEFORM_PLAYED ? "" : `opacity:${0.6 + (index % 3) * 0.1}`
+                            }`}
+                          />
+                        ))
+                      }
+                    </div>
+                    <div class="player__waveform-times">
+                      <span class="player__time">1:15</span>
+                      <span class="player__time">3:42</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )
+          }
+
+          <ul class="music__platforms">
+            {
+              platformLinks.map((link) => (
+                <li>
+                  {link.data.enabled ? (
+                    <a href={link.data.href} target="_blank" rel="noopener noreferrer">
+                      {link.data.label}
+                      <span aria-hidden="true">↗</span>
+                    </a>
+                  ) : (
+                    <span class="music__platform--pending">{link.data.label}</span>
+                  )}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+      <div class="music__releases">
+        <h2 class="music__heading">Releases</h2>
+
+        {
+          releases.length === 0 ? (
+            <p class="music__empty">Releases are on the way.</p>
+          ) : (
+            <ul class="music__grid-releases">
+              {releases.slice(0, 12).map((release) => (
+                <li class="release">
+                  <div class="release__frame">
+                    {release.data.artwork ? (
+                      <img
+                        src={release.data.artwork}
+                        alt=""
+                        width="400"
+                        height="400"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    ) : (
+                      <span class="release__placeholder"></span>
+                    )}
+                  </div>
+                  <p class="release__title">{release.data.title}</p>
+                  <p class="release__meta">
+                    {release.data.releaseDate.slice(0, 4)}
+                    <span> · {release.data.type}</span>
+                  </p>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /*
+   * Colours snap to the Task 2.2 tokens: the legacy section literals #c8cbc8
+   * and #0e0e0c differ from --color-paper / --color-ink by under two levels
+   * per channel. Recorded as an intentional parity exception.
+   */
+  .music {
+    /* Still needed as the .music__seam gradient's end colour below --
+       Music itself is no longer this section's own background (see
+       --music-light), but it still fades into Shows' dark field. */
+    --music-dark: var(--color-ink);
+    --music-light: #f7fee7;
+    --music-chrome: #121212;
+    --music-spotify: #1db954;
+    --music-soundcloud: #ff5500;
+    --music-ink: var(--color-ink);
+
+    /* Moss's own lime/olive stops (shaders/moss.ts), reserved for solid dark
+       surfaces only (.player chrome, .music__platforms chips) -- measured
+       against the section's worst-case bare-backdrop pixel (~rgb(147 148 138),
+       the darkest wisp under the lightest veil point) they land at 1.6:1, so
+       they never appear as text or icon colour directly on the backdrop. */
+    --music-accent: #4d7c0f;
+    --music-accent-bright: #a3e635;
+
+    /* /link's card language (border + radius + lift, not just blur-on-flat),
+       tuned for a light-dominant backdrop: a dark hairline reads as an edge
+       here the way a light one does on /link's dark ground. */
+    --music-card-line: rgb(10 10 10 / 14%);
+    --music-card-line-hi: rgb(10 10 10 / 28%);
+    --music-lift: 0 1px 2px rgb(0 0 0 / 8%), 0 20px 48px -12px rgb(0 0 0 / 22%);
+    --music-lift-hover: 0 2px 4px rgb(0 0 0 / 12%), 0 26px 60px -14px rgb(0 0 0 / 30%);
+    --music-radius: 18px;
+
+    /* The moss backdrop is light at every breakpoint, where the default
+       near-white ring would land under 2:1. Ink reads at >10:1 even at the
+       veil's lightest point. */
+    --focus-ring: var(--color-ink);
+
+    position: relative;
+    /* No background of its own: `.music__backdrop` is `inset: 0` and carries
+       the same --music-light as its own no-WebGL floor, so this would be a
+       duplicate -- and an unmaskable one, which would paint straight over the
+       translucent leading edge the seam mask below depends on. */
+  }
+
+  /* Same industrial texture cue as /link's .film, at section scope: the moss
+     shader already carries its own u_grain, so this stays subtle -- it exists
+     to unify the two sections' surface language, not to add fresh grain. */
+  .music__grain {
+    position: absolute;
+    z-index: var(--z-overlay);
+    inset: 0;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.9'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  /* Section-scoped mount of the shared shader engine (shaderField.ts) with
+     the moss palette (shaders/moss.ts) -- absolute, not fixed, so it stays
+     inside this section instead of showing through Shows/Footer. Unlike
+     /link's Plasma backdrop this palette is light-dominant (cream/lime,
+     see shaders/moss.ts), so the veil below is a LIGHT wash, not a dark
+     one -- it compresses the shader's darkest wisps back up into a safe
+     range for the section's dark text, the mirror image of how /link's
+     dark veil protects its light text against Plasma's bright wisps. */
+  .music__backdrop {
+    position: absolute;
+    z-index: var(--z-base);
+    inset: 0;
+    /* No-JS / no-WebGL floor: a still approximation of the shader's own
+       palette (cream field, a hint of lime and near-black marbling). */
+    background:
+      radial-gradient(ellipse at 24% 18%, rgb(163 230 53 / 35%) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 75%, rgb(16 20 8 / 28%) 0%, transparent 50%),
+      #f7fee7;
+    pointer-events: none;
+  }
+
+  .music__backdrop canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.9s ease;
+  }
+
+  /* Set by musicBackdrop.ts only after the first frame actually renders, so
+     a failed context never flashes an empty canvas over the gradient. */
+  .music__backdrop canvas[data-ready] {
+    opacity: 1;
+  }
+
+  /* Floor chosen by measurement, not by eye: the darkest pixel this shader
+     paints is ~rgb(16,20,8) (its near-black colour stop). At 55% white the
+     section's --color-ink text over that worst-case wisp is 6.5:1; the ramp
+     only goes heavier toward the foot, where the card grid lives. */
+  .music__backdrop-veil {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgb(255 253 245 / 55%) 0%, rgb(255 253 245 / 65%) 55%, rgb(255 253 245 / 75%) 100%);
+  }
+
+  /* The moving half of the Hero→Music seam.
+     ------------------------------------------------------------------
+     Hero pins itself with `position: sticky` and gives its `.hero-scene`
+     enough height that this section's negative margin overlaps the hero's
+     last viewport of travel. The result is a push: this section slides up
+     over a stationary, settled hero under ordinary scroll, and slides back
+     down again on the way up, because nothing here is an animation that
+     would need reversing.
+
+     Both properties are gated on the motion lifecycle for the same reason
+     Hero's scene height is: without JS, or under reduced motion, Hero is a
+     plain 100svh section and this one has to follow it normally rather than
+     sit on top of where it used to be. */
+  :global([data-motion-lifecycle="active"]) .music {
+    z-index: 1;
+    margin-top: -100svh;
+  }
+
+  /* Softens this section's leading edge so the push crosses a dissolve
+     instead of a hard line. Masking the backdrop (rather than laying a
+     gradient over it) is what makes the edge genuinely translucent, so the
+     hero's own foot -- already graded to this section's #f7fee7 by Hero's
+     `.hero__vignette` -- shows through it and the two fields read as one.
+
+     Gated with the pull-up above and for the same reason: unmasked, a
+     translucent top edge with no hero behind it would expose the body's
+     #0a0a0a. With the pull-up there is always a sticky hero behind this
+     band whenever it is on screen. svh, not a percentage: this section is
+     several viewports tall, so a percentage would scale the seam with the
+     content length.
+
+     Front-loaded ramp (70% opaque by 2.5svh, solid by 7svh) rather than a
+     plain linear one. A wide, evenly-translucent band is a window, not an
+     edge: at 13svh linear the artist's face read straight through it as a
+     double exposure as the section swept past him. This keeps the softness
+     that hides the boundary and drops the see-through depth that didn't. */
+  :global([data-motion-lifecycle="active"]) .music__backdrop {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, rgb(0 0 0 / 70%) 2.5svh, #000 7svh);
+    mask-image: linear-gradient(to bottom, transparent 0, rgb(0 0 0 / 70%) 2.5svh, #000 7svh);
+  }
+
+  .music__inner {
+    position: relative;
+    z-index: var(--z-content);
+    padding:
+      var(--space-7) var(--page-gutter) calc(var(--space-8) * 2)
+      calc(var(--page-gutter) + var(--safe-left));
+    padding-right: calc(var(--page-gutter) + var(--safe-right));
+  }
+
+  /* Mobile keeps the releases above the player card, as in the reference. */
+  .music__grid {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .music__stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    border: 1px solid var(--music-card-line);
+    border-radius: var(--music-radius);
+    background: rgb(10 10 10 / 6%);
+    backdrop-filter: blur(24px);
+    box-shadow: var(--music-lift);
+  }
+
+  .music__releases {
+    padding-bottom: 45vh;
+  }
+
+  .music__heading {
+    max-width: 11ch;
+    margin: 0 0 var(--space-3);
+    color: var(--music-ink);
+    font-size: clamp(1.75rem, 6vw, 2.75rem);
+    font-weight: 900;
+    letter-spacing: -0.06em;
+    line-height: 0.88;
+    text-transform: uppercase;
+  }
+
+  .music__empty {
+    color: var(--music-ink);
+  }
+
+  .music__embed {
+    display: block;
+    width: 100%;
+    border: 0;
+    border-radius: calc(var(--music-radius) - 8px);
+    background: var(--music-chrome);
+  }
+
+  .music__embed--spotify {
+    height: clamp(152px, 20vw, 352px);
+  }
+
+  .music__embed--soundcloud {
+    height: 166px;
+  }
+
+  /* ── Fallback players ── */
+
+  .player {
+    overflow: hidden;
+    border-radius: calc(var(--music-radius) - 8px);
+    background: var(--music-chrome);
+    box-shadow: inset 0 1px 1px rgb(255 255 255 / 8%);
+    color: #fff;
+  }
+
+  .player--spotify {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: clamp(152px, 20vw, 352px);
+    padding: clamp(0.875rem, 1.6vw, 1.5rem);
+  }
+
+  .player--soundcloud {
+    display: flex;
+    gap: clamp(0.75rem, 1.6vw, 1.25rem);
+    align-items: center;
+    height: 166px;
+    padding: clamp(0.875rem, 1.4vw, 1.25rem);
+  }
+
+  .player__top {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    justify-content: space-between;
+    min-width: 0;
+  }
+
+  .player__identity {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+    min-width: 0;
+  }
+
+  .player__column {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    min-width: 0;
+  }
+
+  .player__art {
+    flex-shrink: 0;
+    width: clamp(3.5rem, 9vw, 9rem);
+    height: clamp(3.5rem, 9vw, 9rem);
+    background: #262626;
+    object-fit: cover;
+  }
+
+  .player__art--square {
+    width: clamp(6rem, 8vw, 8rem);
+    height: clamp(6rem, 8vw, 8rem);
+  }
+
+  .player__meta {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .player__title,
+  .player__artist {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .player__title {
+    font-size: clamp(0.875rem, 1.2vw, 1.125rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+
+  .player__artist {
+    margin-top: 0.125rem;
+    color: #a3a3a3;
+    font-size: 0.8125rem;
+  }
+
+  .player__brand {
+    display: flex;
+    flex-shrink: 0;
+    gap: 0.375rem;
+    align-items: center;
+    margin: 0;
+    color: var(--music-spotify);
+    font-size: var(--font-size-label);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .player__brand--soundcloud {
+    color: var(--music-soundcloud);
+  }
+
+  .player__brand svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: currentcolor;
+  }
+
+  .player__transport {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+    margin-top: auto;
+    padding-top: var(--space-2);
+  }
+
+  .player__play {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background: var(--music-spotify);
+    color: #000;
+  }
+
+  .player__play--soundcloud {
+    width: 2rem;
+    height: 2rem;
+    background: var(--music-soundcloud);
+    color: #fff;
+  }
+
+  .player__play svg {
+    width: 1.125rem;
+    height: 1.125rem;
+    margin-left: 0.1rem;
+    fill: currentcolor;
+  }
+
+  .player__time {
+    flex-shrink: 0;
+    color: #a3a3a3;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+  }
+
+  .player__scrubber {
+    position: relative;
+    flex: 1;
+    height: 0.25rem;
+    background: rgb(255 255 255 / 20%);
+  }
+
+  .player__progress {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 35%;
+    background: #fff;
+  }
+
+  .player__waveform-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin-top: auto;
+    padding-top: var(--space-2);
+  }
+
+  .player__waveform {
+    display: flex;
+    gap: 1px;
+    align-items: flex-end;
+    justify-content: space-between;
+    height: 2.5rem;
+  }
+
+  .player__bar {
+    flex: 1;
+    background: rgb(255 255 255 / 25%);
+  }
+
+  .player__bar--played {
+    background: var(--music-soundcloud);
+    opacity: 0.9;
+  }
+
+  .player__waveform-times {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* ── Platform links ── */
+
+  /* Legacy hid this row on mobile (`hidden md:flex`); `/link` is the mobile
+     funnel for the same destinations. Parity, not an oversight. */
+  .music__platforms {
+    display: none;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: var(--space-1) 0 0;
+    padding: var(--space-3) var(--space-1) 0;
+    list-style: none;
+  }
+
+  /* Solid-ish dark chips rather than text sitting on the bare backdrop: a
+     live link needs 4.5:1 against whatever the moss shader is doing behind
+     it at any given moment, which text-on-glass can't guarantee. A near-
+     opaque dark pill fixes the surface under the label, the same move
+     .player's chrome background already makes -- so the label can carry
+     full-contrast white/lime instead of a dimmed ink tone. */
+  .music__platforms a,
+  .music__platform--pending {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid rgb(255 255 255 / 10%);
+    border-radius: 999px;
+    /* 92%, not the card language's usual translucency: near-white cream is
+       this shader's brightest stop, and white text needs the pill closer to
+       opaque to hold 4.5:1 against it than a glass-card alpha would give. */
+    background: rgb(10 10 10 / 92%);
+    padding: 0.45rem 0.85rem;
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .music__platforms a {
+    transition:
+      background-color var(--duration-base) var(--ease-in-out),
+      border-color var(--duration-base) var(--ease-in-out),
+      transform var(--duration-base) var(--ease-in-out);
+  }
+
+  .music__platforms a span {
+    color: var(--music-accent-bright);
+  }
+
+  .music__platforms a:hover,
+  .music__platforms a:focus-visible {
+    border-color: rgb(163 230 53 / 45%);
+    background: rgb(10 10 10 / 97%);
+    transform: translateY(-2px);
+  }
+
+  /* An unlinked platform name, styled to read as inactive rather than as
+     prose -- kept dim like /link's own pending chips. */
+  .music__platform--pending {
+    border-color: rgb(255 255 255 / 6%);
+    background: rgb(10 10 10 / 55%);
+    color: rgb(255 255 255 / 55%);
+  }
+
+  /* ── Releases ── */
+
+  .music__grid-releases {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .release__frame {
+    margin-bottom: var(--space-2);
+    overflow: hidden;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: rgb(10 10 10 / 5%);
+    transition:
+      transform var(--duration-base) var(--ease-in-out),
+      border-color var(--duration-base) var(--ease-in-out),
+      box-shadow var(--duration-base) var(--ease-in-out);
+  }
+
+  .release__frame:hover {
+    border-color: var(--music-card-line-hi);
+    box-shadow: var(--music-lift-hover);
+    transform: translateY(-3px);
+  }
+
+  .release__frame img,
+  .release__placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--duration-slow) var(--ease-in-out);
+  }
+
+  .release__frame:hover img {
+    transform: scale(1.04);
+  }
+
+  .release__placeholder {
+    display: block;
+    background: rgb(10 10 10 / 4%);
+  }
+
+  .release__title,
+  .release__meta {
+    margin: 0;
+    overflow: hidden;
+    color: var(--music-ink);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .release__title {
+    margin-bottom: 2px;
+    font-size: clamp(0.6rem, 2.5vw, 1rem);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    opacity: 0.85;
+  }
+
+  /* Bare-backdrop text, same reasoning as .music__platforms a above --
+     mobile's column-reverse layout puts the release grid near the section
+     top, the veil's lightest point, so this needs 4.5:1 there too. */
+  .release__meta {
+    font-family: var(--font-mono);
+    font-size: clamp(0.45rem, 2vw, 0.72rem);
+    letter-spacing: 0.2em;
+    opacity: 0.85;
+    text-transform: uppercase;
+  }
+
+  .release__meta span {
+    opacity: 0.85;
+  }
+
+  /* Mobile shows nine covers; the desktop column has room for twelve. */
+  .release:nth-child(n + 10) {
+    display: none;
+  }
+
+  @media (width >= 768px) {
+    .music__seam {
+      display: block;
+      position: absolute;
+      z-index: var(--z-base);
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: 35vh;
+      background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgb(10 10 10 / 4%) 15%,
+        rgb(10 10 10 / 20%) 35%,
+        rgb(10 10 10 / 60%) 65%,
+        var(--music-dark) 100%
+      );
+      pointer-events: none;
+    }
+
+    .music__inner {
+      display: flex;
+      flex-direction: column;
+      min-height: 100svh;
+      padding-bottom: 22vh;
+    }
+
+    .music__grid {
+      display: grid;
+      flex: 1;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(2.5rem, 5vw, 4rem);
+      align-items: start;
+    }
+
+    .music__stack {
+      gap: var(--space-4);
+      background: linear-gradient(to bottom right, rgb(10 10 10 / 4%), rgb(10 10 10 / 12%));
+      backdrop-filter: blur(48px);
+      box-shadow:
+        0 32px 80px -10px rgb(0 0 0 / 16%),
+        inset 0 1px 1px rgb(255 255 255 / 40%);
+    }
+
+    .music__releases {
+      padding-bottom: 0;
+    }
+
+    .music__platforms {
+      display: flex;
+    }
+
+    .player__play {
+      width: 2.75rem;
+      height: 2.75rem;
+    }
+
+    .player__play--soundcloud {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+
+    .player__waveform {
+      gap: 2px;
+      height: 3rem;
+    }
+
+    .music__heading {
+      margin-bottom: var(--space-5);
+    }
+
+    .music__grid-releases {
+      gap: var(--space-4);
+    }
+
+    .release:nth-child(n + 10) {
+      display: block;
+    }
+
+    .release__frame {
+      border: 1px solid rgb(10 10 10 / 12%);
+      border-radius: 1rem;
+      background: linear-gradient(to bottom right, rgb(10 10 10 / 8%), rgb(10 10 10 / 2%));
+      box-shadow:
+        0 20px 40px -5px rgb(0 0 0 / 10%),
+        inset 0 2px 6px rgb(255 255 255 / 40%);
+      backdrop-filter: blur(24px);
+    }
+
+    .release__frame:hover {
+      border-color: var(--music-card-line-hi);
+      box-shadow:
+        var(--music-lift-hover),
+        inset 0 2px 6px rgb(255 255 255 / 40%);
+    }
+  }
+</style>
+
+<script>
+  import { initMusicBackdrop } from "../lib/motion/musicBackdrop";
+  initMusicBackdrop();
+</script>

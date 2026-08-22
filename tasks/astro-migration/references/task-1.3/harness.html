@@ -1,0 +1,235 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Task 1.3 hero delivery harness</title>
+<style>
+  html,body{margin:0;background:#000;color:#fff;font:12px/1.4 monospace}
+  #stage{position:fixed;inset:0}
+  #stage>*{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  #spacer{height:400vh}
+  #hud{position:fixed;bottom:0;left:0;z-index:9;background:#000a;padding:4px}
+</style>
+<div id="stage">
+  <img id="poster" alt="">
+  <canvas id="cv"></canvas>
+  <video id="vid" muted playsinline preload="auto"></video>
+</div>
+<div id="spacer"></div>
+<div id="hud">booting</div>
+<script>
+// Task 1.3 hero delivery benchmark harness.
+// One page, two delivery strategies, identical instrumentation.
+// Result is published on window.__bench for the CDP runner to read.
+const P = new URLSearchParams(location.search);
+const MODE = P.get('mode') || 'seq-jpeg';
+const FAIL = P.get('fail') === '1';          // point media at a missing path to test fallback
+const COUNT = 193, FPS = 30;
+const SEQ = {
+  'seq-jpeg': { dir: '/public/frames-mobile', ext: 'jpg', pad: 'frame_' },
+  'seq-webp': { dir: '/tasks/astro-migration/references/task-1.3/assets/webp', ext: 'webp', pad: 'frame_' },
+  'seq-avif': { dir: '/tasks/astro-migration/references/task-1.3/assets/avif', ext: 'avif', pad: 'frame_' },
+};
+const VID = {
+  'video-h264-gop30': 'h264-crf23-gop30.mp4',
+  'video-h264-gop10': 'h264-crf23-gop10.mp4',
+  'video-h264-allintra': 'h264-crf23-allintra.mp4',
+  'video-vp9': 'vp9-crf32-gop10.webm',
+};
+const isSeq = MODE.startsWith('seq');
+const R = {
+  mode: MODE, fail: FAIL, ua: navigator.userAgent,
+  firstInteractiveMs: null, fullReadyMs: null, unlockedMs: null, unlockReason: null,
+  posterShownMs: null, errors: [], notes: [],
+};
+const now = () => performance.now();
+const hud = document.getElementById('hud');
+const say = t => { hud.textContent = t; };
+
+// ---- scroll gate: production intent is "lock entry until hero can render",
+// so the fallback path must also unlock. Anything that leaves this locked traps scroll.
+let locked = true;
+const block = e => { if (locked) e.preventDefault(); };
+addEventListener('wheel', block, { passive: false });
+addEventListener('touchmove', block, { passive: false });
+function unlock(reason) {
+  if (!locked) return;
+  locked = false; R.unlockedMs = now(); R.unlockReason = reason;
+  removeEventListener('wheel', block); removeEventListener('touchmove', block);
+}
+const GATE_TIMEOUT = 4000;
+setTimeout(() => unlock('timeout'), GATE_TIMEOUT);
+
+// ---- poster / final-frame fallback
+const poster = document.getElementById('poster');
+poster.src = '/tasks/astro-migration/references/task-1.3/assets/poster-final.webp';
+poster.onload = () => { R.posterShownMs = now(); };
+poster.onerror = () => R.errors.push('poster-failed');
+
+function resourceStats(cutoffMs) {
+  let bytes = 0, reqs = 0, uncompressedGuess = 0, cached = 0;
+  for (const e of performance.getEntriesByType('resource')) {
+    if (cutoffMs != null && e.responseEnd > cutoffMs) continue;
+    if (!/frames-mobile|task-1\.3\/assets/.test(e.name)) continue;
+    reqs++; bytes += e.transferSize || 0; uncompressedGuess += e.encodedBodySize || 0;
+    if (e.transferSize === 0 && e.encodedBodySize > 0) cached++;
+  }
+  return { requests: reqs, transferBytes: bytes, encodedBodyBytes: uncompressedGuess, servedFromCache: cached };
+}
+const pct = (a, p) => a.length ? a.slice().sort((x, y) => x - y)[Math.min(a.length - 1, Math.floor(a.length * p))] : null;
+const stat = a => ({ n: a.length, medianMs: pct(a, .5), p95Ms: pct(a, .95), maxMs: a.length ? Math.max(...a) : null });
+
+async function memory() {
+  const out = { jsHeapUsedBytes: performance.memory?.usedJSHeapSize ?? null, uaSpecific: null };
+  if (crossOriginIsolated && performance.measureUserAgentSpecificMemory) {
+    try { out.uaSpecific = await performance.measureUserAgentSpecificMemory(); } catch (e) { out.uaSpecific = 'error: ' + e.message; }
+  }
+  return out;
+}
+
+// ================= A: progressive image sequence =================
+async function runSequence() {
+  const cfg = SEQ[MODE];
+  document.getElementById('vid').remove();
+  const cv = document.getElementById('cv'), ctx = cv.getContext('2d', { alpha: false });
+  const url = i => `${cfg.dir}/${cfg.pad}${String(i + 1).padStart(4, '0')}.${FAIL ? 'missing' : cfg.ext}`;
+  const imgs = new Array(COUNT), ready = new Array(COUNT).fill(false);
+  let readyCount = 0, spineCount = 0, decodeTimes = [], firstResolve;
+  const firstReady = new Promise(r => firstResolve = r);
+  let allResolve; const allReady = new Promise(r => allResolve = r);
+  let spineResolve, spineTarget = 0; const spineReady = new Promise(r => spineResolve = r);
+
+  function load(i, priority, isSpine) {
+    const img = new Image();
+    imgs[i] = img;
+    img.fetchPriority = priority;
+    img.decoding = 'async';
+    img.onload = () => {
+      const t = now();                    // decode cost only, excluding network/queue wait
+      img.decode().then(() => {
+        decodeTimes.push(now() - t);
+        ready[i] = true; readyCount++;
+        if (isSpine && ++spineCount === spineTarget) spineResolve();
+        if (i === 0) firstResolve();
+        if (readyCount === COUNT) allResolve();
+      }).catch(() => { R.errors.push('decode-fail-' + i); });
+    };
+    img.onerror = () => { if (R.errors.length < 3) R.errors.push('load-fail-' + i); if (i === 0) firstResolve('error'); };
+    img.src = url(i);
+  }
+
+  // tier 1: the frame the user sees first
+  load(0, 'high');
+  // tier 2: coarse every-8th spine -> full-range scrub before the sequence finishes
+  const spine = []; for (let i = 8; i < COUNT; i += 8) spine.push(i);
+  // tier 3: everything else
+  const rest = []; for (let i = 1; i < COUNT; i++) if (i % 8 !== 0) rest.push(i);
+
+  const firstFlag = await Promise.race([firstReady, new Promise(r => setTimeout(() => r('timeout'), GATE_TIMEOUT))]);
+  if (firstFlag === 'error' || firstFlag === 'timeout') {
+    R.notes.push('first frame unavailable (' + firstFlag + ') -> poster fallback');
+    unlock('fallback:' + firstFlag);
+    return;                                // fallback path: nothing left to time
+  }
+  R.firstInteractiveMs = now();
+  poster.style.display = 'none';
+  unlock('first-frame');
+  spineTarget = spine.length;
+  spine.forEach(i => load(i, 'high', true));
+
+  // scrub with a partially loaded sequence: draw the nearest ready frame
+  const draw = i => {
+    let j = i; while (j >= 0 && !ready[j]) j--;
+    if (j < 0) { j = i; while (j < COUNT && !ready[j]) j++; }
+    if (j < 0 || j >= COUNT || !ready[j]) return null;
+    const t = now();
+    cv.width = 375; cv.height = 812;
+    ctx.drawImage(imgs[j], 0, 0, cv.width, cv.height);
+    return { ms: now() - t, exact: j === i };
+  };
+  const scrub = () => {
+    const times = [], hit = [];
+    for (let s = 0; s < 60; s++) {
+      const r = draw(Math.round(s / 59 * (COUNT - 1)));
+      if (r) { times.push(r.ms); hit.push(r.exact); }
+    }
+    return { drawMs: stat(times), stepsRendered: times.length, exactFrameRatio: hit.length ? hit.filter(Boolean).length / hit.length : 0 };
+  };
+
+  R.scrubAtFirstInteractive = scrub();
+  R.readyFramesAtFirstScrub = readyCount;
+  R.statsAtFirstInteractive = resourceStats(R.firstInteractiveMs);
+
+  // coarse spine ready = full-range scrub possible while the rest still downloads
+  await Promise.race([spineReady, new Promise(r => setTimeout(r, 60000))]);
+  R.spineReadyMs = now();
+  R.readyFramesAtSpine = readyCount;
+  R.statsAtSpineReady = resourceStats(R.spineReadyMs);
+  R.scrubAtSpineReady = scrub();
+
+  rest.forEach(i => load(i, 'low'));
+  await Promise.race([allReady, new Promise(r => setTimeout(r, 180000))]);
+  R.fullReadyMs = now();
+  R.readyFrames = readyCount;
+  R.scrubAtFullReady = scrub();
+  R.decodeMsPerFrame = stat(decodeTimes);
+  R.decodedPixelBytes = COUNT * 1176 * 1764 * 4; // computed, not measured
+}
+
+// ================= B: scrub-capable video =================
+async function runVideo() {
+  document.getElementById('cv').remove();
+  const v = document.getElementById('vid');
+  const src = '/tasks/astro-migration/references/task-1.3/assets/video/' + (FAIL ? 'missing.mp4' : VID[MODE]);
+  const once = (el, ev, ms) => new Promise(r => { const t = setTimeout(() => r('timeout'), ms); el.addEventListener(ev, () => { clearTimeout(t); r(ev); }, { once: true }); });
+  const errored = once(v, 'error', GATE_TIMEOUT);
+  v.src = src;
+  const first = await Promise.race([once(v, 'loadeddata', GATE_TIMEOUT), errored]);
+  if (first !== 'loadeddata') {
+    R.notes.push('video unavailable (' + first + ') -> poster fallback');
+    unlock('fallback:' + first);
+  } else {
+    R.firstInteractiveMs = now();
+    R.readyStateAtFirstInteractive = v.readyState;
+    poster.style.display = 'none';
+    unlock('loadeddata');
+  }
+  R.statsAtFirstInteractive = resourceStats(R.firstInteractiveMs);
+  const buffered = () => { const b = []; for (let i = 0; i < v.buffered.length; i++) b.push([v.buffered.start(i), v.buffered.end(i)]); return b; };
+  R.bufferedAtFirstInteractive = buffered();
+  R.duration = v.duration;
+
+  const seekTo = async t => {
+    const t0 = now();
+    v.currentTime = t;
+    await Promise.race([once(v, 'seeked', 5000), new Promise(r => setTimeout(() => r('timeout'), 5000))]);
+    return now() - t0;
+  };
+  const seekSweep = async n => { const a = []; for (let i = 0; i < n; i++) a.push(await seekTo(i / (n - 1) * (v.duration || 1) * 0.98)); return a; };
+  const stepSweep = async n => { const a = []; for (let i = 0; i < n; i++) a.push(await seekTo(i / FPS)); return a; };
+
+  if (first === 'loadeddata') {
+    R.seekAtFirstInteractive = stat(await seekSweep(20));   // random-access scrub, partially buffered
+    R.bufferedAfterFirstScrub = buffered();
+    await Promise.race([once(v, 'canplaythrough', 60000), new Promise(r => setTimeout(r, 60000))]);
+    R.fullReadyMs = now();
+    R.seekRandomFull = stat(await seekSweep(30));           // random-access scrub, fully buffered
+    R.seekSequentialFull = stat(await stepSweep(30));       // frame-adjacent scrub (the real scroll pattern)
+    R.bufferedAtEnd = buffered();
+  }
+}
+
+(async () => {
+  const t0 = now();
+  try { await (isSeq ? runSequence() : runVideo()); }
+  catch (e) { R.errors.push('fatal: ' + e.message); }
+  R.statsTotal = resourceStats(null);
+  R.memory = await memory();
+  // scroll-trap check: gate must be open and the document must actually move
+  R.locked = locked;
+  const y0 = scrollY; scrollTo(0, 600); await new Promise(r => setTimeout(r, 150));
+  R.scrollMoved = scrollY > y0; R.scrollY = scrollY;
+  R.totalMs = now() - t0;
+  window.__bench = R;
+  say('done ' + MODE + ' ' + Math.round(R.totalMs) + 'ms');
+})();
+</script>

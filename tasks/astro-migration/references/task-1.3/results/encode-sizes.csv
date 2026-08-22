@@ -1,0 +1,10 @@
+variant,files,total_bytes,ssim_all
+jpeg-baseline,193,19568732,1.000000
+webp-q80,193,6697540,0.992541
+avif-crf32,193,2894543,0.989649
+h264-crf23-gop30,1,2692686,0.992289
+h264-crf23-gop10,1,3183303,0.992317
+h264-crf23-allintra,1,8848171,0.993028
+vp9-crf32-gop10,1,2180474,0.980681
+poster-first-webp,1,32366,
+poster-final-webp,1,47908,

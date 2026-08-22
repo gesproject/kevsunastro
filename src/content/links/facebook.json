@@ -1,0 +1,7 @@
+{
+  "label": "Facebook",
+  "kind": "social",
+  "priority": 30,
+  "enabled": true,
+  "href": "https://www.facebook.com/solbo.music"
+}

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>Sölbo — AVIF Hero Delivery Test</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main>
+      <section class="hero-test" aria-labelledby="hero-title">
+        <div class="hero-test__stage" id="stage">
+          <canvas id="hero-canvas" aria-label="Sölbo Hero frame preview"></canvas>
+          <div class="hero-test__shade" aria-hidden="true"></div>
+          <header class="hero-test__header">
+            <p class="eyebrow">Sölbo / hero delivery test</p>
+            <p class="route" id="source-label">Desktop master</p>
+          </header>
+          <div class="hero-test__copy">
+            <h1 id="hero-title">Sölbo</h1>
+            <p id="status" role="status">Loading poster…</p>
+          </div>
+          <div class="hero-test__controls" aria-label="Hero test controls">
+            <label for="scrub">Scrub the AVIF sequence</label>
+            <input id="scrub" type="range" min="0" max="232" value="0" />
+            <div class="hero-test__meta">
+              <span id="frame-count">Frame 1 / 233</span>
+              <span id="cache-count">0 frames cached</span>
+            </div>
+            <button id="failure-toggle" type="button">Simulate media failure</button>
+          </div>
+        </div>
+      </section>
+      <section class="notes" aria-label="Test notes">
+        <p class="eyebrow">Why this exists</p>
+        <h2>Canvas precision, without video seeking.</h2>
+        <p>
+          This isolated delivery build uses the human-approved wide master above 768px and the close companion below it. It draws an AVIF sequence into a canvas, uses a final-frame poster before interaction, caps the in-memory image cache, and never installs a scroll lock.
+        </p>
+        <p>
+          Drag the control, scroll through the stage, resize across the 768px breakpoint, and use the failure control. Reduced motion keeps the poster visible while the page remains completely scrollable.
+        </p>
+      </section>
+      <section class="exit" aria-label="End of test">
+        <p>Native scroll is intentionally left untouched.</p>
+      </section>
+    </main>
+    <script type="module" src="./preview.js"></script>
+  </body>
+</html>

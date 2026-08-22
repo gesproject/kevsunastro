@@ -1,0 +1,408 @@
+---
+/**
+ * Hero — human-directed rework (2026-08-09), superseding Task 4.2c.
+ *
+ * Two structural changes over 4.2c, both from direct feedback on the built
+ * result:
+ *
+ * 1. **No cutout.** 4.2c keyed the studio plate to alpha so only the artist
+ *    was opaque, which left a silhouette edge against the shader no amount of
+ *    feathering fully hid. The frames ship opaque again, plate and all, and
+ *    the plate is *dissolved* into the shader instead of cut away: a matching
+ *    #BBBBBB field (`.hero__plate`) sits behind the canvas and extends past
+ *    the footage, and the canvas itself is masked to fade out over its own
+ *    plate margin. The composite reads plate → plate → shader, so there is no
+ *    edge anywhere to catch the eye.
+ * 2. **The hero is pinned by CSS, not GSAP,** and Music slides up over it
+ *    under ordinary scroll. `.hero-scene` is a tall block, `.hero` is
+ *    `position: sticky` inside it, and Music carries a negative top margin
+ *    that overlaps this section's last viewport of travel. The push is
+ *    therefore scroll-driven and reversible for free -- scroll back up and the
+ *    hero is simply there again, which is what the old fired
+ *    `advanceToMusic()` tween (opacity → 0, never restored, hence the black
+ *    screen on the way back) could not do.
+ *
+ * Both breakpoints now play the same footage (see heroSequence.ts): mobile's
+ * separate shoot is gone, so this is one composition with one anchor change,
+ * not two heroes sharing a file.
+ */
+import { getSite } from "../lib/content";
+import HeroBackdrop from "./HeroBackdrop.astro";
+
+const site = await getSite();
+
+// No social nav here by design: the hero is deliberately minimal (artist name,
+// the footage, and one way onward). Music.astro and Footer.astro still render
+// the full social list from the same `links` collection, so nothing is orphaned.
+---
+
+<!--
+  The scroll runway. Only tall when the motion engine is live (see the style
+  block) -- without JS, or under reduced motion, this collapses to the sticky
+  child's own 100svh and the page is an ordinary stack of sections again.
+-->
+<div class="hero-scene">
+  <section id="hero" class="hero">
+    <!-- Layer 0: the live shader field. -->
+    <HeroBackdrop />
+
+    <!-- Layer 1: the plate. Literally the footage's own background colour,
+         extended past where the footage ends so the canvas's fade (layer 2)
+         lands on more of the same grey rather than straight onto the shader.
+         This is the whole trick behind "no cutout": the dissolve happens
+         between two identical greys, and only then does the grey fade into
+         the field. -->
+    <div class="hero__plate" aria-hidden="true"></div>
+
+    <div class="hero__canvas-wrap" aria-hidden="true">
+      <!--
+        No separate poster asset: the plate above is the resting "poster"
+        state, shown until frame 0 decodes and permanently without JS.
+        heroSequence.ts sizes and positions this canvas to exactly the drawn
+        frame's box, which is what lets the percentage mask below line up with
+        the footage's own plate margin at every viewport size.
+      -->
+      <canvas class="hero__canvas"></canvas>
+    </div>
+
+    <!--
+      Hidden by default via the native `hidden` attribute; heroSequence.ts
+      removes/restores it around the active breakpoint's frame-0 load.
+      Without JS nothing is ever "loading," so staying hidden is correct,
+      not a bug -- a spinner with no JS to resolve it would be worse than none.
+    -->
+    <div class="hero__loader" hidden aria-hidden="true">
+      <span class="hero__loader-bar"></span>
+      <span class="hero__loader-bar"></span>
+      <span class="hero__loader-bar"></span>
+      <span class="hero__loader-bar"></span>
+      <span class="hero__loader-bar"></span>
+    </div>
+
+    <div class="film-grain hero__grain" aria-hidden="true"></div>
+
+    <!-- The static half of the seam: grades this section's foot toward Music's
+         own field colour (#f7fee7, Music.astro's --music-light) so that when
+         Music's soft leading edge slides up over it during the push, it is
+         crossing colour it already matches. Literal hex, not a shared token --
+         Music doesn't expose --music-light outside its own scope; if that
+         value changes, this needs a matching update. -->
+    <div class="hero__vignette" aria-hidden="true"></div>
+
+    <!-- Single lockup at every breakpoint: h1 + scroll cue, bottom-left. -->
+    <div class="hero__lockup">
+      <div class="hero__scroll-cue" aria-hidden="true">
+        <span class="hero__scroll-label">Scroll</span>
+        <div class="hero__scroll-line">
+          <div class="hero__scroll-line-inner"></div>
+        </div>
+      </div>
+
+      <div class="hero__lockup-text">
+        <h1 class="hero__lockup-headline">{site.data.artistName}</h1>
+      </div>
+    </div>
+  </section>
+</div>
+
+<style>
+  /* The footage's own studio plate, measured off the master frames: every
+     non-subject pixel is exactly rgb(187,187,187) in all 233 of them. Every
+     grey below that has to disappear into the footage is this value. */
+  .hero {
+    --hero-plate: #bbbbbb;
+  }
+
+  /* Scroll budget, and the one number that has to stay in agreement with
+     heroSequence.ts's SCRUB_VH (1.2) and Music's pull-up (100svh):
+
+       scene height = 100svh (the hero itself)
+                    + 120svh (SCRUB_VH, the frame sequence)
+                    + 100svh (Music sliding up over the settled hero)
+                    = 320svh
+
+     The hero stays stuck for the middle 220svh of that. Music's own
+     `margin-top: -100svh` puts its top edge exactly one viewport before this
+     block ends, so it finishes covering the hero at the same instant the hero
+     unsticks -- no gap, no jump, and the whole thing runs backwards just as
+     well as forwards because nothing here is a fired animation. */
+  :global([data-motion-lifecycle="active"]) .hero-scene {
+    height: 320svh;
+  }
+
+  .hero-scene {
+    position: relative;
+  }
+
+  .hero {
+    position: sticky;
+    top: 0;
+    overflow: clip;
+    height: 100svh;
+    background: var(--color-paper);
+  }
+
+  /* Layer ladder inside .hero, lowest first: 0 backdrop shader (HeroBackdrop),
+     1 plate, 2 frame canvas, 3 grain + seam, 4 lockup, 5 loader. */
+  .hero__plate {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    pointer-events: none;
+    /* Mobile: the footage is width-filled and docked to the bottom, so the
+       plate has to hold solid across the bottom and dissolve upward. */
+    background: linear-gradient(
+      to top,
+      var(--hero-plate) 0%,
+      var(--hero-plate) 52%,
+      rgb(187 187 187 / 0%) 92%
+    );
+  }
+
+  .hero__canvas-wrap {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+  }
+
+  /* The push's depth cue. `--push` is 0..1 across Music's slide-up, written by
+     heroSequence.ts's setupPushRecede (and simply absent without JS, hence the
+     fallbacks).
+
+     Only the footage and the lockup recede -- the plate and the shader behind
+     them stay put and stay opaque, which is what keeps a partly-pushed hero a
+     lit grey field rather than a hole onto the body's #0a0a0a.
+
+     The 2.2 multiplier lands opacity 0 at 45% of the push rather than at its
+     end. That is not a taste call: on mobile the artist's face sits ~44% of a
+     viewport up from the bottom, so this is what gets him out of the way
+     before Music's leading edge arrives there. */
+  .hero__canvas-wrap,
+  .hero__lockup {
+    opacity: clamp(0, calc(1 - var(--push, 0) * 2.2), 1);
+    transform: translate3d(0, calc(var(--push, 0) * -18svh), 0);
+  }
+
+  /* Positioned and sized in JS to the drawn frame's exact box (see
+     paintFrame), which is what makes these percentages meaningful: they are
+     percentages of the footage, not of the viewport.
+
+     Mobile fade is vertical. The subject's head starts 190px into the 1080px
+     frame (17.6%), so fading out over the top 16% consumes the plate margin
+     and stops just short of his hair. */
+  .hero__canvas {
+    position: absolute;
+    display: block;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 16%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 16%);
+  }
+
+  .hero__loader {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  /* [hidden] is only a UA-stylesheet rule; an unconditional `display: flex`
+     here would out-rank it regardless of source order, since author CSS
+     always wins over UA CSS at equal specificity. Gate it explicitly so the
+     native `hidden` attribute genuinely hides this instead of doing nothing. */
+  .hero__loader:not([hidden]) {
+    display: flex;
+  }
+
+  .hero__loader-bar {
+    width: 0.5rem;
+    height: 1.25rem;
+    background: rgb(14 14 12 / 70%);
+    animation: hero-loader-bounce 1s ease-in-out infinite;
+    transform-origin: bottom;
+  }
+
+  .hero__loader-bar:nth-child(1) {
+    animation-delay: 0s;
+  }
+  .hero__loader-bar:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+  .hero__loader-bar:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+  .hero__loader-bar:nth-child(4) {
+    animation-delay: 0.3s;
+  }
+  .hero__loader-bar:nth-child(5) {
+    animation-delay: 0.4s;
+  }
+
+  @keyframes hero-loader-bounce {
+    0%,
+    100% {
+      transform: scaleY(1);
+    }
+    50% {
+      transform: scaleY(1.5);
+    }
+  }
+
+  .hero__grain {
+    position: absolute;
+    z-index: 3;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  /* Lighter and later than 4.2c's version. That one had to wash the artist out
+     itself, because it was the entire transition; now it only has to prepare
+     the colour Music's leading edge arrives over, and Music covers this
+     section's foot during the push anyway. */
+  .hero__vignette {
+    position: absolute;
+    z-index: 3;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(to bottom, transparent 64%, rgb(202 202 202 / 40%) 90%, rgb(247 254 229 / 85%) 100%);
+  }
+
+  .hero__lockup {
+    position: absolute;
+    z-index: 4;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+    gap: var(--space-4);
+    padding: 0 var(--space-5) calc(var(--safe-bottom) + var(--space-5));
+    pointer-events: none;
+  }
+
+  .hero__scroll-cue {
+    display: flex;
+    flex-shrink: 0;
+    align-items: flex-end;
+    gap: var(--space-3);
+    opacity: 0.82;
+  }
+
+  .hero__scroll-label {
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+    color: rgb(30 30 30 / 60%);
+    font-size: 0.55rem;
+    font-weight: 500;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+  }
+
+  .hero__scroll-line {
+    position: relative;
+    overflow: hidden;
+    width: 2px;
+    height: 3.5rem;
+    background: rgb(30 30 30 / 20%);
+  }
+
+  .hero__scroll-line-inner {
+    width: 100%;
+    height: 100%;
+    background: rgb(30 30 30 / 80%);
+    animation: hero-scroll-breathe 2.6s ease-in-out infinite;
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+
+  @keyframes hero-scroll-breathe {
+    0% {
+      transform: scaleY(0);
+      transform-origin: top;
+    }
+    45% {
+      transform: scaleY(1);
+      transform-origin: top;
+    }
+    50% {
+      transform-origin: bottom;
+    }
+    95%,
+    100% {
+      transform: scaleY(0);
+      transform-origin: bottom;
+    }
+  }
+
+  .hero__lockup-text {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    pointer-events: auto;
+  }
+
+  /* Mobile scale: the desktop clamp (9rem floor) is tuned for a wide viewport
+     and would print flat at 144px on a 375px-wide phone, more than a third of
+     the screen's own width for a single word. This clamp is genuinely
+     viewport-driven (14vw) across the phone size range instead. */
+  .hero__lockup-headline {
+    margin: 0;
+    color: var(--color-ink-raised);
+    font-size: clamp(2.75rem, 14vw, 4.5rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 0.9;
+  }
+
+  @media (width >= 768px) {
+    /* Desktop flips the composition from vertical to horizontal: the footage
+       is height-filled and docked right (heroSequence.ts's anchorX: 1), so the
+       plate holds solid on the right and dissolves leftward instead of
+       upward. */
+    .hero__plate {
+      background: linear-gradient(
+        to left,
+        var(--hero-plate) 0%,
+        var(--hero-plate) 42%,
+        rgb(187 187 187 / 0%) 86%
+      );
+    }
+
+    /* Matching flip for the footage's own fade. The subject's union bounding
+       box starts 330px into the 864px-wide crop (38%), so fading in over the
+       left 32% stays entirely inside the plate margin and never touches him.
+       No top or bottom fade at this breakpoint: contain-fit is height-driven
+       here, so those edges are the viewport's own edges and there is nothing
+       past them to fade into. */
+    .hero__canvas {
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 32%);
+      mask-image: linear-gradient(to right, transparent 0%, black 32%);
+    }
+
+    .hero__lockup {
+      align-items: flex-end;
+      max-width: min(52rem, calc(100vw - 6rem));
+      gap: var(--space-7);
+      padding: 0 var(--space-8) var(--space-6);
+    }
+
+    .hero__scroll-cue {
+      gap: var(--space-4);
+    }
+
+    .hero__scroll-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.5em;
+    }
+
+    .hero__scroll-line {
+      height: 6rem;
+    }
+
+    .hero__lockup-headline {
+      font-size: clamp(9rem, 18vw, 13.25rem);
+      letter-spacing: -0.045em;
+    }
+  }
+</style>

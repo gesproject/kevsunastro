@@ -1,0 +1,7 @@
+{
+  "label": "View site",
+  "kind": "site",
+  "priority": 70,
+  "enabled": true,
+  "href": "/"
+}

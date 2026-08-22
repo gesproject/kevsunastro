@@ -1,0 +1,22 @@
+{
+  "name": "solbo-link-preview",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "astro build",
+    "preview": "astro preview",
+    "cf:preview": "wrangler versions upload --config dist/server/wrangler.json"
+  },
+  "engines": {
+    "node": "22.12.0",
+    "npm": "10.9.0"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "14.1.5",
+    "astro": "7.1.4"
+  },
+  "devDependencies": {
+    "wrangler": "4.114.0"
+  }
+}

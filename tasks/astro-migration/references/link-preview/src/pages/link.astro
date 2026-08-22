@@ -1,0 +1,292 @@
+---
+export const prerender = true;
+
+// Marks are the site's own SVGs from public/images, inlined so the row costs no extra
+// requests. Trusted local constants only — nothing here comes from user input.
+// ponytail: `href: null` renders a dimmed non-interactive chip. Spotify and SoundCloud
+// are still `.../placeholder` in the production mock data, so they get no live link yet.
+const socials = [
+  {
+    name: 'Instagram',
+    href: 'https://www.instagram.com/solbo__/?hl=en',
+    svg: `<svg viewBox="0 0 24 24" fill="none" stroke="url(#insta-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><defs><radialGradient id="insta-grad" cx="30%" cy="107%" r="150%"><stop offset="0%" stop-color="#fdf497"/><stop offset="5%" stop-color="#fdf497"/><stop offset="45%" stop-color="#fd5949"/><stop offset="60%" stop-color="#d6249f"/><stop offset="90%" stop-color="#285AEB"/></radialGradient></defs><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>`,
+  },
+  {
+    name: 'TikTok',
+    href: 'https://www.tiktok.com/@solbo__',
+    svg: `<svg viewBox="0 0 24 24"><path d="M19.5 9c-1.8 0-3.5-.6-4.9-1.7V15c0 3.3-2.7 6-6 6s-6-2.7-6-6 2.7-6 6-6c.4 0 .8.04 1.2.12V12c-.4-.1-.8-.2-1.2-.2-1.7 0-3 1.3-3 3s1.3 3 3 3 3-1.3 3-3V3h3c0 2.2 1.8 4 4 4v2z" fill="#25f4ee" transform="translate(-0.8,-0.8)"/><path d="M19.5 9c-1.8 0-3.5-.6-4.9-1.7V15c0 3.3-2.7 6-6 6s-6-2.7-6-6 2.7-6 6-6c.4 0 .8.04 1.2.12V12c-.4-.1-.8-.2-1.2-.2-1.7 0-3 1.3-3 3s1.3 3 3 3 3-1.3 3-3V3h3c0 2.2 1.8 4 4 4v2z" fill="#fe2c55" transform="translate(0.8,0.8)"/><path d="M19.5 9c-1.8 0-3.5-.6-4.9-1.7V15c0 3.3-2.7 6-6 6s-6-2.7-6-6 2.7-6 6-6c.4 0 .8.04 1.2.12V12c-.4-.1-.8-.2-1.2-.2-1.7 0-3 1.3-3 3s1.3 3 3 3 3-1.3 3-3V3h3c0 2.2 1.8 4 4 4v2z" fill="currentColor"/></svg>`,
+  },
+  {
+    name: 'Facebook',
+    href: 'https://www.facebook.com/solbo.music',
+    svg: `<svg viewBox="0 0 24 24" fill="#1877F2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>`,
+  },
+  {
+    name: 'Spotify',
+    href: null,
+    svg: `<svg viewBox="0 0 24 24" fill="none" stroke="#1DB954" stroke-width="2.2" stroke-linecap="round"><g transform="rotate(10 12 12)"><path d="M 4 10 C 8 6, 16 6, 20 10"/><path d="M 5.5 14 C 9 10.5, 15 10.5, 18.5 14"/><path d="M 7.5 18 C 10 15.5, 14 15.5, 16.5 18"/></g></svg>`,
+  },
+  {
+    name: 'SoundCloud',
+    href: null,
+    svg: `<svg viewBox="0 0 24 24" fill="#ff5500"><path d="M11.5 8.5v9h8a3.5 3.5 0 0 0 0-7 4.5 4.5 0 0 0-4.3-3.5c-.7 0-1.3.2-1.8.5-.6-.6-1.3-1-2.1-1z"/><path stroke="#ff5500" stroke-width="1.4" stroke-linecap="round" d="M10 9v8.5M8 10v7.5M6 11.5v6M4 13v4.5M2 14.5v3"/></svg>`,
+  },
+];
+
+// ponytail: `href: null` renders a non-interactive card with a PENDING tag instead of a
+// dead link. Drop the real URL in and it becomes a link — no markup change needed.
+const actions = [
+  { label: 'LISTEN', detail: 'SPOTIFY / SOUNDCLOUD', href: null },
+  { label: 'BUY', detail: 'BANDCAMP', href: null },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="description" content="Sölbo — follow, listen, and enter the site." />
+    <title>Sölbo — Links</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#follow">Skip to links</a>
+    <div class="film" aria-hidden="true"></div>
+
+    <main id="content">
+      <header class="identity">
+        <img
+          class="identity__portrait"
+          src="/images/solbo-profile.jpg"
+          width="80"
+          height="80"
+          alt="Portrait of Sölbo"
+          fetchpriority="high"
+        />
+        <h1>SÖLBO</h1>
+        <p class="identity__location">MONTRÉAL / QC</p>
+
+        <nav class="social-row" aria-label="Sölbo social profiles">
+          {socials.map(({ name, href, svg }) => {
+            const Tag = href ? 'a' : 'span';
+            return (
+              <Tag
+                class:list={['social-chip', { 'social-chip--pending': !href }]}
+                href={href}
+                target={href ? '_blank' : undefined}
+                rel={href ? 'noopener noreferrer' : undefined}
+                role={href ? undefined : 'img'}
+                aria-label={href ? name : `${name} — link pending`}
+                set:html={svg}
+              />
+            );
+          })}
+        </nav>
+      </header>
+
+      <section id="follow" class="section section--lead" aria-labelledby="follow-heading">
+        <h2 id="follow-heading" class="visually-hidden">Follow Sölbo</h2>
+
+        <div class="enter-wrap">
+          <a class="enter-card" href="/?entry=link">
+            <span>ENTER CINEMATIC SITE</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </section>
+
+      <section id="actions" class="section" aria-labelledby="access-heading">
+        <h2 id="access-heading">MUSIC</h2>
+
+        <div class="action-stack">
+          {actions.map(({ label, detail, href }) => {
+            const Tag = href ? 'a' : 'div';
+            return (
+              <Tag class:list={['action-card', 'card', { 'action-card--pending': !href }]} href={href}>
+                <span class="action-card__label">{label}</span>
+                <span class="action-card__detail">{detail}</span>
+                {href
+                  ? <span class="action-card__arrow" aria-hidden="true">↗</span>
+                  : <span class="action-card__pending">LINK PENDING</span>}
+              </Tag>
+            );
+          })}
+        </div>
+      </section>
+
+      <section class="editorial" aria-hidden="true">
+        <img class="editorial__image" src="/images/horizontal1.webp" alt="" loading="lazy" decoding="async" />
+        <div class="editorial__veil"></div>
+        <p class="editorial__statement">Tension between<br />darkness and warmth.</p>
+      </section>
+
+      <section id="release" class="section" aria-labelledby="release-heading">
+        <h2 id="release-heading">NEW RELEASE</h2>
+
+        <article class="release-card card">
+          <img
+            class="release-card__art"
+            src="/images/mecca.webp"
+            width="240"
+            height="240"
+            alt="Mecca release artwork"
+            loading="lazy"
+            decoding="async"
+          />
+          <div class="release-card__copy">
+            <p class="release-card__type">SINGLE / 2026</p>
+            <h3>MECCA</h3>
+            <p>A restrained pressure field, built for the room after midnight.</p>
+          </div>
+        </article>
+      </section>
+
+      <section id="shows" class="section" aria-labelledby="shows-heading">
+        <h2 id="shows-heading">FIND ME LIVE</h2>
+
+        <article class="show-card card">
+          <p class="show-card__day">NEW DATES<br />INCOMING</p>
+          <div class="show-card__copy">
+            <p class="show-card__city">MONTRÉAL + BEYOND</p>
+            <p class="show-card__note">Join the signal to receive the next room, city, and time.</p>
+          </div>
+          <a class="micro-link" href="mailto:booking@solbo.studio?subject=Show%20updates">GET UPDATES <span aria-hidden="true">↗</span></a>
+        </article>
+      </section>
+
+      <footer class="footer">
+        <a class="footer__mail" href="mailto:booking@solbo.studio">BOOKING@SOLBO.STUDIO <span aria-hidden="true">↗</span></a>
+        <p>© 2026 SÖLBO</p>
+      </footer>
+    </main>
+
+    <style>
+      :root {
+        --paper: #b7bab6;
+        --card: #f0f1ee;
+        --ink: #000;
+        --dark: #0a0b09;
+        --silver: #e7e8e3;
+        --line: rgba(0, 0, 0, .16);
+        --radius: 16px;
+        --notch: 18px;
+        --lift: 0 1px 2px rgba(0,0,0,.07), 0 10px 26px rgba(0,0,0,.08);
+        --lift-hover: 0 2px 4px rgba(0,0,0,.09), 0 16px 36px rgba(0,0,0,.12);
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; background: var(--paper); }
+      body {
+        min-width: 320px;
+        margin: 0;
+        background:
+          radial-gradient(circle at 10% 8%, rgba(255,255,255,.44), transparent 25rem),
+          radial-gradient(circle at 90% 22%, rgba(31,33,31,.18), transparent 33rem),
+          var(--paper);
+        color: var(--ink);
+        font-family: Arial, Helvetica, sans-serif;
+        text-rendering: geometricPrecision;
+      }
+
+      a { color: inherit; }
+      a:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+      .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+      .skip-link { position: fixed; z-index: 20; left: 1rem; top: -5rem; padding: .8rem 1rem; background: var(--ink); color: var(--silver); font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-decoration: none; border-radius: var(--radius); }
+      .skip-link:focus { top: 1rem; }
+      .film { position: fixed; inset: 0; z-index: 10; opacity: .07; pointer-events: none; mix-blend-mode: multiply; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.9'/%3E%3C/svg%3E"); }
+
+      main { position: relative; z-index: 1; width: min(100%, 48rem); margin: 0 auto; padding: clamp(.75rem, 2vw, 1.25rem); }
+
+      /* Every card rounds and lifts off the concrete — except .notch-card, see below. */
+      .card { border-radius: var(--radius); box-shadow: var(--lift); }
+
+      .identity { display: grid; justify-items: center; gap: .55rem; padding: 1.4rem 0 1.5rem; border-bottom: 1px solid var(--line); text-align: center; }
+      .identity__portrait { width: 5.25rem; height: 5.25rem; border-radius: 999px; border: 1px solid var(--line); object-fit: cover; filter: grayscale(1); box-shadow: var(--lift); }
+      h1 { margin: .35rem 0 0; font-size: clamp(2.3rem, 10vw, 3.3rem); font-weight: 900; letter-spacing: -.09em; line-height: .85; }
+      .identity__location { opacity: .55; }
+
+      .identity__location, .release-card__type, .show-card__city, .footer p { margin: 0; font-size: .61rem; font-weight: 700; letter-spacing: .16em; line-height: 1.35; text-transform: uppercase; }
+      h1, h2, h3, p { margin-top: 0; }
+      h2 { max-width: 11ch; margin-bottom: 1.1rem; font-size: clamp(1.9rem, 5.5vw, 3rem); font-weight: 900; letter-spacing: -.08em; line-height: .86; }
+
+      .section { padding: clamp(2.4rem, 6vw, 3.6rem) 0 0; scroll-margin-top: 1rem; }
+      .section--lead { padding-top: 1.35rem; }
+
+      /* Primary action 1 — follow. Icon row, no labels; names stay in aria-label. */
+      .social-row { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; margin-top: .45rem; }
+      .social-chip { display: grid; place-items: center; width: 2.9rem; height: 2.9rem; border-radius: 999px; background: var(--card); box-shadow: var(--lift); transition: box-shadow .24s ease, transform .24s cubic-bezier(.2,.8,.2,1); }
+      a.social-chip:hover { box-shadow: var(--lift-hover); transform: translateY(-3px); }
+      .social-chip :global(svg) { width: 1.45rem; height: 1.45rem; }
+      .social-chip--pending { opacity: .34; }
+
+      /* A quiet, secondary funnel into the cinematic site. Its tap target remains 44px. */
+      .enter-wrap { display: flex; justify-content: center; margin-top: .25rem; }
+      .enter-card { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 2.75rem; padding: .55rem .75rem; border-bottom: 1px solid rgba(0,0,0,.38); color: rgba(0,0,0,.66); font-size: .61rem; font-weight: 800; letter-spacing: .13em; line-height: 1; text-decoration: none; transition: border-color .24s ease, color .24s ease; }
+      .enter-card:hover { border-color: var(--ink); color: var(--ink); }
+      .enter-card:focus-visible { outline-color: var(--dark); outline-offset: 3px; }
+
+      /* Secondary actions. */
+      .action-stack { display: grid; gap: .6rem; }
+      .action-card { display: grid; grid-template-columns: 1fr auto; align-items: center; min-height: 5.15rem; padding: 1.15rem 1.15rem; background: var(--card); text-decoration: none; transition: transform .24s cubic-bezier(.2,.8,.2,1), box-shadow .24s ease; }
+      a.action-card:hover { box-shadow: var(--lift-hover); transform: translateX(.3rem); }
+      .action-card--pending { opacity: .55; }
+      .action-card__detail { grid-column: 1; margin-top: .25rem; font-size: .57rem; font-weight: 800; letter-spacing: .12em; opacity: .55; }
+      .action-card__label { font-size: 1.2rem; font-weight: 900; letter-spacing: -.06em; }
+      .action-card__arrow { grid-column: 2; grid-row: 1 / span 2; align-self: center; font-size: 1.3rem; }
+      .action-card__pending { grid-column: 2; grid-row: 1 / span 2; align-self: center; border: 1px solid currentColor; border-radius: 999px; padding: .32rem .55rem; font-size: .5rem; font-weight: 800; letter-spacing: .1em; }
+
+      /* The poster moment, demoted below the actions. */
+      .editorial { position: relative; isolation: isolate; display: grid; align-items: end; min-height: clamp(15rem, 42vw, 20rem); margin-top: clamp(2.4rem, 6vw, 3.6rem); overflow: hidden; border-radius: var(--radius); box-shadow: var(--lift); background: var(--dark); color: var(--silver); }
+      .editorial__image { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.15); transform: scale(1.03); }
+      .editorial__veil { position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(6,7,6,.94) 0%, rgba(6,7,6,.56) 55%, rgba(6,7,6,.08) 100%); }
+      .editorial__statement { margin: 0; max-width: 14ch; padding: clamp(1.2rem, 4vw, 2.4rem); font-size: clamp(1.15rem, 3.6vw, 1.55rem); font-weight: 700; letter-spacing: -.04em; line-height: 1.02; }
+
+      .release-card { display: grid; grid-template-columns: minmax(6.4rem, 35%) 1fr; gap: 1rem; align-items: center; min-height: 12.25rem; padding: 1rem 1rem 1rem 0; overflow: hidden; background: var(--dark); color: var(--silver); }
+      .release-card__art { align-self: stretch; width: 100%; height: 100%; min-height: 11rem; object-fit: cover; filter: saturate(.6) grayscale(.1); }
+      .release-card__copy { padding-right: .25rem; }
+      .release-card__type { color: rgba(231,232,227,.52); }
+      h3 { margin: .45rem 0 .55rem; font-size: clamp(1.6rem, 5.2vw, 2.3rem); font-weight: 900; letter-spacing: -.085em; line-height: .85; }
+      .release-card__copy > p:not(.release-card__type) { max-width: 25ch; margin-bottom: 0; font-size: .78rem; line-height: 1.35; color: rgba(231,232,227,.78); }
+
+      .micro-link { display: inline-flex; gap: .45rem; font-size: .61rem; font-weight: 800; letter-spacing: .12em; text-decoration: none; }
+      .micro-link:hover { text-decoration: underline; text-underline-offset: .35rem; }
+
+      .show-card { display: grid; grid-template-columns: minmax(8.5rem, 34%) 1fr; gap: 1rem; padding: 1.25rem; background: var(--card); }
+      .show-card__day { margin: 0; font-size: 1.3rem; font-weight: 900; letter-spacing: -.075em; line-height: .85; }
+      .show-card__copy { align-self: center; }
+      .show-card__note { margin: .5rem 0 1rem; font-size: .78rem; line-height: 1.35; opacity: .78; }
+      .show-card .micro-link { grid-column: 1 / -1; }
+
+      .footer { display: grid; gap: 1.1rem; margin-top: clamp(2.4rem, 6vw, 3.6rem); padding: 1.15rem 0 2.2rem; border-top: 1px solid var(--line); }
+      .footer__mail { display: flex; align-items: center; justify-content: space-between; gap: 1rem; font-size: .71rem; font-weight: 800; letter-spacing: .11em; text-decoration: none; }
+      .footer__mail:hover { text-decoration: underline; text-underline-offset: .4rem; }
+      .footer p { opacity: .45; }
+
+      @media (min-width: 42rem) {
+        main { padding-top: 1.5rem; }
+        .identity { padding: 2rem 0 1.75rem; }
+        .identity__portrait { width: 6rem; height: 6rem; }
+        .social-chip { width: 3.2rem; height: 3.2rem; }
+        .social-chip :global(svg) { width: 1.6rem; height: 1.6rem; }
+        .enter-card { min-height: 7.5rem; align-content: space-between; }
+        .enter-card__label { max-width: 18ch; }
+        .action-stack { grid-template-columns: repeat(2, 1fr); }
+        .action-card { min-height: 10.5rem; align-content: start; }
+        .action-card__label { grid-row: 2; grid-column: 1; align-self: end; font-size: 1.65rem; }
+        .action-card__detail { grid-row: 3; grid-column: 1; }
+        .action-card__arrow, .action-card__pending { grid-row: 1; grid-column: 2; align-self: start; }
+        .release-card { grid-template-columns: 13rem 1fr; min-height: 14.5rem; }
+        .release-card__art { min-height: 13rem; }
+        .show-card { grid-template-columns: 12rem 1fr auto; align-items: center; min-height: 11rem; }
+        .show-card .micro-link { grid-column: auto; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+      }
+    </style>
+  </body>
+</html>

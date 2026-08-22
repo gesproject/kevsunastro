@@ -1,0 +1,171 @@
+:root {
+  --ink: #0e0e0c;
+  --paper: #c8cbc8;
+  --mist: #f2f3f1;
+  --line: rgb(242 243 241 / 30%);
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--mist);
+  background: var(--ink);
+}
+
+* { box-sizing: border-box; }
+
+html { background: var(--ink); }
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--ink);
+}
+
+.hero-test { height: 260svh; }
+
+.hero-test__stage {
+  position: sticky;
+  top: 0;
+  isolation: isolate;
+  display: grid;
+  min-height: 100svh;
+  overflow: clip;
+  background: var(--paper);
+}
+
+#hero-canvas,
+.hero-test__shade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#hero-canvas { background: var(--paper); }
+
+.hero-test__shade {
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgb(14 14 12 / 5%) 0%, transparent 28%, rgb(14 14 12 / 52%) 100%),
+    linear-gradient(90deg, rgb(200 203 200 / 76%) 0%, transparent 52%);
+}
+
+.hero-test__header,
+.hero-test__copy,
+.hero-test__controls {
+  z-index: 2;
+  position: relative;
+}
+
+.hero-test__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: clamp(1.25rem, 3vw, 3rem);
+  color: var(--ink);
+}
+
+.eyebrow,
+.route,
+.hero-test__controls label,
+.hero-test__meta,
+button {
+  margin: 0;
+  font-family: "Courier New", monospace;
+  font-size: 0.65rem;
+  line-height: 1.25;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.route { text-align: right; }
+
+.hero-test__copy {
+  align-self: end;
+  width: min(100% - 2.5rem, 66rem);
+  padding: 0 clamp(1.25rem, 3vw, 3rem) clamp(9rem, 18svh, 13rem);
+}
+
+.hero-test__copy h1 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(5.4rem, 19vw, 17rem);
+  line-height: 0.78;
+  letter-spacing: -0.09em;
+}
+
+.hero-test__copy p {
+  margin: 1.75rem 0 0;
+  color: var(--ink);
+  font: 600 clamp(0.78rem, 1.2vw, 1rem) / 1.5 "Courier New", monospace;
+}
+
+.hero-test__controls {
+  position: absolute;
+  right: clamp(1.25rem, 3vw, 3rem);
+  bottom: clamp(1.25rem, 3vw, 3rem);
+  width: min(20rem, calc(100% - 2.5rem));
+  padding: 1rem;
+  border: 1px solid var(--line);
+  background: rgb(14 14 12 / 74%);
+  box-shadow: 0 1rem 3rem rgb(0 0 0 / 18%);
+  backdrop-filter: blur(16px);
+}
+
+.hero-test__controls label { display: block; }
+
+#scrub {
+  width: 100%;
+  margin: 1rem 0 0.8rem;
+  accent-color: var(--mist);
+}
+
+.hero-test__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  color: rgb(242 243 241 / 60%);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+}
+
+button {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border: 1px solid rgb(242 243 241 / 48%);
+  color: var(--mist);
+  background: transparent;
+  cursor: pointer;
+}
+
+button:hover,
+button:focus-visible { background: var(--mist); color: var(--ink); }
+
+:focus-visible { outline: 2px solid var(--mist); outline-offset: 4px; }
+
+.notes,
+.exit {
+  max-width: 46rem;
+  padding: clamp(4rem, 12vw, 10rem) clamp(1.25rem, 7vw, 8rem);
+}
+
+.notes { min-height: 82svh; color: var(--mist); }
+.notes h2 { margin: 1rem 0 1.5rem; font-size: clamp(2.5rem, 7vw, 6rem); line-height: 0.9; letter-spacing: -0.065em; }
+.notes p:not(.eyebrow) { max-width: 40rem; font-size: clamp(1rem, 1.5vw, 1.25rem); line-height: 1.5; color: rgb(242 243 241 / 72%); }
+.exit { min-height: 60svh; color: var(--paper); }
+
+@media (max-width: 767px) {
+  .hero-test__shade { background: linear-gradient(180deg, transparent 38%, rgb(14 14 12 / 66%) 100%); }
+  .hero-test__header { color: var(--mist); }
+  .hero-test__copy { padding-bottom: 13rem; }
+  .hero-test__copy h1,
+  .hero-test__copy p { color: var(--mist); }
+  .hero-test__controls { left: 1.25rem; right: 1.25rem; width: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+  .hero-test { height: 100svh; }
+  #scrub, #failure-toggle { display: none; }
+  .hero-test__controls::after { content: "Reduced motion: final poster"; display: block; margin-top: 0.8rem; font: 0.58rem/1.4 "Courier New", monospace; letter-spacing: 0.12em; text-transform: uppercase; }
+}

@@ -1,0 +1,78 @@
+---
+/**
+ * Decorative WebGL "Plasma" backdrop for /link.
+ *
+ * Purely atmospheric: the canvas sits behind a dark veil and carries no
+ * content, so /link keeps its no-JavaScript guarantee. Without JS, without
+ * WebGL, or under reduced motion the CSS gradient below stands in and the
+ * page is unchanged in substance.
+ *
+ * Plain WebGL1, no library — the whole thing is one fullscreen triangle and
+ * the fragment shader supplied with the design brief, uniforms fed exactly as
+ * that brief specifies. The engine itself is the shared, shader-agnostic
+ * src/lib/motion/shaderField.ts; this shader's own source and uniform values
+ * live in src/lib/motion/shaders/plasma.ts. Task 4.3's Music backdrop runs
+ * through the same engine with a different shader (shaders/moss.ts).
+ */
+---
+
+<div class="backdrop" aria-hidden="true">
+  <canvas data-plasma></canvas>
+  <div class="backdrop__veil"></div>
+</div>
+
+<style>
+  .backdrop {
+    position: fixed;
+    z-index: 0;
+    inset: 0;
+    /* No-JS / no-WebGL floor: a still approximation of the shader's own
+       palette, so the page never falls back to flat black.
+       These are the brief's four colours *after* the u_finish.x = 3.04 rad hue
+       rotation the shader applies (#1B6CA8 -> #964E02, #5AD2F4 -> #FF9760,
+       #031C26 -> #271102). Using the unrotated cyan here would have made the
+       no-JS render the one thing on the site that doesn't match the shader. */
+    background:
+      radial-gradient(ellipse at 22% 12%, #964e02 0%, transparent 58%),
+      radial-gradient(ellipse at 84% 78%, #ff9760 0%, transparent 46%),
+      #271102;
+    pointer-events: none;
+  }
+
+  .backdrop canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.9s ease;
+  }
+
+  /* Set by the script only after the first frame actually renders, so a
+     failed context never flashes an empty black canvas over the gradient. */
+  .backdrop canvas[data-ready] {
+    opacity: 1;
+  }
+
+  /* Keeps every foreground colour pair on a predictable dark floor. The
+     shader's palette peaks at near-white (#EAF9FF), and a bright wisp
+     drifting under body text would otherwise break its contrast.
+     Floor chosen by measurement, not by eye. The brightest pixel this shader
+     paints is rgb(162,150,142); at a 28% veil the #FF9760 focus ring landing
+     on that wisp gives 2.3:1, under the 3:1 minimum for a focus indicator. At
+     50% it is 3.8:1 and page ink is 7.3:1, which is why the ramp starts here
+     rather than lower. Still ramps toward the foot, where the small uppercase
+     type and the cards live. */
+  .backdrop__veil {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgb(14 7 2 / 50%) 0%, rgb(14 7 2 / 58%) 55%, rgb(14 7 2 / 66%) 100%);
+  }
+</style>
+
+<script>
+  import { initShaderField } from "../lib/motion/shaderField";
+  import { plasmaShader } from "../lib/motion/shaders/plasma";
+
+  const canvas = document.querySelector<HTMLCanvasElement>("canvas[data-plasma]");
+  if (canvas) initShaderField(canvas, plasmaShader);
+</script>
