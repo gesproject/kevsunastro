@@ -15,7 +15,7 @@ function pinCount(page: import("@playwright/test").Page, selector: string) {
   }, selector);
 }
 
-test("desktop Shows pins for 250%, reveals its content, and tilts the photo panel", async ({ page }) => {
+test("desktop Shows pins through its reveal and stays singular after resize", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await blockHeroFrames(page);
   await page.goto("/", { waitUntil: "domcontentloaded" });
@@ -24,17 +24,14 @@ test("desktop Shows pins for 250%, reveals its content, and tilts the photo pane
   await page.evaluate(() => {
     const shows = document.querySelector<HTMLElement>("#shows");
     if (!shows) throw new Error("Missing #shows");
-    window.scrollTo(0, shows.getBoundingClientRect().top + window.scrollY + window.innerHeight * 2.5);
+    window.scrollTo(0, shows.getBoundingClientRect().top + window.scrollY + window.innerHeight * 1.6);
   });
   await expect.poll(() => opacity(page, ".shows__header h2"), { timeout: 10_000 }).toBeGreaterThan(0.95);
-  await expect.poll(() => opacity(page, ".shows__panel"), { timeout: 10_000 }).toBeGreaterThan(0.95);
+  await expect.poll(() => opacity(page, ".shows__list"), { timeout: 10_000 }).toBeGreaterThan(0.95);
 
-  const panel = page.locator(".shows__photo-panel");
-  const box = await panel.boundingBox();
-  if (!box) throw new Error("Shows photo panel is not visible");
-  await page.mouse.move(box.x + 30, box.y + 30);
-  await page.mouse.move(box.x + 80, box.y + 80);
-  await expect.poll(() => panel.evaluate((element) => getComputedStyle(element).transform)).not.toBe("matrix(1, 0, 0, 1, 0, 0)");
+  // The sticky photo panel was retired with the board chrome; the section's
+  // only photography is now the CSS marquee, which must exist without JS.
+  await expect(page.locator(".shows__marquee-track .shows__gallery-item").first()).toBeVisible();
 
   await page.setViewportSize({ width: 768, height: 1024 });
   await expect.poll(() => pinCount(page, "#shows")).toBe(1);
@@ -53,7 +50,7 @@ test("mobile Shows enters without a pin and keeps the exit seam scroll-driven", 
     window.scrollTo(0, header.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.2);
   });
   await expect.poll(() => opacity(page, ".shows__header h2")).toBeGreaterThan(0.95);
-  await expect.poll(() => opacity(page, ".shows__panel")).toBeGreaterThan(0.95);
+  await expect.poll(() => opacity(page, ".shows__list")).toBeGreaterThan(0.95);
   expect(await opacity(page, "#shows")).toBe(1);
   await expect.poll(() => pinCount(page, "#shows")).toBe(0);
 });
@@ -65,7 +62,7 @@ test("reduced motion leaves Shows readable without a pin or entrance state", asy
 
   await expect(page.locator("html")).toHaveAttribute("data-motion-lifecycle", "reduced");
   expect(await opacity(page, ".shows__header h2")).toBe(1);
-  expect(await opacity(page, ".shows__panel")).toBe(1);
+  expect(await opacity(page, ".shows__list")).toBe(1);
   await expect.poll(() => pinCount(page, "#shows")).toBe(0);
 });
 
@@ -91,8 +88,10 @@ test("Shows content remains available without JavaScript", async ({ browser }) =
 
   await expect(page.locator("#shows .shows__header h2")).toHaveText("Find me live.");
   await expect(page.locator("#shows .shows__list .shows__row")).toHaveCount(5);
-  await expect(page.locator("#shows .shows__panel")).toContainText("VELD");
-  await expect(page.locator("#shows .shows__badge").first()).toHaveText("Demo");
+  await expect(page.locator("#shows .shows__venue").first()).toHaveText("VELD");
+  // Demo rows render no badge at all (minimalist pass): only real states —
+  // Sold Out / Free / a live ticket link — earn an action cell.
+  await expect(page.locator("#shows .shows__badge")).toHaveText(["Sold Out", "Sold Out", "Free"]);
   await expect(page.locator("#shows .shows__ticket")).toHaveCount(0);
   await context.close();
 });

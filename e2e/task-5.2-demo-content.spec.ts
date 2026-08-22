@@ -7,8 +7,8 @@ test("the CMS demo catalog preserves the legacy layout without live destinations
   await page.goto("/", { waitUntil: "domcontentloaded" });
 
   await expect(page.locator("#shows .shows__row")).toHaveCount(5);
-  await expect(page.locator("#shows .shows__badge").first()).toHaveText("Demo");
-  await expect(page.locator("#shows .shows__badge")).toContainText(["Demo", "Demo", "Sold Out", "Sold Out", "Free"]);
+  // Minimalist pass: demo rows carry no badge; real states remain.
+  await expect(page.locator("#shows .shows__badge")).toContainText(["Sold Out", "Sold Out", "Free"]);
   await expect(page.locator("#shows .shows__ticket")).toHaveCount(0);
 
   await expect(page.locator("#music .release")).toHaveCount(3);

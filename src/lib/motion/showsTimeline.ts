@@ -31,8 +31,8 @@ function scrambleText(element: HTMLElement): () => void {
   };
 }
 
-function setupRowAtmosphere(panel: HTMLElement): () => void {
-  const rows = Array.from(panel.querySelectorAll<HTMLElement>(".shows__list .shows__row"));
+function setupRowAtmosphere(list: HTMLElement): () => void {
+  const rows = Array.from(list.querySelectorAll<HTMLElement>(".shows__row"));
   if (!rows.length) return () => {};
 
   let idleTimer: number | undefined;
@@ -57,7 +57,7 @@ function setupRowAtmosphere(panel: HTMLElement): () => void {
     window.clearTimeout(idleTimer);
     idleTimer = window.setTimeout(startIdle, 3500);
   };
-  const onPanelLeave = () => {
+  const onListLeave = () => {
     restore();
     scheduleIdle();
   };
@@ -66,56 +66,50 @@ function setupRowAtmosphere(panel: HTMLElement): () => void {
     const onEnter = () => {
       window.clearTimeout(idleTimer);
       restore();
-      cancellations = Array.from(row.querySelectorAll<HTMLElement>(".shows__date-label, .shows__venue, .shows__city")).map(scrambleText);
+      cancellations = Array.from(
+        row.querySelectorAll<HTMLElement>(".shows__date-label, .shows__venue, .shows__city"),
+      ).map(scrambleText);
     };
     row.addEventListener("mouseenter", onEnter);
     return () => row.removeEventListener("mouseenter", onEnter);
   });
-  panel.addEventListener("mouseleave", onPanelLeave);
+  list.addEventListener("mouseleave", onListLeave);
   scheduleIdle();
 
   return () => {
     window.clearTimeout(idleTimer);
     restore();
     removers.forEach((remove) => remove());
-    panel.removeEventListener("mouseleave", onPanelLeave);
+    list.removeEventListener("mouseleave", onListLeave);
   };
 }
 
-/** Ports Shows' legacy section choreography without changing its static floor. */
+/**
+ * Shows' scroll choreography. Minimalist rework (2026-08-22): the sticky
+ * photo panel and its 3D tilt are gone (retired with the board chrome —
+ * its clip-under-gallery behaviour was the repo's longest-lived ponytail),
+ * so the desktop pin shortens to the header + list reveal and photography
+ * now drifts in a CSS marquee that needs no JS.
+ */
 export function initShowsTimeline(): void {
   if (active || !initMotionLifecycle()) return;
 
   const section = document.querySelector<HTMLElement>("#shows");
   const header = section?.querySelector<HTMLElement>(".shows__header h2");
-  const panel = section?.querySelector<HTMLElement>(".shows__panel");
-  const photoOuter = section?.querySelector<HTMLElement>(".shows__photo-outer");
-  const photoPanel = section?.querySelector<HTMLElement>(".shows__photo-panel");
-  if (!section || !header || !panel) return;
+  const list = section?.querySelector<HTMLElement>(".shows__list");
+  if (!section || !header || !list) return;
 
   active = true;
-  const stopRowAtmosphere = setupRowAtmosphere(panel);
+  const stopRowAtmosphere = setupRowAtmosphere(list);
   const context = gsap.context(() => {
     const media = gsap.matchMedia();
 
     media.add(DESKTOP_QUERY, () => {
-      if (photoOuter) {
-        gsap.fromTo(
-          photoOuter,
-          { yPercent: -8 },
-          {
-            yPercent: 8,
-            ease: "none",
-            scrollTrigger: { trigger: section, start: "top bottom", end: "bottom top", scrub: 0.5 },
-          },
-        );
-      }
-
       const timeline = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: "+=250%",
+          end: "+=160%",
           scrub: 1,
           pin: true,
           anticipatePin: 1,
@@ -127,36 +121,12 @@ export function initShowsTimeline(): void {
         { opacity: 1, clipPath: "inset(0 0 0% 0)", yPercent: 0, duration: 0.7, ease: "expo.out" },
         0.15,
       );
-      timeline.fromTo(panel, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 0.32);
-
-      if (!photoPanel) return;
-      const rotateX = gsap.quickTo(photoPanel, "rotationX", { duration: 0.6, ease: "power2.out" });
-      const rotateY = gsap.quickTo(photoPanel, "rotationY", { duration: 0.6, ease: "power2.out" });
-      const scale = gsap.quickTo(photoPanel, "scale", { duration: 0.4, ease: "power2.out" });
-      let rect: DOMRect | undefined;
-      const onMove = (event: MouseEvent) => {
-        if (!rect) return;
-        rotateY(((event.clientX - rect.left) / rect.width) * 24 - 12);
-        rotateX(-(((event.clientY - rect.top) / rect.height) * 16 - 8));
-      };
-      const onEnter = () => {
-        rect = photoPanel.getBoundingClientRect();
-        scale(1.02);
-      };
-      const onLeave = () => {
-        rect = undefined;
-        rotateX(0);
-        rotateY(0);
-        scale(1);
-      };
-      photoPanel.addEventListener("mousemove", onMove);
-      photoPanel.addEventListener("mouseenter", onEnter);
-      photoPanel.addEventListener("mouseleave", onLeave);
-      return () => {
-        photoPanel.removeEventListener("mousemove", onMove);
-        photoPanel.removeEventListener("mouseenter", onEnter);
-        photoPanel.removeEventListener("mouseleave", onLeave);
-      };
+      timeline.fromTo(
+        list,
+        { opacity: 0, y: 24 },
+        { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", stagger: { each: 0.05, from: "start" } },
+        0.32,
+      );
     });
 
     media.add(MOBILE_QUERY, () => {
@@ -171,14 +141,14 @@ export function initShowsTimeline(): void {
         },
       );
       gsap.fromTo(
-        panel,
+        list,
         { opacity: 0, y: 20 },
         {
           opacity: 1,
           y: 0,
           duration: 0.7,
           ease: "power2.out",
-          scrollTrigger: { trigger: panel, start: "top 92%", toggleActions: "play none none none" },
+          scrollTrigger: { trigger: list, start: "top 92%", toggleActions: "play none none none" },
         },
       );
       if (section.querySelector(".shows__list .shows__row")) {

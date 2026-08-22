@@ -204,7 +204,6 @@ const FALLBACK_TRACK = releases[0]
         </div>
 
       <div class="music__releases">
-        <p class="music__eyebrow" aria-hidden="true">DISCOGRAPHY — {String(releases.length).padStart(2, "0")}</p>
         <h2 class="music__heading">Releases</h2>
 
         {
@@ -418,15 +417,6 @@ const FALLBACK_TRACK = releases[0]
 
   .music__releases {
     padding-bottom: 45vh;
-  }
-
-  .music__eyebrow {
-    margin: 0 0 var(--space-2);
-    color: var(--music-accent);
-    font-family: var(--font-mono);
-    font-size: 0.56rem;
-    letter-spacing: 0.22em;
-    opacity: 0.85;
   }
 
   .music__heading {
