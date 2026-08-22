@@ -98,6 +98,8 @@ Gate still carried forward, not blocking: Task 3.1 leaves a `ponytail:` marker i
 
 ### Checkpoint 4: Motion and accessibility parity approved
 
+**Human-approved 2026-08-22.**
+
 ## Phase 5 — Content cutover
 
 - [ ] Task 5.1: Implement the production Keystatic schema and auth configuration.
