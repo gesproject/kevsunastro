@@ -98,7 +98,7 @@ function getDateParts(iso: string) {
         <div class="shows__photo-panel">
           <img
             class="shows__photo"
-            src="/images/Horizontal1.webp"
+            src="/images/shows/live-04.webp"
             alt="Live performance"
             width="1600"
             height="1000"
@@ -108,6 +108,32 @@ function getDateParts(iso: string) {
           <div class="shows__vignette" aria-hidden="true"></div>
         </div>
       </div>
+    </div>
+
+    <!--
+      Live gallery strip — stills from recent shows, one system with the
+      signal board above it (same hairlines, radius, lime accent). Static
+      markup: every frame is a real <img> with intrinsic size, lazy-loaded,
+      so the strip is complete without JavaScript and costs nothing until
+      scrolled to.
+    -->
+    <div class="shows__gallery">
+      <figure class="shows__gallery-item">
+        <img src="/images/shows/live-01.webp" alt="Sölbo on stage, studio portrait" width="800" height="1000" loading="lazy" decoding="async" />
+        <figcaption aria-hidden="true">LIVE — 01</figcaption>
+      </figure>
+      <figure class="shows__gallery-item">
+        <img src="/images/shows/live-02.webp" alt="Sölbo portrait in daylight" width="800" height="1000" loading="lazy" decoding="async" />
+        <figcaption aria-hidden="true">LIVE — 02</figcaption>
+      </figure>
+      <figure class="shows__gallery-item">
+        <img src="/images/shows/live-03.webp" alt="Sölbo under stage light" width="800" height="1000" loading="lazy" decoding="async" />
+        <figcaption aria-hidden="true">LIVE — 03</figcaption>
+      </figure>
+      <figure class="shows__gallery-item">
+        <img src="/images/shows/live-04.webp" alt="Sölbo performing live, wide shot" width="1685" height="1130" loading="lazy" decoding="async" />
+        <figcaption aria-hidden="true">LIVE — 04</figcaption>
+      </figure>
     </div>
   </div>
 </section>
@@ -455,6 +481,79 @@ function getDateParts(iso: string) {
       box-shadow:
         0 30px 100px rgb(0 0 0 / 90%),
         0 4px 24px rgb(0 0 0 / 60%);
+    }
+  }
+
+  /* ── Live gallery strip ──
+     Same material system as the signal board: hairline frames, one radius,
+     mono micro-labels, the lime accent reserved for hover/focus states. */
+
+  .shows__gallery {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.45rem;
+    margin-top: var(--space-7);
+  }
+
+  .shows__gallery-item {
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+    border: 1px solid rgb(var(--shows-border) / 12%);
+    border-radius: 0.35rem;
+    background: rgb(255 255 255 / 2%);
+    transition: border-color var(--duration-base) var(--ease-in-out);
+  }
+
+  .shows__gallery-item:hover,
+  .shows__gallery-item:focus-within {
+    border-color: rgb(222 250 103 / 35%);
+  }
+
+  .shows__gallery-item img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    transition: transform 600ms var(--ease-out-expo);
+  }
+
+  .shows__gallery-item:hover img {
+    transform: scale(1.025);
+  }
+
+  /* Bottom scrim so the caption survives bright plates (live-02). */
+  .shows__gallery-item::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: 38%;
+    background: linear-gradient(to top, rgb(10 10 10 / 62%), transparent);
+    pointer-events: none;
+  }
+
+  .shows__gallery-item figcaption {
+    position: absolute;
+    z-index: 1;
+    bottom: 0.6rem;
+    left: 0.7rem;
+    color: var(--shows-text);
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    letter-spacing: 0.22em;
+    opacity: 0.72;
+  }
+
+  @media (min-width: 768px) {
+    .shows__gallery {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.6rem;
+    }
+
+    /* Editorial stagger: alternating cards sit lower, so the strip reads as
+       a contact sheet rather than a tiled row. Pure transform, GPU-cheap. */
+    .shows__gallery-item:nth-child(even) {
+      transform: translateY(var(--space-5));
     }
   }
 </style>

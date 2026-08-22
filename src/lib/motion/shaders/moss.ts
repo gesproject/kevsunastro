@@ -255,15 +255,18 @@ void main() {
 }
 `;
 
-// Colours low -> high: #A3E635-ish bright lime, #F7FEE7 cream, near-black,
-// olive green (repeated for the unused colours 5-8; colorCount 4 stops the
-// palette ramp there).
+// Dark-grade palette (2026-08-22), low -> high: near-black moss ground,
+// deep olive shadow, dimmed cream highlight, and the original bright lime
+// reserved for thin veins. Same four hues as the human-approved reference,
+// re-weighted so the section reads dark like the rest of the site; the
+// veil in Music.astro is measured against the brightest remaining stop
+// (the dimmed cream). colorCount 4 stops the ramp there.
 export const mossShader: ShaderDefinition = {
   frag: FRAG,
   colors: [
     0.639, 0.902, 0.208,
-    0.969, 0.996, 0.906,
-    0.063, 0.078, 0.031,
+    0.816, 0.867, 0.729,
+    0.039, 0.047, 0.031,
     0.302, 0.486, 0.059,
     0.302, 0.486, 0.059,
     0.302, 0.486, 0.059,
@@ -272,8 +275,8 @@ export const mossShader: ShaderDefinition = {
   ],
   colorCount: 4,
   shape: [1.7, 0.69, 0.74, 0.3],
-  surface: [3.68, 1.005, 0.0, 1.0],
-  finish: [0.0, 0.0, 0.0, 0.063],
+  surface: [3.68, 1.02, 0.0, 0.9],
+  finish: [0.0, 0.18, 0.0, 0.063],
   transform: [1.0, 1.2915, 0.0, 0.0],
   timeScale: 1.069,
 };

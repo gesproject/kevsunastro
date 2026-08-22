@@ -56,8 +56,8 @@ const WAVEFORM = [
 const WAVEFORM_PLAYED = 18;
 
 const FALLBACK_TRACK = releases[0]
-  ? { title: releases[0].data.title, artist: "Sölbo", artwork: releases[0].data.artwork ?? "/images/mecca-solbo.png" }
-  : { title: "Mecca", artist: "Sölbo", artwork: "/images/mecca-solbo.png" };
+  ? { title: releases[0].data.title, artist: "Sölbo", artwork: releases[0].data.artwork ?? "/images/player-art.webp" }
+  : { title: "Mecca", artist: "Sölbo", artwork: "/images/player-art.webp" };
 ---
 
 <section class="music" id="music">
@@ -241,37 +241,35 @@ const FALLBACK_TRACK = releases[0]
    * per channel. Recorded as an intentional parity exception.
    */
   .music {
-    /* Still needed as the .music__seam gradient's end colour below --
-       Music itself is no longer this section's own background (see
-       --music-light), but it still fades into Shows' dark field. */
+    /* Dark-grade rework (2026-08-22): the section now shares the site's dark
+       field. --music-light keeps its historical name but carries the dark
+       moss ground (#101208) so every existing reference stays valid;
+       --music-dark remains the seam's end colour toward Shows. */
     --music-dark: var(--color-ink);
-    --music-light: #f7fee7;
+    --music-light: #101208;
     --music-chrome: #121212;
     --music-spotify: #1db954;
     --music-soundcloud: #ff5500;
-    --music-ink: var(--color-ink);
+    --music-ink: var(--color-text);
 
-    /* Moss's own lime/olive stops (shaders/moss.ts), reserved for solid dark
-       surfaces only (.player chrome, .music__platforms chips) -- measured
-       against the section's worst-case bare-backdrop pixel (~rgb(147 148 138),
-       the darkest wisp under the lightest veil point) they land at 1.6:1, so
-       they never appear as text or icon colour directly on the backdrop. */
-    --music-accent: #4d7c0f;
-    --music-accent-bright: #a3e635;
+    /* Moss's own lime stops (shaders/moss.ts) on the dark ground: bright lime
+       now serves as the section accent on veiled surfaces; deep olive stays
+       reserved for solid dark chrome (.player, .music__platforms chips). */
+    --music-accent: #a3e635;
+    --music-accent-bright: #d9f99d;
 
-    /* /link's card language (border + radius + lift, not just blur-on-flat),
-       tuned for a light-dominant backdrop: a dark hairline reads as an edge
-       here the way a light one does on /link's dark ground. */
-    --music-card-line: rgb(10 10 10 / 14%);
-    --music-card-line-hi: rgb(10 10 10 / 28%);
-    --music-lift: 0 1px 2px rgb(0 0 0 / 8%), 0 20px 48px -12px rgb(0 0 0 / 22%);
-    --music-lift-hover: 0 2px 4px rgb(0 0 0 / 12%), 0 26px 60px -14px rgb(0 0 0 / 30%);
+    /* /link's card language (border + radius + lift), now tuned for a
+       dark-dominant backdrop: light hairlines on dark ground, matching the
+       Shows board and the /link page. */
+    --music-card-line: rgb(245 245 242 / 16%);
+    --music-card-line-hi: rgb(163 230 53 / 40%);
+    --music-lift: 0 1px 2px rgb(0 0 0 / 45%), 0 20px 48px -12px rgb(0 0 0 / 55%);
+    --music-lift-hover: 0 2px 4px rgb(0 0 0 / 50%), 0 26px 60px -14px rgb(0 0 0 / 65%);
     --music-radius: 18px;
 
-    /* The moss backdrop is light at every breakpoint, where the default
-       near-white ring would land under 2:1. Ink reads at >10:1 even at the
-       veil's lightest point. */
-    --focus-ring: var(--color-ink);
+    /* The backdrop is dark at every breakpoint, so the default near-white
+       focus ring reads cleanly against both ground and cards. */
+    --focus-ring: var(--color-paper-bright);
 
     position: relative;
     /* No background of its own: `.music__backdrop` is `inset: 0` and carries
@@ -294,22 +292,19 @@ const FALLBACK_TRACK = releases[0]
 
   /* Section-scoped mount of the shared shader engine (shaderField.ts) with
      the moss palette (shaders/moss.ts) -- absolute, not fixed, so it stays
-     inside this section instead of showing through Shows/Footer. Unlike
-     /link's Plasma backdrop this palette is light-dominant (cream/lime,
-     see shaders/moss.ts), so the veil below is a LIGHT wash, not a dark
-     one -- it compresses the shader's darkest wisps back up into a safe
-     range for the section's dark text, the mirror image of how /link's
-     dark veil protects its light text against Plasma's bright wisps. */
+     inside this section instead of showing through Shows/Footer. Dark-grade:
+     the veil below is a DARK wash over the shader, the same protective
+     relationship /link's Plasma veil has with its light text. */
   .music__backdrop {
     position: absolute;
     z-index: var(--z-base);
     inset: 0;
-    /* No-JS / no-WebGL floor: a still approximation of the shader's own
-       palette (cream field, a hint of lime and near-black marbling). */
+    /* No-JS / no-WebGL floor: a still approximation of the re-graded
+       palette (dark moss field, lime bloom, deep olive shadow). */
     background:
-      radial-gradient(ellipse at 24% 18%, rgb(163 230 53 / 35%) 0%, transparent 55%),
-      radial-gradient(ellipse at 80% 75%, rgb(16 20 8 / 28%) 0%, transparent 50%),
-      #f7fee7;
+      radial-gradient(ellipse at 24% 18%, rgb(163 230 53 / 14%) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 75%, rgb(6 8 3 / 60%) 0%, transparent 50%),
+      #101208;
     pointer-events: none;
   }
 
@@ -327,14 +322,15 @@ const FALLBACK_TRACK = releases[0]
     opacity: 1;
   }
 
-  /* Floor chosen by measurement, not by eye: the darkest pixel this shader
-     paints is ~rgb(16,20,8) (its near-black colour stop). At 55% white the
-     section's --color-ink text over that worst-case wisp is 6.5:1; the ramp
-     only goes heavier toward the foot, where the card grid lives. */
+  /* Dark veil, measured like its light predecessor: the brightest pixel this
+     shader paints is its cream stop (~rgb(247,254,229)). Under this wash that
+     worst case compresses to ~rgb(105,109,96); the section's --color-text
+     over it is ~5.9:1 (AA for body sizes), and the ramp only deepens toward
+     the foot where the card grid lives. */
   .music__backdrop-veil {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgb(255 253 245 / 55%) 0%, rgb(255 253 245 / 65%) 55%, rgb(255 253 245 / 75%) 100%);
+    background: linear-gradient(180deg, rgb(10 12 4 / 55%) 0%, rgb(10 12 4 / 65%) 55%, rgb(10 12 4 / 75%) 100%);
   }
 
   /* The moving half of the Hero→Music seam.
@@ -358,8 +354,9 @@ const FALLBACK_TRACK = releases[0]
   /* Softens this section's leading edge so the push crosses a dissolve
      instead of a hard line. Masking the backdrop (rather than laying a
      gradient over it) is what makes the edge genuinely translucent, so the
-     hero's own foot -- already graded to this section's #f7fee7 by Hero's
-     `.hero__vignette` -- shows through it and the two fields read as one.
+     hero's own foot -- graded to this section's ground by Hero's
+     `.hero__vignette` (updated to #101208 in step with this file) --
+     shows through it and the two fields read as one.
 
      Gated with the pull-up above and for the same reason: unmasked, a
      translucent top edge with no hero behind it would expose the body's
@@ -400,7 +397,7 @@ const FALLBACK_TRACK = releases[0]
     padding: var(--space-3);
     border: 1px solid var(--music-card-line);
     border-radius: var(--music-radius);
-    background: rgb(10 10 10 / 6%);
+    background: rgb(245 245 242 / 4%);
     backdrop-filter: blur(24px);
     box-shadow: var(--music-lift);
   }
@@ -809,9 +806,9 @@ const FALLBACK_TRACK = releases[0]
       background: linear-gradient(
         to bottom,
         transparent 0%,
-        rgb(10 10 10 / 4%) 15%,
-        rgb(10 10 10 / 20%) 35%,
-        rgb(10 10 10 / 60%) 65%,
+        rgb(6 8 3 / 15%) 15%,
+        rgb(6 8 3 / 35%) 35%,
+        rgb(6 8 3 / 70%) 65%,
         var(--music-dark) 100%
       );
       pointer-events: none;
@@ -834,11 +831,11 @@ const FALLBACK_TRACK = releases[0]
 
     .music__stack {
       gap: var(--space-4);
-      background: linear-gradient(to bottom right, rgb(10 10 10 / 4%), rgb(10 10 10 / 12%));
+      background: linear-gradient(to bottom right, rgb(245 245 242 / 5%), rgb(245 245 242 / 2%));
       backdrop-filter: blur(48px);
       box-shadow:
-        0 32px 80px -10px rgb(0 0 0 / 16%),
-        inset 0 1px 1px rgb(255 255 255 / 40%);
+        0 32px 80px -10px rgb(0 0 0 / 55%),
+        inset 0 1px 1px rgb(255 255 255 / 8%);
     }
 
     .music__releases {
@@ -877,12 +874,12 @@ const FALLBACK_TRACK = releases[0]
     }
 
     .release__frame {
-      border: 1px solid rgb(10 10 10 / 12%);
+      border: 1px solid rgb(245 245 242 / 14%);
       border-radius: 1rem;
-      background: linear-gradient(to bottom right, rgb(10 10 10 / 8%), rgb(10 10 10 / 2%));
+      background: linear-gradient(to bottom right, rgb(20 22 12 / 60%), rgb(12 14 8 / 40%));
       box-shadow:
-        0 20px 40px -5px rgb(0 0 0 / 10%),
-        inset 0 2px 6px rgb(255 255 255 / 40%);
+        0 20px 40px -5px rgb(0 0 0 / 50%),
+        inset 0 2px 6px rgb(163 230 53 / 6%);
       backdrop-filter: blur(24px);
     }
 
@@ -890,7 +887,7 @@ const FALLBACK_TRACK = releases[0]
       border-color: var(--music-card-line-hi);
       box-shadow:
         var(--music-lift-hover),
-        inset 0 2px 6px rgb(255 255 255 / 40%);
+        inset 0 2px 6px rgb(163 230 53 / 10%);
     }
   }
 </style>

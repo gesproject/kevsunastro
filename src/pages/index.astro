@@ -1,7 +1,8 @@
 ---
 export const prerender = true;
 
-import { getSite } from "../lib/content";
+import { getSite, getPlatformLinks } from "../lib/content";
+import { musicGroupJsonLd } from "../lib/seo";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Hero from "../components/Hero.astro";
 import Music from "../components/Music.astro";
@@ -9,12 +10,24 @@ import Shows from "../components/Shows.astro";
 import Footer from "../components/Footer.astro";
 
 const site = await getSite();
+const socialLinks = (await getPlatformLinks())
+  .filter((link) => link.data.kind === "social" && "href" in link.data)
+  .map((link) => ({ label: link.data.label, href: link.data.href as string }));
+const structuredData = musicGroupJsonLd({
+  origin: Astro.site?.toString() ?? "",
+  artistName: site.data.artistName,
+  description: site.data.description,
+  location: site.data.location,
+  profileImage: site.data.profileImage,
+  socialLinks,
+});
 ---
 
 <BaseLayout
   title={site.data.artistName}
   description={site.data.description}
-  socialImage={site.data.profileImage}
+  socialImage="/images/og-card.jpg"
+  structuredData={structuredData}
 >
   <Hero />
   <Music />

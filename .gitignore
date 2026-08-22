@@ -16,10 +16,6 @@
 /playwright-report/
 /playwright/.cache/
 
-# Next.js legacy build output
-/.next/
-/out/
-
 # Astro / Cloudflare build output
 /.astro/
 /dist/

@@ -5,9 +5,11 @@ interface Props {
   title: string;
   description: string;
   socialImage?: string;
+  /** Optional JSON-LD block(s), rendered verbatim in the head. */
+  structuredData?: string;
 }
 
-const { title, description, socialImage } = Astro.props;
+const { title, description, socialImage, structuredData } = Astro.props;
 const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
 const socialImageUrl = canonicalUrl && socialImage ? new URL(socialImage, Astro.site) : undefined;
 ---
@@ -24,14 +26,23 @@ const socialImageUrl = canonicalUrl && socialImage ? new URL(socialImage, Astro.
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={title} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
-    {socialImageUrl && <meta property="og:image" content={socialImageUrl} />}
+    {/* 1200x630 share card; summary fallback keeps small avatars presentable. */}
+    {socialImageUrl && (
+      <>
+        <meta property="og:image" content={socialImageUrl} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:image" content={socialImageUrl} />
+      </>
+    )}
     <meta name="twitter:card" content={socialImageUrl ? "summary_large_image" : "summary"} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    {socialImageUrl && <meta name="twitter:image" content={socialImageUrl} />}
+    {structuredData && <script is:inline type="application/ld+json" set:html={structuredData} />}
   </head>
   <body>
     <a class="skip-link" href="#content">Skip to content</a>

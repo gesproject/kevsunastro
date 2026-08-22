@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://solbo-astro7-cloudflare.nickgagne92.workers.dev/sitemap-index.xml
