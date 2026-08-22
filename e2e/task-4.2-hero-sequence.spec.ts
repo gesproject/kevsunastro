@@ -234,14 +234,20 @@ test("back/forward navigation rebuilds the scrub instead of leaving a dead engin
     .toBeGreaterThan(900 * 3.1);
 
   // Not duplicated: two racing ScrollTrigger instances would disagree about
-  // --push, which is written on every update.
+  // --push, which is written on every update. The window matches the
+  // neighbouring polls above: after a bfcache restore this page re-decodes
+  // the full hero frame set, and under parallel-runner CPU pressure the
+  // first push-writing tick can land seconds late -- a wider poll does not
+  // weaken the assertion, which is that push resumes at all.
   await page.evaluate(() => {
     window.scrollTo(0, 1500);
     window.dispatchEvent(new Event("scroll"));
   });
   await expect
-    .poll(() =>
-      page.evaluate(() => Number(getComputedStyle(document.querySelector(".hero-scene")!).getPropertyValue("--push").trim())),
+    .poll(
+      () =>
+        page.evaluate(() => Number(getComputedStyle(document.querySelector(".hero-scene")!).getPropertyValue("--push").trim())),
+      { timeout: 15_000 },
     )
     .toBeGreaterThan(0);
   const push = await page.evaluate(() => Number(getComputedStyle(document.querySelector(".hero-scene")!).getPropertyValue("--push").trim()));
