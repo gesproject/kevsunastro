@@ -35,7 +35,7 @@ export const showSchema = z
     country: z.string().regex(/^[A-Z]{2}$/, {
       message: "Use an uppercase ISO 3166-1 alpha-2 country code.",
     }),
-    status: z.enum(["available", "sold-out", "free"]),
+    status: z.enum(["available", "sold-out", "free", "demo"]),
     ticketUrl: externalUrl.optional(),
     priority: z.number().int().min(0).max(999),
     featuredImage: publicAssetPath.optional(),

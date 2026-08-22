@@ -18,7 +18,11 @@ test("Keystatic manages the existing JSON content contract in GitHub mode", asyn
   assert.equal(keystatic.singletons.site.format, "json");
 
   const reader = createReader(process.cwd(), keystatic);
+  assert.equal((await reader.collections.shows.list()).length, 5);
+  assert.equal((await reader.collections.releases.list()).length, 3);
   assert.equal((await reader.collections.links.list()).length, 7);
+  assert.equal((await reader.collections.shows.read("veld"))?.status, "demo");
+  assert.equal((await reader.collections.releases.read("mecca"))?.artwork, "/images/mecca-solbo.png");
   assert.equal((await reader.collections.links.read("booking"))?.href, "mailto:booking@solbo.studio");
 
   assert.throws(() => keystatic.collections.shows.schema.date.validate("2026-02-30"), /real calendar date/);

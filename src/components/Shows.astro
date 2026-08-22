@@ -17,29 +17,18 @@ type ShowRow = {
   date: string;
   venue: string;
   city: string;
-  status: "available" | "sold-out" | "free";
+  status: "available" | "sold-out" | "free" | "demo";
   ticketUrl?: string;
 };
 
 const contentShows = await getShows();
-// ponytail: User-approved Vercel mock fallback. Task 5.2 replaces it with
-// real records; content records above always take precedence when they exist.
-const fallbackShows: ShowRow[] = [
-  { date: "2025-08-15", venue: "VELD", city: "Toronto", status: "available", ticketUrl: "https://example.com/tickets/1" },
-  { date: "2025-09-03", venue: "Stereo", city: "Montreal", status: "available", ticketUrl: "https://example.com/tickets/2" },
-  { date: "2025-10-11", venue: "New City Gas", city: "Montreal", status: "sold-out" },
-  { date: "2025-10-11", venue: "Newspeak", city: "Montreal", status: "sold-out" },
-  { date: "2025-11-22", venue: "Yoko Luna", city: "Montreal", status: "free" },
-];
-const shows: ShowRow[] = contentShows.length > 0
-  ? contentShows.map(({ data }) => ({
-      date: data.date,
-      venue: data.venue,
-      city: data.city,
-      status: data.status,
-      ticketUrl: data.ticketUrl,
-    }))
-  : fallbackShows;
+const shows: ShowRow[] = contentShows.map(({ data }) => ({
+  date: data.date,
+  venue: data.venue,
+  city: data.city,
+  status: data.status,
+  ticketUrl: data.ticketUrl,
+}));
 
 function formatShowDate(iso: string) {
   return `${iso.slice(8, 10)} · ${iso.slice(5, 7)} · ${iso.slice(0, 4)}`;
@@ -83,6 +72,8 @@ function getDateParts(iso: string) {
                       <span class="shows__badge">Sold Out</span>
                     ) : show.status === "free" ? (
                       <span class="shows__badge">Free</span>
+                    ) : show.status === "demo" ? (
+                      <span class="shows__badge">Demo</span>
                     ) : show.ticketUrl ? (
                       <a
                         class="shows__ticket"

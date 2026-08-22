@@ -92,6 +92,7 @@ test("Shows content remains available without JavaScript", async ({ browser }) =
   await expect(page.locator("#shows .shows__header h2")).toHaveText("Find me live.");
   await expect(page.locator("#shows .shows__list .shows__row")).toHaveCount(5);
   await expect(page.locator("#shows .shows__panel")).toContainText("VELD");
-  await expect(page.locator("#shows .shows__ticket").first()).toHaveAttribute("href", "https://example.com/tickets/1");
+  await expect(page.locator("#shows .shows__badge").first()).toHaveText("Demo");
+  await expect(page.locator("#shows .shows__ticket")).toHaveCount(0);
   await context.close();
 });

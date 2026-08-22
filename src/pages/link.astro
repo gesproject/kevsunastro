@@ -65,7 +65,11 @@ function socialMark(label: string) {
 }
 ---
 
-<BaseLayout title={`${site.data.artistName} — Links`} description="Sölbo — follow, listen, and enter the site.">
+<BaseLayout
+  title={`${site.data.artistName} — Links`}
+  description="Sölbo — follow, listen, and enter the site."
+  socialImage="/images/shows/live-01.webp"
+>
   <PlasmaBackdrop />
 
   <div class="link-page">
@@ -198,6 +202,8 @@ function socialMark(label: string) {
                   <p class="show-card__note">Sold out.</p>
                 ) : nextShow.data.status === "free" ? (
                   <p class="show-card__note">Free entry.</p>
+                ) : nextShow.data.status === "demo" ? (
+                  <p class="show-card__note">Demo listing.</p>
                 ) : (
                   nextShow.data.ticketUrl && (
                     <a class="micro-link" href={nextShow.data.ticketUrl} target="_blank" rel="noopener noreferrer">

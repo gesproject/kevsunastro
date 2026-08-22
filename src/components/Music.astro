@@ -24,12 +24,10 @@
  * this change, and left for a dedicated pass once Hero's own concurrent
  * rework (a separate session) lands.
  *
- * ponytail: the embed branches below are unreachable until Task 5.2 supplies
- * real release URLs, so they ship unhardened. Ceiling: once a release carries a
- * URL, the iframe replaces the static card and renders as an empty box with
- * JavaScript disabled, which breaks the Phase 3 no-JS bar. Upgrade path: add a
- * plain <a> to the release URL beneath each embed when 5.2 lands real content
- * to verify it against. Must close before Checkpoint 3 sign-off.
+ * ponytail: Task 5.2's user-approved demo records deliberately omit streaming
+ * URLs, so the static cards remain the no-JavaScript floor. Ceiling: a real
+ * release URL would replace a card with an iframe. Upgrade path: add a plain
+ * release link beneath each embed before publishing a real destination.
  */
 import { getPlatformLinks, getReleases } from "../lib/content";
 import { soundcloudEmbedUrl, spotifyEmbedUrl } from "../lib/embeds";
@@ -57,7 +55,9 @@ const WAVEFORM = [
 ];
 const WAVEFORM_PLAYED = 18;
 
-const FALLBACK_TRACK = { title: "Mecca", artist: "Sölbo", artwork: "/images/mecca-solbo.png" };
+const FALLBACK_TRACK = releases[0]
+  ? { title: releases[0].data.title, artist: "Sölbo", artwork: releases[0].data.artwork ?? "/images/mecca-solbo.png" }
+  : { title: "Mecca", artist: "Sölbo", artwork: "/images/mecca-solbo.png" };
 ---
 
 <section class="music" id="music">
