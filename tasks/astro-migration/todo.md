@@ -103,7 +103,7 @@ Gate still carried forward, not blocking: Task 3.1 leaves a `ponytail:` marker i
 
 ## Phase 5 — Content cutover
 
-- [ ] Task 5.1: Implement the production Keystatic schema and auth configuration.
+- [x] Task 5.1: Implement the production Keystatic schema and auth configuration. `keystatic.config.mjs` maps the existing JSON Shows, Releases, Links, and Site Settings contract to GitHub mode for `gesproject/kevsunastro`, with a `keystatic/` draft-branch namespace and versioned public image locations. The Astro 7 / Cloudflare wrapper supplies runtime env bindings without putting credentials in source. Evidence: `task-5.1-keystatic-production-schema.md`, config unit test, built-Worker Keystatic smoke test, public-route React audit, `npm run check`, and `npm run build`. Live sign-in awaits only the client-owned GitHub App variables in the Cloudflare secret manager.
 - [ ] Task 5.2: Migrate and validate real shows, releases, links, copy, and artwork.
 - [ ] Task 5.3: Complete non-developer editorial UAT from edit through rollback.
 - [ ] Task 5.4: Write the Keystatic client guide.

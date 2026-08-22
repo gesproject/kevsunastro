@@ -7,7 +7,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check && npm test",
-    "test": "node --experimental-strip-types --test src/lib/embeds.test.mjs",
+    "test": "node --experimental-strip-types --test src/lib/embeds.test.mjs src/keystatic.config.test.mjs",
     "test:e2e": "playwright test",
     "lint": "astro check",
     "cf:preview": "wrangler versions upload --config dist/server/wrangler.json"

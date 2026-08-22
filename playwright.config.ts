@@ -19,7 +19,14 @@ export default defineConfig({
     // against the same built Worker reliably until its separate long-process
     // instability is addressed upstream.
     command:
-      "npm run build && npx wrangler dev --config dist/server/wrangler.json --ip 127.0.0.1 --port 4321 --inspector-port 9230 --show-interactive-dev-session=false",
+      "npm run build && npx wrangler dev --config dist/server/wrangler.json --ip 127.0.0.1 --port 4321 --inspector-port 9230 --show-interactive-dev-session=false --var KEYSTATIC_GITHUB_CLIENT_ID:keystatic-test-client --var KEYSTATIC_GITHUB_CLIENT_SECRET:keystatic-test-client-secret --var KEYSTATIC_SECRET:keystatic-test-session-secret-not-for-production --var PUBLIC_KEYSTATIC_GITHUB_APP_SLUG:keystatic-test-app",
+    env: {
+      ...process.env,
+      KEYSTATIC_GITHUB_CLIENT_ID: "",
+      KEYSTATIC_GITHUB_CLIENT_SECRET: "",
+      KEYSTATIC_SECRET: "",
+      PUBLIC_KEYSTATIC_GITHUB_APP_SLUG: "",
+    },
     url: "http://127.0.0.1:4321",
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
