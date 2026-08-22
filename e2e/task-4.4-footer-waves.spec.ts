@@ -103,6 +103,46 @@ test("reduced motion paints Footer waves once without a loop", async ({ page }) 
   expect(await strokes.read(page)).toBe(staticStrokes);
 });
 
+test("desktop Footer keeps its full wordmark and contact rail inside the expanded field", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await blockHeroFrames(page);
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+
+  const layout = await page.evaluate(() => {
+    const box = (selector: string) => document.querySelector<HTMLElement>(selector)!.getBoundingClientRect();
+    const footer = box("#footer");
+    const wordmark = box(".footer__watermark--desktop span");
+    const email = box(".footer__booking-email");
+    const socialLink = box(".footer__links a");
+    return { footerHeight: footer.height, wordmarkRight: wordmark.right, emailRight: email.right, emailTop: email.top, socialRight: socialLink.right, socialTop: socialLink.top };
+  });
+
+  expect(layout.footerHeight).toBeGreaterThanOrEqual(900 * 0.75);
+  expect(layout.wordmarkRight).toBeLessThanOrEqual(1440);
+  expect(Math.abs(layout.emailRight - layout.socialRight)).toBeLessThan(1);
+  expect(layout.socialTop).toBeGreaterThan(layout.emailTop);
+});
+
+test("mobile Footer keeps its contact rail inside the expanded field", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await blockHeroFrames(page);
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+
+  const layout = await page.evaluate(() => {
+    const box = (selector: string) => document.querySelector<HTMLElement>(selector)!.getBoundingClientRect();
+    const footer = box("#footer");
+    const email = box(".footer__booking-email");
+    const socialLink = box(".footer__links a");
+    return { footerHeight: footer.height, emailRight: email.right, emailTop: email.top, socialRight: socialLink.right, socialTop: socialLink.top };
+  });
+
+  expect(layout.footerHeight).toBeGreaterThanOrEqual(812 * 0.55);
+  expect(layout.emailRight).toBeLessThanOrEqual(375);
+  expect(layout.socialRight).toBeLessThanOrEqual(375);
+  expect(Math.abs(layout.emailRight - layout.socialRight)).toBeLessThan(1);
+  expect(layout.socialTop).toBeGreaterThan(layout.emailTop);
+});
+
 test("Footer stays readable without JavaScript", async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();

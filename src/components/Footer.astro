@@ -60,7 +60,7 @@ const year = new Date().getFullYear();
     position: relative;
     display: flex;
     overflow: hidden;
-    min-height: 44vh;
+    min-height: 60svh;
     flex-direction: column;
     justify-content: flex-end;
   }
@@ -109,15 +109,19 @@ const year = new Date().getFullYear();
     position: relative;
     z-index: var(--z-content);
     width: 100%;
+    min-height: 38svh;
     padding: clamp(2rem, 4vw, 3.5rem) clamp(1.5rem, 5vw, 5rem) clamp(1.75rem, 3vw, 3rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
   .footer__booking {
     display: flex;
+    flex-direction: column;
+    align-items: flex-end;
     justify-content: flex-end;
-    /* Legacy: mb-15 md:mb-55 (Tailwind v4, 0.25rem step) = 3.75rem / 13.75rem.
-       No token in the space scale is close to either value. */
-    margin-bottom: 3.75rem;
+    margin-bottom: 0;
     text-align: right;
   }
 
@@ -197,6 +201,14 @@ const year = new Date().getFullYear();
   }
 
   @media (width >= 768px) {
+    .footer {
+      min-height: 78svh;
+    }
+
+    .footer__content {
+      min-height: 58svh;
+    }
+
     .footer__watermark--desktop {
       display: block;
       /* left:0 AND right:0 pinned with width left auto (no width here) makes the
@@ -220,17 +232,16 @@ const year = new Date().getFullYear();
     }
 
     .footer__links {
-      flex-direction: row;
-      align-items: center;
-      justify-content: flex-start;
+      align-items: flex-end;
+      gap: var(--space-3);
     }
 
     .footer__copyright {
-      margin-inline-start: auto;
+      margin-top: var(--space-2);
     }
 
     .footer__booking {
-      margin-bottom: 13.75rem;
+      margin-bottom: 0;
     }
   }
 </style>
