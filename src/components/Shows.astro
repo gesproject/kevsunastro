@@ -378,6 +378,19 @@ function getDateParts(iso: string) {
       radial-gradient(circle at center, transparent 30%, rgb(0 0 0 / 50%) 120%);
   }
 
+  /* A focused ticket must reveal the board immediately, even before the
+     decorative entrance/exit scrub has reached its opaque state. */
+  .shows:focus-within,
+  .shows:focus-within .shows__header h2,
+  .shows:focus-within .shows__panel {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .shows:focus-within .shows__header h2 {
+    clip-path: none !important;
+  }
+
   @media (width >= 768px) {
     .shows {
       overflow-x: visible;

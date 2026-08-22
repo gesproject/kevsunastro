@@ -75,14 +75,29 @@ for (const bp of BREAKPOINTS) {
     await expect
       .poll(() => page.evaluate(() => document.documentElement.dataset.motionLifecycle), { timeout: 15000 })
       .toBe("active");
+    await expect
+      .poll(() =>
+        page.evaluate(() => {
+          const music = document.querySelector<HTMLElement>("#music")!;
+          const layout = music.parentElement?.classList.contains("pin-spacer") ? music.parentElement : music;
+          return innerWidth < 768 || parseFloat(getComputedStyle(layout).marginTop) < -innerHeight * 0.95;
+        }),
+      )
+      .toBe(true);
 
-    const geom = await page.evaluate(() => ({
-      sceneH: document.querySelector(".hero-scene")!.getBoundingClientRect().height,
-      heroPosition: getComputedStyle(document.querySelector("#hero")!).position,
-      heroH: document.querySelector("#hero")!.getBoundingClientRect().height,
-      musicMarginTop: parseFloat(getComputedStyle(document.querySelector("#music")!).marginTop),
-      musicTop: document.querySelector("#music")!.getBoundingClientRect().top + window.scrollY,
-    }));
+    const geom = await page.evaluate(() => {
+      const music = document.querySelector<HTMLElement>("#music")!;
+      // ScrollTrigger moves the section's margin onto its pin spacer on
+      // desktop. The spacer is the element that owns the visible overlap.
+      const layout = music.parentElement?.classList.contains("pin-spacer") ? music.parentElement : music;
+      return {
+        sceneH: document.querySelector(".hero-scene")!.getBoundingClientRect().height,
+        heroPosition: getComputedStyle(document.querySelector("#hero")!).position,
+        heroH: document.querySelector("#hero")!.getBoundingClientRect().height,
+        musicMarginTop: parseFloat(getComputedStyle(layout).marginTop),
+        musicTop: music.getBoundingClientRect().top + window.scrollY,
+      };
+    });
 
     // 100svh hero + 120svh of frame scrub (SCRUB_VH) + 100svh of push.
     expect(geom.sceneH).toBeGreaterThan(bp.height * 3.1);
@@ -126,6 +141,12 @@ for (const bp of BREAKPOINTS) {
     // recede reads back to 0 on its own.
     await page.evaluate(() => window.scrollTo(0, 0));
     await expect.poll(musicTop, { timeout: 15000 }).toBeGreaterThan(bp.height * 2);
+    await expect
+      .poll(
+        () => page.evaluate(() => Number(getComputedStyle(document.querySelector(".hero__canvas-wrap")!).opacity)),
+        { timeout: 15000 },
+      )
+      .toBe(1);
 
     const restored = await page.evaluate(() => ({
       push: getComputedStyle(document.querySelector(".hero-scene")!).getPropertyValue("--push").trim(),
@@ -214,13 +235,17 @@ test("back/forward navigation rebuilds the scrub instead of leaving a dead engin
 
   // Not duplicated: two racing ScrollTrigger instances would disagree about
   // --push, which is written on every update.
-  await page.evaluate(() => window.scrollTo(0, 1500));
-  await page.waitForTimeout(500);
-  const push = await page.evaluate(() =>
-    getComputedStyle(document.querySelector(".hero-scene")!).getPropertyValue("--push").trim(),
-  );
-  expect(Number(push)).toBeGreaterThan(0);
-  expect(Number(push)).toBeLessThanOrEqual(1);
+  await page.evaluate(() => {
+    window.scrollTo(0, 1500);
+    window.dispatchEvent(new Event("scroll"));
+  });
+  await expect
+    .poll(() =>
+      page.evaluate(() => Number(getComputedStyle(document.querySelector(".hero-scene")!).getPropertyValue("--push").trim())),
+    )
+    .toBeGreaterThan(0);
+  const push = await page.evaluate(() => Number(getComputedStyle(document.querySelector(".hero-scene")!).getPropertyValue("--push").trim()));
+  expect(push).toBeLessThanOrEqual(1);
   expect(errors).toEqual([]);
 });
 

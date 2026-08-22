@@ -783,6 +783,15 @@ const FALLBACK_TRACK = { title: "Mecca", artist: "Sölbo", artwork: "/images/mec
     opacity: 0.85;
   }
 
+  /* GSAP entrance opacity must never leave keyboard focus on unpainted
+     content. The focused link receives its normal browser focus ring; this
+     only reveals its existing section while that focus remains inside it. */
+  .music:focus-within .music__stack,
+  .music:focus-within .music__platforms {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
   /* Mobile shows nine covers; the desktop column has room for twelve. */
   .release:nth-child(n + 10) {
     display: none;

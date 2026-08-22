@@ -123,11 +123,11 @@ export function initShowsTimeline(): void {
       });
       timeline.fromTo(
         header,
-        { autoAlpha: 0, clipPath: "inset(0 0 100% 0)", yPercent: 12 },
-        { autoAlpha: 1, clipPath: "inset(0 0 0% 0)", yPercent: 0, duration: 0.7, ease: "expo.out" },
+        { opacity: 0, clipPath: "inset(0 0 100% 0)", yPercent: 12 },
+        { opacity: 1, clipPath: "inset(0 0 0% 0)", yPercent: 0, duration: 0.7, ease: "expo.out" },
         0.15,
       );
-      timeline.fromTo(panel, { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: 0.4, ease: "power3.out" }, 0.32);
+      timeline.fromTo(panel, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 0.32);
 
       if (!photoPanel) return;
       const rotateX = gsap.quickTo(photoPanel, "rotationX", { duration: 0.6, ease: "power2.out" });
@@ -162,9 +162,9 @@ export function initShowsTimeline(): void {
     media.add(MOBILE_QUERY, () => {
       gsap.fromTo(
         header,
-        { autoAlpha: 0, y: 24 },
+        { opacity: 0, y: 24 },
         {
-          autoAlpha: 1,
+          opacity: 1,
           y: 0,
           ease: "none",
           scrollTrigger: { trigger: header, start: "top 90%", end: "top 60%", scrub: 0.8 },
@@ -172,9 +172,9 @@ export function initShowsTimeline(): void {
       );
       gsap.fromTo(
         panel,
-        { autoAlpha: 0, y: 20 },
+        { opacity: 0, y: 20 },
         {
-          autoAlpha: 1,
+          opacity: 1,
           y: 0,
           duration: 0.7,
           ease: "power2.out",
@@ -184,9 +184,9 @@ export function initShowsTimeline(): void {
       if (section.querySelector(".shows__list .shows__row")) {
         gsap.fromTo(
           section,
-          { autoAlpha: 1 },
+          { opacity: 1 },
           {
-            autoAlpha: 0,
+            opacity: 0,
             ease: "none",
             scrollTrigger: { trigger: section, start: "bottom 70%", end: "bottom 10%", scrub: 0.8 },
           },

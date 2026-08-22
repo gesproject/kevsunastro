@@ -187,6 +187,15 @@ const year = new Date().getFullYear();
     text-transform: uppercase;
   }
 
+  /* A focused link takes priority over the decorative entrance state. */
+  .footer:focus-within .footer__content,
+  .footer:focus-within .footer__booking,
+  .footer:focus-within .footer__links a,
+  .footer:focus-within .footer__link--pending {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
   @media (width >= 768px) {
     .footer__watermark--desktop {
       display: block;

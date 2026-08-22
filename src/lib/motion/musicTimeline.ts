@@ -40,11 +40,11 @@ export function initMusicTimeline(): void {
         },
       });
 
-      if (stack) timeline.fromTo(stack, { autoAlpha: 0, y: 50 }, { autoAlpha: 1, y: 0, ease: "power3.out", duration: 0.5 }, 0.2);
-      if (platforms) timeline.fromTo(platforms, { autoAlpha: 0 }, { autoAlpha: 1, ease: "power2.out", duration: 0.3 }, 0.5);
-      if (heading) timeline.fromTo(heading, { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, ease: "power3.out", duration: 0.3 }, 0.5);
+      if (stack) timeline.fromTo(stack, { opacity: 0, y: 50 }, { opacity: 1, y: 0, ease: "power3.out", duration: 0.5 }, 0.2);
+      if (platforms) timeline.fromTo(platforms, { opacity: 0 }, { opacity: 1, ease: "power2.out", duration: 0.3 }, 0.5);
+      if (heading) timeline.fromTo(heading, { opacity: 0, y: 24 }, { opacity: 1, y: 0, ease: "power3.out", duration: 0.3 }, 0.5);
       releases.forEach((release, index) =>
-        timeline.fromTo(release, { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, ease: "power2.out", duration: 0.2 }, 0.68 + index * 0.04),
+        timeline.fromTo(release, { opacity: 0, y: 20 }, { opacity: 1, y: 0, ease: "power2.out", duration: 0.2 }, 0.68 + index * 0.04),
       );
     });
 
@@ -52,9 +52,9 @@ export function initMusicTimeline(): void {
       [stack, heading].filter((element): element is HTMLElement => Boolean(element)).forEach((element, index) => {
         gsap.fromTo(
           element,
-          { autoAlpha: 0, y: 20 },
+          { opacity: 0, y: 20 },
           {
-            autoAlpha: 1,
+            opacity: 1,
             y: 0,
             duration: 0.7,
             delay: index * 0.08,
@@ -66,9 +66,9 @@ export function initMusicTimeline(): void {
       releases.forEach((release, index) => {
         gsap.fromTo(
           release,
-          { autoAlpha: 0, y: 16 },
+          { opacity: 0, y: 16 },
           {
-            autoAlpha: 1,
+            opacity: 1,
             y: 0,
             duration: 0.5,
             delay: index * 0.04,
