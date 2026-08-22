@@ -1,0 +1,95 @@
+---
+/**
+ * 404 — prerendered by Astro's reserved route name so static hosting and
+ * the Cloudflare worker both serve it for unmatched paths. Same dark field,
+ * mono micro-label voice, and one way onward; no JS required.
+ */
+export const prerender = true;
+
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getSite } from "../lib/content";
+
+const site = await getSite();
+---
+
+<BaseLayout title={`Page not found — ${site.data.artistName}`} description="This page doesn't exist. Head back to the site.">
+  <section class="nf">
+    <div class="nf__inner">
+      <p class="nf__code" aria-hidden="true">ERROR — 404</p>
+      <h1 class="nf__heading">Wrong turn.</h1>
+      <p class="nf__body">That page doesn't exist — or it moved before you got there.</p>
+      <a class="nf__home" href="/">Back to the site <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="film-grain nf__grain" aria-hidden="true"></div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf {
+    display: grid;
+    min-height: 100svh;
+    place-items: center;
+    background:
+      radial-gradient(ellipse at 24% 18%, rgb(163 230 53 / 8%) 0%, transparent 55%),
+      var(--color-ink);
+  }
+
+  .nf__inner {
+    padding: var(--space-7) var(--page-gutter);
+  }
+
+  .nf__code {
+    margin: 0 0 var(--space-3);
+    color: rgb(163 230 53 / 85%);
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    letter-spacing: 0.22em;
+  }
+
+  .nf__heading {
+    margin: 0 0 var(--space-3);
+    color: var(--color-text);
+    font-size: clamp(2.5rem, 9vw, 6rem);
+    font-weight: 900;
+    letter-spacing: -0.05em;
+    line-height: 0.88;
+    text-transform: uppercase;
+  }
+
+  .nf__body {
+    margin: 0 0 var(--space-6);
+    max-width: 34ch;
+    color: var(--color-text-muted);
+  }
+
+  .nf__home {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    padding: 0.55rem 1.1rem;
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition:
+      border-color var(--duration-base) var(--ease-in-out),
+      transform var(--duration-base) var(--ease-in-out);
+  }
+
+  .nf__home:hover,
+  .nf__home:focus-visible {
+    border-color: rgb(163 230 53 / 45%);
+    transform: translateY(-2px);
+  }
+
+  .nf__grain {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+</style>

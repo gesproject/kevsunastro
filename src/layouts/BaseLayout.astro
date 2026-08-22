@@ -24,6 +24,8 @@ const socialImageUrl = canonicalUrl && socialImage ? new URL(socialImage, Astro.
     <meta name="color-scheme" content="dark" />
     <title>{title}</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="mask-icon" href="/favicon.svg" color="#0a0a0a" />
     {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={title} />

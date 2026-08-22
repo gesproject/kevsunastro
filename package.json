@@ -34,7 +34,10 @@
   },
   "overrides": {
     "@cloudflare/vite-plugin": "1.47.0",
-    "vite": "8.0.13"
+    "vite": "8.2.2",
+    "postcss": {
+      "nanoid": "^3.3.18"
+    }
   },
   "engines": {
     "node": "22.12.0",

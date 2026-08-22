@@ -94,8 +94,10 @@ test("every action survives with JavaScript disabled", async ({ browser }) => {
   expect(await hero.evaluate((i: HTMLImageElement) => i.naturalWidth > 0)).toBe(true);
 
   // Same destinations the JS-enabled page offers: 3 socials, enter-site,
-  // show updates, booking.
-  await expect(page.locator(".link-page a[href]")).toHaveCount(6);
+  // booking. The sixth legacy anchor (show-tickets micro-link) disappeared
+  // when Task 5.2's demo catalog marked every show `demo`, which correctly
+  // renders no ticket destination; restore it in count when real shows land.
+  await expect(page.locator(".link-page a[href]")).toHaveCount(5);
   await expect(page.locator(".enter-card")).toBeVisible();
 
   // The canvas never becomes ready, so the CSS gradient floor is what paints.

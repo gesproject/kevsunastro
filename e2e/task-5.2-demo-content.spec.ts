@@ -13,7 +13,7 @@ test("the CMS demo catalog preserves the legacy layout without live destinations
 
   await expect(page.locator("#music .release")).toHaveCount(3);
   await expect(page.locator("#music .release__title")).toHaveText(["Mecca", "Threshold", "Periphery"]);
-  await expect(page.locator("#music .release__frame img").first()).toHaveAttribute("src", "/images/mecca-solbo.png");
+  await expect(page.locator("#music .release__frame img").first()).toHaveAttribute("src", "/images/artwork-mecca.webp");
   await expect(page.locator("#music .music__embed")).toHaveCount(0);
   await expect(page.locator("#music .player")).toHaveCount(2);
   const [primaryTitle, primaryArtwork] = await Promise.all([
