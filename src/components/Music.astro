@@ -28,6 +28,14 @@
  * URLs, so the static cards remain the no-JavaScript floor. Ceiling: a real
  * release URL would replace a card with an iframe. Upgrade path: add a plain
  * release link beneath each embed before publishing a real destination.
+ *
+ * Dark-grade amendment (2026-08-22, pass 2) — backdrop swap. The section
+ * background is now the human-supplied "vertical bars" canvas field, ported
+ * vanilla to src/lib/motion/barField.ts per the repo's no-island rule (same
+ * route the moss shader itself took from its React source). Mount contract,
+ * pauses, and the no-JS floor pattern are unchanged; the floor gradient now
+ * carries the field's hairline rhythm so no-JS still reads as the same
+ * artwork, frozen. The moss WebGL shader is retired from this section.
  */
 import { getPlatformLinks, getReleases } from "../lib/content";
 import { soundcloudEmbedUrl, spotifyEmbedUrl } from "../lib/embeds";
@@ -196,6 +204,7 @@ const FALLBACK_TRACK = releases[0]
         </div>
 
       <div class="music__releases">
+        <p class="music__eyebrow" aria-hidden="true">DISCOGRAPHY — {String(releases.length).padStart(2, "0")}</p>
         <h2 class="music__heading">Releases</h2>
 
         {
@@ -222,7 +231,8 @@ const FALLBACK_TRACK = releases[0]
                   <p class="release__title">{release.data.title}</p>
                   <p class="release__meta">
                     {release.data.releaseDate.slice(0, 4)}
-                    <span> · {release.data.type}</span>
+                    <span aria-hidden="true"> · </span>
+                    <span>{release.data.type}</span>
                   </p>
                 </li>
               ))}
@@ -290,19 +300,25 @@ const FALLBACK_TRACK = releases[0]
     pointer-events: none;
   }
 
-  /* Section-scoped mount of the shared shader engine (shaderField.ts) with
-     the moss palette (shaders/moss.ts) -- absolute, not fixed, so it stays
-     inside this section instead of showing through Shows/Footer. Dark-grade:
-     the veil below is a DARK wash over the shader, the same protective
-     relationship /link's Plasma veil has with its light text. */
+  /* Section-scoped mount of the vertical bar field (barField.ts) behind the
+     section -- absolute, not fixed, so it stays inside this section instead
+     of showing through Shows/Footer. Dark-grade: the veil below is a DARK
+     wash over the field's brightest bars, the same protective relationship
+     /link's Plasma veil has with its light text. */
   .music__backdrop {
     position: absolute;
     z-index: var(--z-base);
     inset: 0;
-    /* No-JS / no-WebGL floor: a still approximation of the re-graded
-       palette (dark moss field, lime bloom, deep olive shadow). */
+    /* No-JS / no-canvas floor: a still stand-in for the bar field that
+       paints above it — dark moss ground with a lime bloom, plus the same
+       horizontal hairline rhythm (~11px) the animated bars ride. */
     background:
-      radial-gradient(ellipse at 24% 18%, rgb(163 230 53 / 14%) 0%, transparent 55%),
+      repeating-linear-gradient(
+        to bottom,
+        rgb(245 245 242 / 4%) 0 1px,
+        transparent 1px 11px
+      ),
+      radial-gradient(ellipse at 24% 18%, rgb(163 230 53 / 12%) 0%, transparent 55%),
       radial-gradient(ellipse at 80% 75%, rgb(6 8 3 / 60%) 0%, transparent 50%),
       #101208;
     pointer-events: none;
@@ -322,15 +338,13 @@ const FALLBACK_TRACK = releases[0]
     opacity: 1;
   }
 
-  /* Dark veil, measured like its light predecessor: the brightest pixel this
-     shader paints is its cream stop (~rgb(247,254,229)). Under this wash that
-     worst case compresses to ~rgb(105,109,96); the section's --color-text
-     over it is ~5.9:1 (AA for body sizes), and the ramp only deepens toward
-     the foot where the card grid lives. */
+  /* Dark veil: keeps the field's bone-white bars and lime peaks from ever
+     competing with player-card content. Measured against the bars' peak
+     alpha; the ramp deepens toward the foot where the card grid lives. */
   .music__backdrop-veil {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgb(10 12 4 / 55%) 0%, rgb(10 12 4 / 65%) 55%, rgb(10 12 4 / 75%) 100%);
+    background: linear-gradient(180deg, rgb(10 12 4 / 45%) 0%, rgb(10 12 4 / 60%) 55%, rgb(10 12 4 / 75%) 100%);
   }
 
   /* The moving half of the Hero→Music seam.
@@ -404,6 +418,15 @@ const FALLBACK_TRACK = releases[0]
 
   .music__releases {
     padding-bottom: 45vh;
+  }
+
+  .music__eyebrow {
+    margin: 0 0 var(--space-2);
+    color: var(--music-accent);
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    letter-spacing: 0.22em;
+    opacity: 0.85;
   }
 
   .music__heading {
@@ -649,7 +672,7 @@ const FALLBACK_TRACK = releases[0]
   }
 
   /* Solid-ish dark chips rather than text sitting on the bare backdrop: a
-     live link needs 4.5:1 against whatever the moss shader is doing behind
+     live link needs 4.5:1 against whatever the bar field is doing behind
      it at any given moment, which text-on-glass can't guarantee. A near-
      opaque dark pill fixes the surface under the label, the same move
      .player's chrome background already makes -- so the label can carry

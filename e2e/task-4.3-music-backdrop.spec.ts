@@ -1,33 +1,28 @@
 import { test, expect } from "@playwright/test";
 
-// Task 4.3 amendment -- the Music section's moss shader backdrop, a
-// section-scoped mount of the same shared engine (src/lib/motion/
-// shaderField.ts) /link's fixed Plasma backdrop uses, running a different
-// shader (shaders/moss.ts vs shaders/plasma.ts). What's specific to a
-// section-scoped mount (and not already covered by
+// Task 4.3 amendment -- the Music section backdrop. Originally the moss
+// shader (a section-scoped mount of the shared WebGL engine); since the
+// 2026-08-22 dark re-grade it is the vanilla vertical-bar field
+// (src/lib/motion/barField.ts) mounted by the same musicBackdrop.ts.
+// What's specific to a section-scoped mount (and not already covered by
 // link-plasma-backdrop.spec.ts) is musicBackdrop.ts's own
 // IntersectionObserver-driven pause/resume; the engine-level behavior
-// (hidden-tab pause, reduced motion, no-JS floor, compile/draw/resize) is
-// the same shared contract, already locked by link-plasma-backdrop.spec.ts
-// against the exact engine module Music also imports.
+// (hidden-tab pause, reduced motion, no-JS floor, resize) follows the same
+// contract shaderField.ts established.
 //
 // Getting the real Music section into view would mean out-scrolling Hero's
-// Lenis-smoothed, GSAP-pinned "+=130%"/"+=160%" scroll range in a live
-// browser -- slow, and it exercises Hero/Lenis/GSAP, not Music's own pause
-// logic. Instead this stubs IntersectionObserver so musicBackdrop.ts's real
-// code runs against a synthetic, instant "in view" / "out of view" signal --
-// the exact contract it actually has with the browser, without needing
-// Hero's scroll machinery to be correct or even present.
+// Lenis-smoothed scroll range in a live browser -- slow, and it exercises
+// Hero/Lenis/GSAP, not Music's own pause logic. Instead this stubs
+// IntersectionObserver so musicBackdrop.ts's real code runs against a
+// synthetic, instant "in view" / "out of view" signal -- the exact contract
+// it actually has with the browser.
 //
-// `/` also runs Hero's own canvas engine and (outside reduced motion) GSAP's
-// ticker, both separately calling requestAnimationFrame, unlike /link where
-// its canvas is the only thing on the page -- so this counts WebGL
-// drawArrays calls scoped to Music's own canvas rather than a page-wide rAF
-// count. `/`'s progressive AVIF loading also means the `load` event doesn't
-// fire promptly (see task-4.2-hero-sequence.spec.ts) and competes for
-// bandwidth/decode time these tests don't need, so every test blocks
-// hero-frames requests and uses domcontentloaded, the same technique
-// task-4.2-hero-sequence.spec.ts uses for its own frame-independent checks.
+// Draw counting: the bar field issues exactly one clearRect per frame, so
+// counting clearRect calls scoped to Music's own canvas gives the exact
+// frame count without depending on how many bars any particular frame
+// happens to paint. `/`'s progressive AVIF loading means the `load` event
+// doesn't fire promptly, so every test blocks hero-frames requests and uses
+// domcontentloaded.
 
 const HOME = "/";
 
@@ -36,11 +31,13 @@ const countDraws = {
     page.addInitScript(() => {
       const w = window as unknown as { __musicDraws: number };
       w.__musicDraws = 0;
-      const original = WebGLRenderingContext.prototype.drawArrays;
-      WebGLRenderingContext.prototype.drawArrays = function (this: WebGLRenderingContext, ...args) {
-        const canvas = this.canvas as HTMLElement;
-        if (canvas.hasAttribute?.("data-music-shader")) w.__musicDraws += 1;
-        return original.apply(this, args as never);
+      const original = CanvasRenderingContext2D.prototype.clearRect;
+      CanvasRenderingContext2D.prototype.clearRect = function (
+        this: CanvasRenderingContext2D,
+        ...args: Parameters<typeof original>
+      ) {
+        if ((this.canvas as HTMLElement).hasAttribute?.("data-music-shader")) w.__musicDraws += 1;
+        return original.apply(this, args);
       };
     }),
   read: (page: import("@playwright/test").Page) =>
@@ -196,7 +193,7 @@ test("Music section content and links survive with JavaScript disabled", async (
 
   // The canvas never becomes ready, so the section's own CSS gradient floor
   // -- the same no-JS fallback pattern PlasmaBackdrop.astro established for
-  // /link, with the moss palette's own colours -- is what actually paints.
+  // /link, now carrying the bar field's hairline rhythm -- is what paints.
   await expect(music.locator("canvas[data-music-shader]")).not.toHaveAttribute("data-ready", "");
   const bg = await music.evaluate((el) => getComputedStyle(el.querySelector(".music__backdrop")!).backgroundImage);
   expect(bg).toContain("gradient");
