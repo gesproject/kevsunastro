@@ -1,8 +1,31 @@
-# Security headers — full baseline (Task 6.3, 2026-08-23).
-# CSP is report-safe: no unsafe-inline for scripts; styles stay inline by design
-# (Astro scoped CSS ships as <style> blocks). Frames: Spotify + SoundCloud embeds
-# on / and the Keystatic admin UI need frame-src allowances.
+# Security headers + cache policy (Task 6.3, 2026-08-23; fonts added with the
+# Hanken Grotesk interim face).
+# CSP is report-tight: scripts self + inline (Astro inlines small modules);
+# styles stay inline by design (Astro scoped CSS ships as <style> blocks).
+# Frames: Spotify + SoundCloud embeds on / and the Keystatic admin UI need
+# frame-src allowances.
 
+# Immutable deploy assets: hashed bundles, hero sequence, self-hosted fonts.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/hero-frames/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/images/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+# Prerendered documents: short TTL so fixes and content edits land promptly.
+/
+  Cache-Control: public, max-age=600, stale-while-revalidate=86400
+
+/link/
+  Cache-Control: public, max-age=600, stale-while-revalidate=86400
+
+# Security baseline for every response.
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin

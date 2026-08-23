@@ -4,6 +4,16 @@
  * Do not ship or convert them until their web-embedding/subsetting rights are confirmed.
  */
 
+/* Self-hosted variable face (SIL OFL 1.1 — see /fonts/OFL.txt). One latin
+   wght file covers every weight the site uses, 100–900. */
+@font-face {
+  font-family: "Hanken Grotesk";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/hanken-grotesk-latin-wght-normal.woff2") format("woff2-variations");
+}
+
 :root {
   color-scheme: dark;
 
@@ -17,8 +27,11 @@
   --color-line: rgb(245 245 242 / 20%);
   --color-scrim: rgb(10 10 10 / 72%);
 
-  /* Typography — licensed local Neue Haas faces are intentionally pending. */
-  --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* Typography — Neue Haas faces remain unshipped pending web-license
+     confirmation. Interim face: Hanken Grotesk variable (SIL OFL 1.1,
+     self-hosted in /fonts — license shipped alongside), chosen as the
+     closest libre grotesque to Neue Haas/Helvetica proportions. */
+  --font-sans: "Hanken Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-display: var(--font-sans);
   --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   --font-size-label: 0.6875rem;
