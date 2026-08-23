@@ -5,6 +5,9 @@ function blockHeroFrames(page: import("@playwright/test").Page) {
 }
 
 test("every homepage keyboard stop is named, visible, and has a focus ring", async ({ page }) => {
+  // A full Tab walk across every focus stop with per-stop polling: under
+  // headless software WebGL the whole walk outgrew the 30s default.
+  test.setTimeout(90_000);
   await page.setViewportSize({ width: 1440, height: 900 });
   await blockHeroFrames(page);
   await page.goto("/", { waitUntil: "domcontentloaded" });

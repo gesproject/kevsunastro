@@ -16,6 +16,9 @@ function pinCount(page: import("@playwright/test").Page, selector: string) {
 }
 
 test("desktop Shows pins through its reveal and stays singular after resize", async ({ page }) => {
+  // Two full page loads, a viewport swap, and four polls: against a cold dev
+  // server the sum outgrew the 30s default even though every step passed.
+  test.setTimeout(60_000);
   await page.setViewportSize({ width: 1440, height: 900 });
   await blockHeroFrames(page);
   await page.goto("/", { waitUntil: "domcontentloaded" });
@@ -24,10 +27,13 @@ test("desktop Shows pins through its reveal and stays singular after resize", as
   await page.evaluate(() => {
     const shows = document.querySelector<HTMLElement>("#shows");
     if (!shows) throw new Error("Missing #shows");
-    window.scrollTo(0, shows.getBoundingClientRect().top + window.scrollY + window.innerHeight * 1.6);
+    window.scrollTo(0, shows.getBoundingClientRect().top + window.scrollY + window.innerHeight * 3);
   });
-  await expect.poll(() => opacity(page, ".shows__header h2"), { timeout: 10_000 }).toBeGreaterThan(0.95);
-  await expect.poll(() => opacity(page, ".shows__list"), { timeout: 10_000 }).toBeGreaterThan(0.95);
+  // Deep-past-the-pin position: entrance reveals are fully resolved there
+  // regardless of total section height (the gallery field changes it), so no
+  // hardcoded mid-pin offset is stable across redesigns.
+  await expect.poll(() => opacity(page, ".shows__header h2"), { timeout: 15_000 }).toBeGreaterThan(0.95);
+  await expect.poll(() => opacity(page, ".shows__list"), { timeout: 15_000 }).toBeGreaterThan(0.95);
 
   // The sticky photo panel was retired with the board chrome; the section's
   // only photography is now the dual counter-drifting strip (renamed from
@@ -71,7 +77,7 @@ test("the Shows anchor and keyboard paging remain usable through the desktop pin
   await page.setViewportSize({ width: 1440, height: 900 });
   await blockHeroFrames(page);
   await page.goto("/#shows", { waitUntil: "domcontentloaded" });
-  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+  await expect.poll(() => page.evaluate(() => window.scrollY), { timeout: 10_000 }).toBeGreaterThan(0);
 
   await page.evaluate(() => {
     document.documentElement.tabIndex = -1;
