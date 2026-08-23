@@ -96,6 +96,7 @@ Gate still carried forward, not blocking: Task 3.1 leaves a `ponytail:` marker i
 - [x] Task 4.4 amendment — Footer breathing layout (user-directed 2026-08-22). Expanded the Footer to 60svh on mobile and 78svh on desktop, while keeping the original SÖLBO watermark intact and fully visible. Booking and social/copyright information now share a naturally spaced, right-aligned contact rail. Evidence: `task-4.4-footer-breathing-layout.md` and `e2e/task-4.4-footer-waves.spec.ts` (7 assertions).
 - [x] Task 3.2 amendment — Shows Signal Board (user-directed 2026-08-22). Supersedes the earlier content-honest empty state: restores the user-approved five-row legacy Vercel fallback and presents it as a date-led Signal Board. Real Task 5.2 records automatically take precedence. Evidence: `task-3.2-shows-signal-board.md`, Shows browser suite 5/5, and responsive captures.
 - [x] Task 4.5: Complete reduced-motion, keyboard, focus, and failure-mode QA. Replaced GSAP `autoAlpha` entrances with opacity-only entrances so future content remains in sequential keyboard navigation; verified focused links, bfcache scroll restoration, reduced motion, native keyboard paging, no-JavaScript content, hidden-tab behavior, and media failure paths. Evidence: `task-4.5-motion-accessibility.md`, `e2e/task-4.5-motion-accessibility.spec.ts` (2/2), and the focused 58/58 Chromium motion regression.
+- [x] Visual polish amendments — Music→Shows seam + Shows composition (user-directed 2026-08-23, two passes). Pass 4: measured rendered geometry showed location text 14px from the action column on mobile and ~175–260px dead air on desktop, so rows gained rhythm and an explicit min action-cell gap; the desktop portrait gate dropped 1200px→1024px (the right field was empty at common laptop widths). Pass 5 (after review): the right rail became the live-reel **video placeholder** (3:2 poster frame + play glyph, larger column, zero JS — swap to `<video>` when the reel lands); the rail's `position: sticky` was deleted as the root cause of a reported clipping bug (with a five-row schedule sticky never engaged and clipped the box against the stage edge mid-scroll — verified by headless scroll sweep); row padding reverted to the approved tighter rhythm while keeping the spacing fixes; and Music's exit seam became an ungated chromatic bridge (moss field → near-black → Shows' violet #07050f) so mobile gets the same transition — previously phones had no exit grade at all. Verified with Playwright geometry sweeps at 390/768/1152/1440, pixel-level seam sampling (reduced-motion max adjacent-row luminance step 5.7), and zero clip/escape violations across scroll positions. Evidence: session log measurements; `src/components/Shows.astro`, `src/components/Music.astro` pass comments.
 
 ### Checkpoint 4: Motion and accessibility parity approved
 
@@ -106,15 +107,54 @@ Gate still carried forward, not blocking: Task 3.1 leaves a `ponytail:` marker i
 - [x] Task 5.1: Implement the production Keystatic schema and auth configuration. `keystatic.config.mjs` maps the existing JSON Shows, Releases, Links, and Site Settings contract to GitHub mode for `gesproject/kevsunastro`, with a `keystatic/` draft-branch namespace and versioned public image locations. The Astro 7 / Cloudflare wrapper supplies runtime env bindings without putting credentials in source. Evidence: `task-5.1-keystatic-production-schema.md`, config unit test, built-Worker Keystatic smoke test, public-route React audit, `npm run check`, and `npm run build`. Live sign-in awaits only the client-owned GitHub App variables in the Cloudflare secret manager.
 - [x] Task 5.2: Migrate and validate the human-approved legacy demo catalog in Keystatic. Five Shows and three Releases now preserve the previous placeholder layout and versioned artwork while using an explicit `Demo` show state and no unverified ticket or streaming destinations. Existing booking/social links and site copy remain intact; Listen and Buy stay pending. Evidence: `task-5.2-demo-content.md`, `npm run check`, `npm run build`, and the 10/10 serial Music/Shows/content browser regression. Replace every demo record with approved real editorial content before production publication.
 - [ ] Task 5.3: Complete non-developer editorial UAT from edit through rollback.
-- [ ] Task 5.4: Write the Keystatic client guide.
+- [x] Task 5.4: Write the Keystatic client guide (2026-08-23). Non-developer
+      walkthrough at `task-5.4-keystatic-client-guide.md`: sign-in, the four
+      editable collections, everyday recipes (add a show, mark sold-out,
+      publish real Listen/Buy URLs, replace demo records), draft/branch/merge
+      safety model, and rules of thumb. Evidence: this file.
 
 ### Checkpoint 5: Client editorial UAT approved
 
 ## Phase 6 — Cleanup and release candidate
 
-- [ ] Task 6.1: Remove superseded Next/Tailwind/Supabase runtime code and dead dependencies.
-- [ ] Task 6.2: Optimize the approved media and font pipelines.
-- [ ] Task 6.3: Add CSP, security/cache headers, SEO files, CMS no-index, and error behavior.
+- [x] Task 6.1: Remove superseded Next/Tailwind/Supabase runtime code and dead
+      dependencies (audited 2026-08-23). No legacy `app/`, `next.config.*`,
+      `tailwind.config.*`, or `supabase/` trees exist; zero source references
+      to Supabase remain; `package.json` carries only the Astro 7 / Cloudflare /
+      Keystatic / gsap+lenis stack with React present solely for Keystatic's
+      admin UI. Every `src/lib/motion/*` module is imported by a live consumer.
+      The one genuine dead artifact (a superseded opaque desktop AVIF frame set)
+      was already removed during Task 4.2. No further deletions available;
+      nothing removed this audit. Evidence: this entry, package.json inspection,
+      repo-wide greps recorded in the session log.
+- [x] Task 6.2: Optimize the approved media and font pipelines (status
+      2026-08-23). Media: hero frames previously cut 8.0 MB → 2.6 MB
+      (Task 4.2d), all photography ships WebP (`public/images` totals ~540 KB),
+      artwork versioned under `/images/artwork`; no unoptimized originals ship.
+      Fonts: Neue Haas Grotesk OTFs remain deliberately unshipped under
+      `brand-assets/` pending the human web-license confirmation (recorded
+      constraint); the site runs on the Helvetica/Arial system stack until
+      then, so no pipeline work is possible or needed for fonts this pass.
+      Remaining media headroom (none blocking) noted for future passes:
+      AVIF variants for `/images`. Evidence: asset size survey in session log,
+      Task 4.2d record above.
+- [x] Task 6.3: Add CSP, security/cache headers, SEO files, CMS no-index, and
+      error behavior (2026-08-23). `public/_headers` now carries the full
+      baseline: HSTS, COOP, XFO/frame-ancestors, nosniff, referrer and
+      permissions policies, immutable cache for hashed assets/versioned media,
+      short TTL for prerendered documents, and a report-tight CSP
+      (default-src 'self'; scripts self + inline because Astro inlines small
+      modules — hash-pinning is the named upgrade path; img-src allows
+      i.ytimg.com for /link's Music-clips thumbnails; frames allow
+      Spotify/SoundCloud embeds and the Keystatic UI). `public/robots.txt`
+      disallows `/keystatic` and `/api/` while keeping the sitemap pointer;
+      new `src/middleware.ts` stamps X-Robots-Tag noindex on every Keystatic
+      admin/API response. SEO surface verified complete: canonical, OG/Twitter,
+      JSON-LD MusicGroup, sitemap integration, prerendered 404. Error behavior:
+      the reserved-route 404 ships prerendered for static and worker paths.
+      Evidence: built `dist/client/_headers` + `robots.txt` inspection, e2e
+      suite green against the real Worker with headers active (one CSP violation
+      caught and resolved by adding the ytimg allowance), session log captures.
 - [ ] Task 6.4: Pass browser, device, accessibility, content, CMS, build, and performance matrices.
 
 ### Checkpoint 6: Release candidate approved
