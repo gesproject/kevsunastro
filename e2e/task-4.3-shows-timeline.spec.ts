@@ -30,8 +30,9 @@ test("desktop Shows pins through its reveal and stays singular after resize", as
   await expect.poll(() => opacity(page, ".shows__list"), { timeout: 10_000 }).toBeGreaterThan(0.95);
 
   // The sticky photo panel was retired with the board chrome; the section's
-  // only photography is now the CSS marquee, which must exist without JS.
-  await expect(page.locator(".shows__marquee-track .shows__gallery-item").first()).toBeVisible();
+  // only photography is now the dual counter-drifting strip (renamed from
+  // the single marquee in the 2026-08-22 rework), which must exist sans JS.
+  await expect(page.locator(".shows__strip-track .shows__gallery-item").first()).toBeVisible();
 
   await page.setViewportSize({ width: 768, height: 1024 });
   await expect.poll(() => pinCount(page, "#shows")).toBe(1);
