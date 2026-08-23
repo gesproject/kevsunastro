@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /keystatic
+Disallow: /api/
 
 Sitemap: https://solbo-astro7-cloudflare.nickgagne92.workers.dev/sitemap-index.xml
