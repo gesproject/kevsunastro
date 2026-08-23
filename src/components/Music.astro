@@ -74,6 +74,10 @@ const FALLBACK_TRACK = releases[0]
     <div class="music__backdrop-veil"></div>
   </div>
   <div class="music__grain" aria-hidden="true"></div>
+  <!-- Music→Shows hand-off: mounts the previously orphaned .music__seam
+       element so the section's desktop foot actually grades into ink --
+       the colour Shows' own leading seam starts from. -->
+  <div class="music__seam" aria-hidden="true"></div>
 
   <div class="music__inner">
     <div class="music__grid">
@@ -253,7 +257,10 @@ const FALLBACK_TRACK = releases[0]
     /* Dark-grade rework (2026-08-22): the section now shares the site's dark
        field. --music-light keeps its historical name but carries the dark
        moss ground (#101208) so every existing reference stays valid;
-       --music-dark remains the seam's end colour toward Shows. */
+       --music-dark historically ended this section's exit seam toward Shows.
+       Polish pass (2026-08-23): the seam now terminates directly on Shows'
+       violet ground #07050f (see .music__seam below), bridging what used to
+       be an abrupt neutral→violet hue cut. */
     --music-dark: var(--color-ink);
     --music-light: #101208;
     --music-chrome: #121212;
@@ -807,26 +814,31 @@ const FALLBACK_TRACK = releases[0]
     display: none;
   }
 
-  @media (width >= 768px) {
-    .music__seam {
-      display: block;
-      position: absolute;
-      z-index: var(--z-base);
-      right: 0;
-      bottom: 0;
-      left: 0;
-      height: 35vh;
-      background: linear-gradient(
-        to bottom,
-        transparent 0%,
-        rgb(6 8 3 / 15%) 15%,
-        rgb(6 8 3 / 35%) 35%,
-        rgb(6 8 3 / 70%) 65%,
-        var(--music-dark) 100%
-      );
-      pointer-events: none;
-    }
+  .music__seam {
+    display: block;
+    position: absolute;
+    z-index: var(--z-base);
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 42vh;
+    /* Chromatic bridge into Shows, all breakpoints (mobile previously had no
+       exit grade at all — Shows' violet just started). Ends directly on
+       Shows' violet ground #07050f so the hand-off is one continuous colour
+       journey instead of a dark-on-dark hue cut. */
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgb(6 8 3 / 15%) 15%,
+      rgb(7 5 15 / 38%) 38%,
+      rgb(7 5 15 / 68%) 60%,
+      rgb(7 5 15 / 88%) 82%,
+      #07050f 100%
+    );
+    pointer-events: none;
+  }
 
+  @media (width >= 768px) {
     .music__inner {
       display: flex;
       flex-direction: column;
