@@ -79,6 +79,17 @@ const PHOTOS = [
 // Split across two strips; each strip duplicates its half for a seamless loop.
 const TOP_STRIP = [PHOTOS[0], PHOTOS[2], PHOTOS[4], PHOTOS[6]];
 const BOTTOM_STRIP = [PHOTOS[1], PHOTOS[3], PHOTOS[5], PHOTOS[7]];
+
+// Diagonal field rows (vanilla port of the GreatUI diagonal marquee):
+// five counter-drifting lines at varied speeds. Reverse rows run the
+// wide-format cards, mirroring the old dual-strip size parallax.
+const STRIP_ROWS = [
+  { photos: TOP_STRIP, speed: 52, reverse: false },
+  { photos: BOTTOM_STRIP, speed: 64, reverse: true },
+  { photos: [PHOTOS[4], PHOTOS[6], PHOTOS[0], PHOTOS[2]], speed: 58, reverse: false },
+  { photos: [PHOTOS[7], PHOTOS[5], PHOTOS[3], PHOTOS[1]], speed: 69, reverse: true },
+  { photos: [PHOTOS[2], PHOTOS[0], PHOTOS[6], PHOTOS[4]], speed: 47, reverse: false },
+];
 ---
 
 <section class="shows" id="shows">
@@ -131,54 +142,42 @@ const BOTTOM_STRIP = [PHOTOS[1], PHOTOS[3], PHOTOS[5], PHOTOS[7]];
         </ul>
       </div>
 
-      <!-- Desktop counterweight: the live-reel video slot. Poster + play glyph
-           now; swap the img for a <video src controls> when the reel lands. -->
-      <figure class="shows__video">
-        <img
-          src="/images/shows/live-02.webp"
-          alt="Sölbo performing live"
-          width="800"
-          height="1000"
-          loading="lazy"
-          decoding="async"
-        />
+      <!-- Desktop counterweight: the live-reel slot at half the stage width.
+           YouTube-style static placeholder — swap the whole figure contents
+           for an iframe embed when the reel lands. -->
+      <figure class="shows__video" role="img" aria-label="Sölbo live reel — video coming soon">
+        <span class="shows__video-brand" aria-hidden="true">SÖLBO — LIVE REEL</span>
         <span class="shows__video-play" aria-hidden="true"></span>
+        <span class="shows__video-bar" aria-hidden="true"><span></span></span>
       </figure>
     </div>
 
     <!--
-      Dual live strips — two infinite drifts in opposite directions at
-      different speeds, each on its own slight 3D tilt. Static markup stays
-      plain duplicated lists (no-JS reads them top to bottom); the loops are
-      pure CSS transform animations over duplicated tracks, paused under
-      reduced motion, with hover holding the nearest card.
+      Diagonal live field — five counter-drifting rows on a shared tilt
+      (vanilla port of the GreatUI diagonal marquee: no React island, pure CSS
+      transform loops over duplicated tracks, paused under reduced motion,
+      hover holds the nearest row). Static markup stays plain duplicated
+      lists; no-JS reads them top to bottom.
     -->
     <div class="shows__strips" aria-label="Live photo gallery">
-      <div class="shows__strip shows__strip--top">
-        <div class="shows__strip-track">
-          {[0, 1].map((copy) => (
-            <div class="shows__strip-group" aria-hidden={copy === 1 ? "true" : undefined}>
-              {TOP_STRIP.map((photo) => (
-                <figure class="shows__gallery-item">
-                  <img src={photo.src} alt={copy === 0 ? photo.alt : ""} width="800" height="1000" loading="lazy" decoding="async" />
-                </figure>
-              ))}
+      <div class="shows__strips-field">
+        {
+          STRIP_ROWS.map((row) => (
+            <div class:list={["shows__strip", { "shows__strip--reverse": row.reverse }]} style={`--strip-speed:${row.speed}s`}>
+              <div class="shows__strip-track">
+                {[0, 1].map((copy) => (
+                  <div class:list={["shows__strip-group", { "shows__strip-group--reverse": row.reverse }]} aria-hidden={copy === 1 ? "true" : undefined}>
+                    {row.photos.map((photo) => (
+                      <figure class:list={["shows__gallery-item", { "shows__gallery-item--wide": row.reverse }]}>
+                        <img src={photo.src} alt={copy === 0 ? photo.alt : ""} width="800" height="1000" loading="lazy" decoding="async" />
+                      </figure>
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
-          ))}
-        </div>
-      </div>
-      <div class="shows__strip shows__strip--bottom">
-        <div class="shows__strip-track">
-          {[0, 1].map((copy) => (
-            <div class="shows__strip-group shows__strip-group--reverse" aria-hidden={copy === 1 ? "true" : undefined}>
-              {BOTTOM_STRIP.map((photo) => (
-                <figure class="shows__gallery-item shows__gallery-item--wide">
-                  <img src={photo.src} alt={copy === 0 ? photo.alt : ""} width="800" height="1000" loading="lazy" decoding="async" />
-                </figure>
-              ))}
-            </div>
-          ))}
-        </div>
+          ))
+        }
       </div>
     </div>
   </div>
@@ -436,62 +435,62 @@ const BOTTOM_STRIP = [PHOTOS[1], PHOTOS[3], PHOTOS[5], PHOTOS[7]];
     clip-path: none !important;
   }
 
-  /* ── Dual live strips ──
-     Two counter-drifting rows on opposed slight tilts. Perspective lives on
-     the wrapper; each track's rotateX pushes its far edge back, so together
-     they read like one dense cinematic field rather than two lists. */
-
+  /* ── Diagonal live field ──
+     Five counter-drifting rows share one tilted plane (vanilla port of the
+     GreatUI diagonal marquee — no React island). Rows alternate direction
+     and speed so the field shears as it drifts; the oversized rotated field
+     bleeds past the section, which clips it, and edge fades dissolve the
+     field into the shader backdrop. Motion is transform-only; reduced motion
+     freezes the rows level and full-width. */
   .shows__strips {
-    perspective: 900px;
-    overflow: hidden;
+    position: relative;
+    overflow: clip;
     margin-top: var(--space-8);
-    /* Full-bleed past the inner gutters: strips run edge-to-edge while the
-       rows above stay inside the page measure. */
-    margin-inline: calc(-1 * var(--page-gutter));
   }
 
-  .shows__strip {
-    overflow: hidden;
-    padding-block: 0.75rem;
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
-    mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+  .shows__strips::before,
+  .shows__strips::after {
+    position: absolute;
+    inset-inline: 0;
+    z-index: 1;
+    height: 24%;
+    content: "";
+    pointer-events: none;
   }
 
-  /* Top strip: tilted away at its top edge, drifting left. */
-  .shows__strip--top .shows__strip-track {
-    transform: rotateX(7deg);
+  .shows__strips::before {
+    top: 0;
+    background: linear-gradient(to bottom, rgb(7 5 15 / 90%), transparent);
   }
 
-  /* Bottom strip: mirrored tilt, drifting right, slightly larger cards —
-     the parallax between speeds + sizes is what makes it feel deep. */
-  .shows__strip--bottom {
-    margin-top: -0.25rem;
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent),
-      linear-gradient(to bottom, transparent, #000 18%, #000 100%);
-    mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent),
-      linear-gradient(to bottom, transparent, #000 18%, #000 100%);
+  .shows__strips::after {
+    bottom: 0;
+    background: linear-gradient(to top, rgb(7 5 15 / 90%), transparent);
   }
 
-  .shows__strip--bottom .shows__strip-track {
-    transform: rotateX(-6deg);
+  .shows__strips-field {
+    display: grid;
+    gap: clamp(0.9rem, 1.8vw, 1.5rem);
+    width: 170vw;
+    margin-block: clamp(-2.5rem, -3vw, -1.5rem);
+    margin-inline: -35vw;
+    transform: rotate(-8deg);
   }
 
   .shows__strip-track {
     display: flex;
     width: max-content;
-    transform-style: preserve-3d;
   }
 
   .shows__strip-group {
     display: flex;
     gap: clamp(0.9rem, 2vw, 1.5rem);
     padding-right: clamp(0.9rem, 2vw, 1.5rem);
-    animation: shows-marquee-left 52s linear infinite;
+    animation: shows-marquee-left var(--strip-speed, 52s) linear infinite;
   }
 
   .shows__strip-group--reverse {
     animation-name: shows-marquee-right;
-    animation-duration: 64s;
   }
 
   @keyframes shows-marquee-left {
@@ -518,9 +517,15 @@ const BOTTOM_STRIP = [PHOTOS[1], PHOTOS[3], PHOTOS[5], PHOTOS[7]];
       animation: none;
     }
 
-    .shows__strip--top .shows__strip-track,
-    .shows__strip--bottom .shows__strip-track {
+    .shows__strips-field {
+      width: auto;
+      margin-inline: 0;
       transform: none;
+    }
+
+    .shows__strips::before,
+    .shows__strips::after {
+      content: none;
     }
   }
 
@@ -605,10 +610,11 @@ const BOTTOM_STRIP = [PHOTOS[1], PHOTOS[3], PHOTOS[5], PHOTOS[7]];
      barely taller than the media box, so sticky never engaged and instead
      clipped the box against the stage edge mid-scroll (reported 2026-08-23). */
   @media (min-width: 1024px) {
+    /* True 50/50 stage: schedule and reel share the width equally. */
     .shows__stage {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) clamp(20rem, 28vw, 28rem);
-      gap: clamp(2.5rem, 4vw, 5rem);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(2rem, 3vw, 4rem);
       align-items: start;
     }
 
@@ -616,36 +622,38 @@ const BOTTOM_STRIP = [PHOTOS[1], PHOTOS[3], PHOTOS[5], PHOTOS[7]];
       max-width: none;
     }
 
-    /* Live-reel slot, sized like a video frame (3:2) and notably larger than
-       the old portrait. Static markup only — no JS until a real <video>
-       replaces the poster. */
+    /* Live-reel slot, YouTube-style: 16:9 dark player chrome — brand mark,
+       centred play button, red progress bar. Static markup only; swap the
+       figure's contents for an iframe embed when the reel lands. */
     .shows__video {
       display: block;
       position: relative;
+      aspect-ratio: 16 / 9;
       margin: 0;
       overflow: hidden;
       border: 1px solid rgb(var(--shows-border) / 18%);
       border-radius: 0.75rem;
-      background: #0a0913;
+      background:
+        radial-gradient(ellipse at 30% 20%, rgb(116 82 188 / 22%) 0%, transparent 60%),
+        linear-gradient(to bottom, #12101f 0%, #07050f 100%);
       box-shadow: 0 28px 70px -32px rgb(0 0 0 / 90%);
     }
 
-    .shows__video img {
-      display: block;
-      width: 100%;
-      height: auto;
-      aspect-ratio: 3 / 2;
-      object-fit: cover;
-      object-position: 62% center;
-      filter: saturate(0.84) contrast(1.05);
+    .shows__video-brand {
+      position: absolute;
+      top: clamp(1rem, 2vw, 1.5rem);
+      left: clamp(1rem, 2vw, 1.5rem);
+      color: var(--shows-text);
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.22em;
+      opacity: 0.85;
     }
 
     .shows__video::after {
       position: absolute;
       inset: 0;
-      background:
-        linear-gradient(to bottom, transparent 55%, rgb(6 5 14 / 56%) 100%),
-        linear-gradient(135deg, rgb(116 82 188 / 16%), transparent 55%);
+      background: linear-gradient(to bottom, transparent 55%, rgb(6 5 14 / 56%) 100%);
       content: "";
       pointer-events: none;
     }
@@ -655,14 +663,13 @@ const BOTTOM_STRIP = [PHOTOS[1], PHOTOS[3], PHOTOS[5], PHOTOS[7]];
       left: 50%;
       top: 50%;
       z-index: 1;
-      width: clamp(4rem, 6vw, 5.5rem);
+      width: clamp(4.25rem, 7vw, 6rem);
       aspect-ratio: 1;
-      border: 1px solid rgb(var(--shows-border) / 45%);
       border-radius: 50%;
-      background: rgb(10 8 20 / 55%);
-      backdrop-filter: blur(6px);
+      background: rgb(200 24 24 / 92%);
+      box-shadow: 0 12px 40px -8px rgb(200 24 24 / 55%);
       transform: translate(-50%, -50%);
-      transition: transform var(--duration-base) var(--ease-in-out), border-color var(--duration-base) var(--ease-in-out);
+      transition: transform var(--duration-base) var(--ease-in-out), background-color var(--duration-base) var(--ease-in-out);
     }
 
     .shows__video-play::after {
@@ -673,14 +680,32 @@ const BOTTOM_STRIP = [PHOTOS[1], PHOTOS[3], PHOTOS[5], PHOTOS[7]];
       width: 0;
       height: 0;
       border-style: solid;
-      border-width: 0.7rem 0 0.7rem 1.15rem;
-      border-color: transparent transparent transparent rgb(var(--shows-border) / 90%);
+      border-width: 0.8rem 0 0.8rem 1.3rem;
+      border-color: transparent transparent transparent #fff;
       transform: translate(-50%, -50%);
     }
 
     .shows__video:hover .shows__video-play {
-      border-color: rgb(222 250 103 / 60%);
-      transform: translate(-50%, -50%) scale(1.06);
+      background: rgb(230 33 23 / 98%);
+      transform: translate(-50%, -50%) scale(1.07);
+    }
+
+    /* Player progress bar: a static YouTube-style red scrubber line. */
+    .shows__video-bar {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1;
+      height: 4px;
+      background: rgb(255 255 255 / 22%);
+    }
+
+    .shows__video-bar span {
+      display: block;
+      width: 34%;
+      height: 100%;
+      background: rgb(200 24 24 / 95%);
     }
   }
 </style>
