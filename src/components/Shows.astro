@@ -81,14 +81,12 @@ const TOP_STRIP = [PHOTOS[0], PHOTOS[2], PHOTOS[4], PHOTOS[6]];
 const BOTTOM_STRIP = [PHOTOS[1], PHOTOS[3], PHOTOS[5], PHOTOS[7]];
 
 // Diagonal field rows (vanilla port of the GreatUI diagonal marquee):
-// five counter-drifting lines at varied speeds. Reverse rows run the
-// wide-format cards, mirroring the old dual-strip size parallax.
+// three counter-drifting lines at varied speeds, all drawing from the same
+// single photo pool in different rotations — one set, not parallel sets.
 const STRIP_ROWS = [
-  { photos: TOP_STRIP, speed: 52, reverse: false },
-  { photos: BOTTOM_STRIP, speed: 64, reverse: true },
-  { photos: [PHOTOS[4], PHOTOS[6], PHOTOS[0], PHOTOS[2]], speed: 58, reverse: false },
-  { photos: [PHOTOS[7], PHOTOS[5], PHOTOS[3], PHOTOS[1]], speed: 69, reverse: true },
-  { photos: [PHOTOS[2], PHOTOS[0], PHOTOS[6], PHOTOS[4]], speed: 47, reverse: false },
+  { photos: [PHOTOS[0], PHOTOS[2], PHOTOS[4], PHOTOS[6]], speed: 52, reverse: false },
+  { photos: [PHOTOS[1], PHOTOS[3], PHOTOS[5], PHOTOS[7]], speed: 64, reverse: true },
+  { photos: [PHOTOS[6], PHOTOS[4], PHOTOS[2], PHOTOS[0]], speed: 47, reverse: false },
 ];
 ---
 
@@ -436,44 +434,25 @@ const STRIP_ROWS = [
   }
 
   /* ── Diagonal live field ──
-     Five counter-drifting rows share one tilted plane (vanilla port of the
+     Three counter-drifting rows share one tilted plane (vanilla port of the
      GreatUI diagonal marquee — no React island). Rows alternate direction
      and speed so the field shears as it drifts; the oversized rotated field
-     bleeds past the section, which clips it, and edge fades dissolve the
-     field into the shader backdrop. Motion is transform-only; reduced motion
-     freezes the rows level and full-width. */
+     bleeds edge-to-edge past the section, which clips it, so photos pop from
+     both screen edges at every width. No fade bands and no hover pause: the
+     field reads as part of the section's shader backdrop. Motion is
+     transform-only; reduced motion freezes the rows level and full-width. */
   .shows__strips {
     position: relative;
     overflow: clip;
-    margin-top: var(--space-8);
-  }
-
-  .shows__strips::before,
-  .shows__strips::after {
-    position: absolute;
-    inset-inline: 0;
-    z-index: 1;
-    height: 24%;
-    content: "";
-    pointer-events: none;
-  }
-
-  .shows__strips::before {
-    top: 0;
-    background: linear-gradient(to bottom, rgb(7 5 15 / 90%), transparent);
-  }
-
-  .shows__strips::after {
-    bottom: 0;
-    background: linear-gradient(to top, rgb(7 5 15 / 90%), transparent);
+    margin-top: var(--space-6);
   }
 
   .shows__strips-field {
     display: grid;
     gap: clamp(0.9rem, 1.8vw, 1.5rem);
-    width: 170vw;
-    margin-block: clamp(-2.5rem, -3vw, -1.5rem);
-    margin-inline: -35vw;
+    width: 160vw;
+    margin-block: clamp(-2rem, -3vw, -1.25rem);
+    margin-inline: -30vw;
     transform: rotate(-8deg);
   }
 
@@ -508,10 +487,6 @@ const STRIP_ROWS = [
     }
   }
 
-  .shows__strips:hover .shows__strip-group {
-    animation-play-state: paused;
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .shows__strip-group {
       animation: none;
@@ -521,11 +496,6 @@ const STRIP_ROWS = [
       width: auto;
       margin-inline: 0;
       transform: none;
-    }
-
-    .shows__strips::before,
-    .shows__strips::after {
-      content: none;
     }
   }
 
@@ -546,7 +516,7 @@ const STRIP_ROWS = [
     transition: transform 600ms var(--ease-out-expo), filter 600ms var(--ease-out-expo);
   }
 
-  /* Bottom strip runs wider-format cards for the size parallax. */
+  /* Middle row runs wider-format cards for size variety across the field. */
   .shows__gallery-item--wide img {
     width: clamp(210px, 27vw, 360px);
     height: clamp(180px, 22vw, 300px);
