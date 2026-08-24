@@ -57,6 +57,11 @@ const socialImageUrl = canonicalUrl && socialImage ? new URL(socialImage, Astro.
   </head>
   <body>
     <a class="skip-link" href="#content">Skip to content</a>
+    {/* Site-wide cinematic grain: one fixed pointer-events-none layer above
+        all content (z-overlay sits under navigation). Purely decorative —
+        aria-hidden, no-JS-safe, frozen under prefers-reduced-motion by the
+        global rule. */}
+    <div class="film-grain site-grain" aria-hidden="true"></div>
     <main id="content">
       <slot />
     </main>

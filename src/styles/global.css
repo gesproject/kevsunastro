@@ -255,6 +255,17 @@ a {
   }
 }
 
+/* Site-wide cinematic grain layer (BaseLayout): fixed so it covers every
+   section uniformly, above content but below navigation/modals. Kept faint —
+   it should read as film, not noise. */
+.site-grain {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  overflow: hidden;
+  pointer-events: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

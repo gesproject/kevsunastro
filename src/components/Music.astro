@@ -414,16 +414,17 @@ const FALLBACK_TRACK = releases[0]
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
-    padding: var(--space-3);
-    border: 1px solid var(--music-card-line);
-    border-radius: var(--music-radius);
-    background: rgb(245 245 242 / 4%);
-    backdrop-filter: blur(24px);
-    box-shadow: var(--music-lift);
+    /* Bubble removed (user pass, 2026-08-23): the players' own dark chrome is
+       the card surface; the wrapper adds nothing visual now. */
+    padding: 0;
+    border: 0;
+    background: transparent;
+    backdrop-filter: none;
+    box-shadow: none;
   }
 
   .music__releases {
-    padding-bottom: 45vh;
+    padding-bottom: 22vh;
   }
 
   .music__heading {
@@ -843,7 +844,8 @@ const FALLBACK_TRACK = releases[0]
       display: flex;
       flex-direction: column;
       min-height: 100svh;
-      padding-bottom: 22vh;
+      /* Tail shortened (user pass): the seam ramp carries the transition. */
+      padding-bottom: 10vh;
     }
 
     .music__grid {
@@ -856,11 +858,10 @@ const FALLBACK_TRACK = releases[0]
 
     .music__stack {
       gap: var(--space-4);
-      background: linear-gradient(to bottom right, rgb(245 245 242 / 5%), rgb(245 245 242 / 2%));
-      backdrop-filter: blur(48px);
-      box-shadow:
-        0 32px 80px -10px rgb(0 0 0 / 55%),
-        inset 0 1px 1px rgb(255 255 255 / 8%);
+      /* Desktop keeps the bubble off too — same transparent wrapper. */
+      background: transparent;
+      backdrop-filter: none;
+      box-shadow: none;
     }
 
     .music__releases {

@@ -94,10 +94,14 @@ const year = new Date().getFullYear();
   }
 
   .footer__watermark--mobile {
-    inset: 0 auto 0 0;
-    width: 1em;
+    inset: auto auto 0 0;
+    /* Oversized so the last glyph (the O) runs past and clips at the footer's
+       bottom edge — the mark reads as rising out of the page end. */
+    height: 1em;
     margin-left: -5vw;
-    font-size: clamp(7.6rem, 15vw, 12rem);
+    margin-bottom: -0.12em;
+    font-size: clamp(9.5rem, 24vw, 15rem);
+    line-height: 1;
     writing-mode: vertical-lr;
   }
 

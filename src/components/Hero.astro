@@ -344,13 +344,12 @@ const site = await getSite();
   }
 
   /* Mobile scale: the desktop clamp (9rem floor) is tuned for a wide viewport
-     and would print flat at 144px on a 375px-wide phone, more than a third of
-     the screen's own width for a single word. This clamp is genuinely
-     viewport-driven (14vw) across the phone size range instead. */
+     and would print flat at 144px on a 375px-wide phone. Viewport-driven at
+     19vw — bumped from 14vw so the name owns the phone's first screen. */
   .hero__lockup-headline {
     margin: 0;
     color: var(--color-ink-raised);
-    font-size: clamp(2.75rem, 14vw, 4.5rem);
+    font-size: clamp(3.4rem, 19vw, 5.5rem);
     font-weight: 800;
     letter-spacing: -0.04em;
     line-height: 0.9;

@@ -256,7 +256,9 @@ const STRIP_ROWS = [
   .shows__inner {
     position: relative;
     z-index: var(--z-content);
-    padding: var(--space-7) var(--page-gutter) var(--space-7)
+    /* Bottom stays 0 at every width: the foot-fade band supplies the closing
+       space and pulls itself over the carousel's last row. */
+    padding: var(--space-7) var(--page-gutter) 0
       calc(var(--page-gutter) + var(--safe-left));
     padding-right: calc(var(--page-gutter) + var(--safe-right));
   }
@@ -555,14 +557,17 @@ const STRIP_ROWS = [
     transform: scale(1.04);
   }
 
-  /* Shows→Footer merge: the section's own foot fades out over the last
-     viewport of travel instead of ending on a hard boundary. The band sits
-     outside __inner (full-bleed) and its ink tint matches the footer waves'
-     ground so the two fields read as one continuous surface. */
+  /* Shows→Footer merge: the section's own foot fades out instead of ending
+     on a hard boundary. The band sits outside __inner (full-bleed), is kept
+     short, and is pulled UP over the carousel's bottom edge with a negative
+     margin — so the footer's ink/wave field visibly climbs onto the last
+     photo row and the hand-off reads as one continuous surface rather than
+     two stacked blocks. */
   .shows__foot-fade {
     position: relative;
     z-index: var(--z-content);
-    height: 22svh;
+    height: 14svh;
+    margin-top: clamp(-3rem, -6vh, -1.5rem);
     background: linear-gradient(to bottom, transparent 0%, rgb(6 5 14 / 55%) 55%, var(--color-ink) 100%);
     pointer-events: none;
   }
@@ -570,7 +575,9 @@ const STRIP_ROWS = [
   @media (min-width: 768px) {
     .shows__inner {
       padding-top: var(--space-8);
-      padding-bottom: var(--space-8);
+      /* No bottom padding: the foot-fade band pulls itself up over the
+         carousel's last row, so spacing here would defeat the overlap. */
+      padding-bottom: 0;
     }
 
     .shows__list {
